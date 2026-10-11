@@ -18,17 +18,21 @@ import sys
 import time
 from pathlib import Path
 
-import numpy as np
-import torch
-from datasets import load_dataset
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import classification_report, f1_score
-from torch.utils.data import DataLoader
-from transformers import AutoModelForSequenceClassification, AutoTokenizer, get_linear_schedule_with_warmup
-
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
+from pinch.pipeline import load_env  # noqa: E402
+
+load_env()  # before importing HF libraries, so HF_HOME from .env decides the download folder
+
+import numpy as np  # noqa: E402
+import torch  # noqa: E402
+from datasets import load_dataset  # noqa: E402
+from sklearn.feature_extraction.text import TfidfVectorizer  # noqa: E402
+from sklearn.linear_model import LogisticRegression  # noqa: E402
+from sklearn.metrics import classification_report, f1_score  # noqa: E402
+from torch.utils.data import DataLoader  # noqa: E402
+from transformers import AutoModelForSequenceClassification, AutoTokenizer, get_linear_schedule_with_warmup  # noqa: E402
+
 from pinch.emotions import FINE_TO_COARSE, LABELS  # noqa: E402
 
 BASE_MODEL = "distilbert-base-uncased"
