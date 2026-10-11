@@ -20,4 +20,4 @@ BUBBLE = {
     "neutral": "round",
 }
 
-ART_STYLE = "comic book panel, clean ink lines, flat colors, expressive cartoon characters"
+ART_STYLE = "comic panel, clean ink lines, flat colors"
