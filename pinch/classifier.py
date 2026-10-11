@@ -25,3 +25,18 @@ class EmotionClassifier:
             probs = self.model(**enc).logits.softmax(-1).cpu()
         best = probs.max(-1)
         return [(self.labels[i], round(float(p), 3)) for p, i in zip(best.values, best.indices)]
+
+
+if __name__ == "__main__":
+    # python -m pinch.classifier "text one" "text two"   or no args for an interactive prompt
+    import sys
+    clf = EmotionClassifier()
+    texts = sys.argv[1:]
+    if texts:
+        for text, (label, p) in zip(texts, clf.predict(texts)):
+            print(f"{label:9} {p:.2f}  {text}")
+    else:
+        print("Type a message (empty line to quit)")
+        while text := input("> ").strip():
+            label, p = clf.predict([text])[0]
+            print(f"  {label} ({p:.0%})")
