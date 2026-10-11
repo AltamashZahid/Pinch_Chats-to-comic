@@ -1,16 +1,18 @@
-"""python -m pinch screenshot.png  ->  prints the extracted dialogue as JSON."""
+"""python -m pinch screenshot.png  ->  prints the comic script (dialogue, emotions, prompts)."""
 import argparse
 import json
+from dataclasses import asdict
 
-from .ocr import extract_dialogue, load_image
+from .ocr import load_image
+from .pipeline import screenshot_to_script
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(prog="pinch")
     parser.add_argument("screenshot")
     args = parser.parse_args()
-    messages = extract_dialogue(load_image(args.screenshot))
-    print(json.dumps([m.to_dict() for m in messages], indent=2, ensure_ascii=False))
+    script = screenshot_to_script(load_image(args.screenshot))
+    print(json.dumps(asdict(script), indent=2, ensure_ascii=False))
 
 
 if __name__ == "__main__":
