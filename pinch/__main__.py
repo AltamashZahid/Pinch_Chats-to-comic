@@ -1,7 +1,8 @@
 """python -m pinch screenshot.png [--images]
 
 Without --images: prints the comic script (dialogue, emotions, prompts) as JSON.
-With --images: also generates one image per panel (cached) and prints where they are.
+With --images: also generates one image per panel (cached) and lays them out as a
+comic page in outputs/<name>_comic.png.
 """
 import argparse
 import json
@@ -26,9 +27,14 @@ def main() -> None:
     from .render import render_panels
 
     cache = ImageCache()
-    for i, r in enumerate(render_panels(script, backend_from_env(), cache), 1):
+    rendered = render_panels(script, backend_from_env(), cache)
+    for i, r in enumerate(rendered, 1):
         said = " / ".join(f"{l.speaker}: {l.text}" for l in r.panel.lines)
         print(f"panel {i} [{r.source:9} {r.seconds:5.1f}s] {r.image}\n    {said}")
+    from pathlib import Path
+    from .layout import compose_page
+    page = compose_page(rendered, Path("outputs") / f"{Path(args.screenshot).stem}_comic.png")
+    print(f"comic page: {page.resolve()}")
     s = cache.stats
     print(f"cache: {s['exact']} exact, {s['semantic']} semantic, {s['miss']} miss, "
           f"{s['seconds_saved']:.1f}s of generation saved")
