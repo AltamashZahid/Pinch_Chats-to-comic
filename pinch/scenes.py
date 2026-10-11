@@ -59,18 +59,20 @@ def panel_emotion(lines: list[Line], speaker: str) -> str:
 
 
 def build_prompt(script: Script, panel: Panel) -> str:
+    """Most important first: SD's CLIP text encoder ignores everything past 77 tokens,
+    so the action and characters come before the background setting."""
     people = []
     for speaker in sorted({l.speaker for l in panel.lines}):
         look = script.characters.get(speaker, "a young person")
         people.append(f"{look}, {EXPRESSION[panel_emotion(panel.lines, speaker)]}")
-    return ", ".join([ART_STYLE, script.setting, *people, panel.scene])
+    return ", ".join([ART_STYLE, panel.scene, *people, script.setting])
 
 
 SYSTEM = """You write scripts for short comics made from text-message conversations.
 Reply with JSON only, no prose, in exactly this shape:
-{"setting": "<one place where the story happens, 5-12 words>",
- "characters": {"me": "<fixed visual description, 8-15 words>", "them": "<same>"},
- "panels": ["<what is visibly happening in panel 1, 8-20 words>", ...]}
+{"setting": "<one place where the story happens, 4-8 words>",
+ "characters": {"me": "<fixed visual description, 6-10 words>", "them": "<same>"},
+ "panels": ["<what is visibly happening in panel 1, 6-14 words>", ...]}
 Rules: one entry in "panels" per panel given, in order. Describe only what a camera
 would see: poses, actions, props, framing. No dialogue, no text, no speech bubbles in
 the descriptions. Messages may be in Hinglish or slang; infer the meaning."""

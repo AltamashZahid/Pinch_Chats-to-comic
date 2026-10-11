@@ -88,3 +88,15 @@ def test_llm_error_message_includes_status():
 def test_bubble_style_follows_emotion():
     assert Line("me", "!!", "surprise").bubble == "burst"
     assert Line("me", "ugh", "anger").bubble == "jagged"
+
+
+def test_prompt_fits_clip_window_with_longest_llm_output():
+    """CLIP reads 77 tokens; at ~1.3 tokens/word the prompt must stay under ~58 words."""
+    long_reply = {"setting": " ".join(["word"] * 8),
+                  "characters": {"me": " ".join(["m"] * 10), "them": " ".join(["t"] * 10)},
+                  "panels": [" ".join(["scene"] * 14)] * 2}
+    script = write_script(LINES, fake_llm(json.dumps(long_reply)))
+    for p in script.panels:
+        words = p.prompt.replace(",", " ").split()
+        assert len(words) <= 64
+        assert p.prompt.index("scene") < p.prompt.index("word")  # action before setting
