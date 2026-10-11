@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pinch</title>
+<style>
+  :root {
+    --bg: #f6f3ee; --surface: #ffffff; --text: #1d1b19; --muted: #6b655e;
+    --line: #e2ddd5; --accent: #e8452c; --accent-text: #ffffff; --chip: #f0ebe3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #151413; --surface: #1f1d1b; --text: #f1ede7; --muted: #a39b91;
+      --line: #34302c; --accent: #ff6a50; --accent-text: #1a0d0a; --chip: #2b2825;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 32px 16px 64px; }
+  header h1 { margin: 0; font-size: 2.2rem; letter-spacing: -0.02em; }
+  header p { margin: 4px 0 24px; color: var(--muted); }
+  .drop { border: 2px dashed var(--line); border-radius: 14px; background: var(--surface);
+          padding: 28px; text-align: center; cursor: pointer; transition: border-color .15s; }
+  .drop.over, .drop:hover { border-color: var(--accent); }
+  .drop img { max-height: 260px; max-width: 100%; border-radius: 8px; display: block; margin: 0 auto 12px; }
+  .drop .hint { color: var(--muted); }
+  input[type=file] { display: none; }
+  .actions { display: flex; gap: 12px; align-items: center; margin: 16px 0 28px; flex-wrap: wrap; }
+  button { background: var(--accent); color: var(--accent-text); border: 0; border-radius: 10px;
+           padding: 12px 22px; font: 600 1rem system-ui, sans-serif; cursor: pointer; }
+  button:disabled { opacity: .5; cursor: default; }
+  .status { color: var(--muted); }
+  .error { color: var(--accent); }
+  .result { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 24px; }
+  @media (max-width: 820px) { .result { grid-template-columns: 1fr; } }
+  .comic img { width: 100%; border-radius: 10px; display: block; background: var(--surface); }
+  .comic a { color: var(--muted); font-size: .9rem; }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+           padding: 14px 16px; margin-bottom: 12px; }
+  .panel h3 { margin: 0 0 8px; font-size: .95rem; display: flex; justify-content: space-between; }
+  .tag { font-size: .75rem; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: var(--chip); }
+  .tag.generated { color: var(--muted); }
+  .tag.exact, .tag.semantic { background: var(--accent); color: var(--accent-text); }
+  .line { display: grid; grid-template-columns: 52px 1fr auto; gap: 8px; padding: 4px 0;
+          border-top: 1px solid var(--line); font-size: .92rem; }
+  .line:first-of-type { border-top: 0; }
+  .who { color: var(--muted); }
+  .emo { color: var(--muted); font-size: .82rem; white-space: nowrap; }
+  details { margin-top: 6px; color: var(--muted); font-size: .82rem; }
+  .summary { color: var(--muted); font-size: .9rem; margin: 0 0 12px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Pinch</h1>
+    <p>Drop in a chat screenshot. Get it back as a comic.</p>
+  </header>
+
+  <label class="drop" id="drop">
+    <img id="preview" alt="" hidden>
+    <div class="hint" id="hint">Click or drag a screenshot here</div>
+    <input type="file" id="file" accept="image/*">
+  </label>
+
+  <div class="actions">
+    <button id="go" disabled>Pinch it</button>
+    <span class="status" id="status"></span>
+  </div>
+
+  <section class="result" id="result" hidden>
+    <div class="comic">
+      <img id="comic" alt="Generated comic page">
+      <a id="download" download>Download PNG</a>
+    </div>
+    <div>
+      <p class="summary" id="summary"></p>
+      <div id="panels"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+let chosen = null;
+
+function choose(file) {
+  if (!file || !file.type.startsWith("image/")) return;
+  chosen = file;
+  $("preview").src = URL.createObjectURL(file);
+  $("preview").hidden = false;
+  $("hint").textContent = file.name;
+  $("go").disabled = false;
+}
+
+$("file").addEventListener("change", e => choose(e.target.files[0]));
+const drop = $("drop");
+["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", e => choose(e.dataTransfer.files[0]));
+document.addEventListener("paste", e => {
+  const item = [...e.clipboardData.items].find(i => i.type.startsWith("image/"));
+  if (item) choose(item.getAsFile());
+});
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+$("go").addEventListener("click", async () => {
+  if (!chosen) return;
+  $("go").disabled = true;
+  $("status").className = "status";
+  $("status").textContent = "Reading bubbles, feeling feelings, drawing panels…";
+  const body = new FormData();
+  body.append("file", chosen);
+  try {
+    const t0 = performance.now();
+    const res = await fetch("/api/comic", { method: "POST", body });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || res.statusText);
+    const url = data.comic_url + "?t=" + Date.now();
+    $("comic").src = url;
+    $("download").href = data.comic_url;
+    const c = data.cache;
+    $("summary").textContent =
+      `${data.panels.length} panels in ${((performance.now() - t0) / 1000).toFixed(1)}s · ` +
+      `scenes by ${data.script_source === "llm" ? "LLM" : "template"} · ` +
+      `cache: ${c.exact} exact, ${c.semantic} similar, ${c.miss} new`;
+    $("panels").innerHTML = data.panels.map((p, i) => `
+      <div class="panel">
+        <h3>Panel ${i + 1} <span class="tag ${p.source}">${p.source === "generated" ? `generated ${p.seconds}s` : `cache: ${p.source}`}</span></h3>
+        ${p.lines.map(l => `
+          <div class="line">
+            <span class="who">${esc(l.speaker)}</span>
+            <span>${esc(l.text)}</span>
+            <span class="emo">${esc(l.emotion)} ${Math.round(l.confidence * 100)}% · ${esc(l.bubble)}</span>
+          </div>`).join("")}
+        <details><summary>Image prompt</summary>${esc(p.prompt)}</details>
+      </div>`).join("");
+    $("result").hidden = false;
+    $("status").textContent = "";
+  } catch (err) {
+    $("status").className = "status error";
+    $("status").textContent = err.message;
+  } finally {
+    $("go").disabled = false;
+  }
+});
+</script>
+</body>
+</html>

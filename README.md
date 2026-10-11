@@ -14,9 +14,15 @@ Turn chat screenshots into AI-generated comic panels.
    scene per panel. Image prompts are assembled in code, so character descriptions repeat
    verbatim across panels and expressions come from the classifier. Falls back to templates
    when no LLM is configured or the reply is malformed.
-4. **Image generation and caching**: diffusion backend with an embedding-similarity cache.
-5. **Comic layout**: compose panels and emotion-shaped speech bubbles.
-6. **Web app**: FastAPI backend and a simple frontend.
+4. **Image generation and caching** (done): SD-Turbo runs locally in fp16 (~1 s/panel, 3 GB VRAM
+   on an RTX 2050); Hugging Face and Pollinations backends are optional. Results are cached by
+   exact hash and by MiniLM embedding similarity of the scene text, with the threshold (0.88)
+   calibrated on paraphrase vs. different-scene pairs. Style, characters, expressions, seed and
+   model must match exactly, so a "sad" panel never reuses a "happy" image.
+5. **Comic layout** (done): panels on a grid with speech bubbles whose outline follows the
+   message's emotion (starburst for surprise, spikes for anger, shaky for fear, sagging for sadness).
+6. **Web app** (done): FastAPI backend and a single-page upload UI that shows the comic plus the
+   per-message emotions, bubble styles and cache hits.
 
 ## Setup
 
@@ -24,7 +30,7 @@ Turn chat screenshots into AI-generated comic panels.
 python -m venv .venv
 .venv\Scripts\pip install -r requirements-dev.txt
 .venv\Scripts\pip install torch --index-url https://download.pytorch.org/whl/cu124
-.venv\Scripts\pip install transformers datasets scikit-learn accelerate
+.venv\Scripts\pip install transformers datasets scikit-learn accelerate diffusers
 ```
 
 Install [Tesseract](https://github.com/UB-Mannheim/tesseract/wiki). If it isn't on PATH or in

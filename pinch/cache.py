@@ -15,6 +15,7 @@ On scene text alone, paraphrases measured 0.92-0.98 and different scenes 0.39-0.
 import hashlib
 import json
 import sqlite3
+import threading
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -66,7 +67,9 @@ class ImageCache:
     def __init__(self, root: Path = DEFAULT_DIR, embedder=None, threshold: float = DEFAULT_THRESHOLD):
         self.root = Path(root)
         (self.root / "images").mkdir(parents=True, exist_ok=True)
-        self.db = sqlite3.connect(self.root / "index.sqlite")
+        # The web server calls in from worker threads; the lock serialises DB access.
+        self.db = sqlite3.connect(self.root / "index.sqlite", check_same_thread=False)
+        self._lock = threading.Lock()
         self.db.execute("""CREATE TABLE IF NOT EXISTS entries (
             prompt_hash TEXT NOT NULL, exact_key TEXT NOT NULL, prompt TEXT NOT NULL,
             embedding BLOB NOT NULL, file TEXT NOT NULL, gen_seconds REAL, created REAL,
@@ -87,6 +90,10 @@ class ImageCache:
         return sha(json.dumps(params, sort_keys=True))
 
     def get(self, prompt: str, exact_key: str) -> Hit | None:
+        with self._lock:
+            return self._get(prompt, exact_key)
+
+    def _get(self, prompt: str, exact_key: str) -> Hit | None:
         norm = normalize(prompt)
         row = self.db.execute(
             "SELECT file, prompt, gen_seconds FROM entries WHERE prompt_hash=? AND exact_key=?",
@@ -113,9 +120,10 @@ class ImageCache:
         path = self.root / "images" / name
         path.write_bytes(image)
         emb = self.embedder([norm])[0]
-        self.db.execute("INSERT OR REPLACE INTO entries VALUES (?,?,?,?,?,?,?)",
-                        (sha(norm), exact_key, prompt, emb.tobytes(), name, gen_seconds, time.time()))
-        self.db.commit()
+        with self._lock:
+            self.db.execute("INSERT OR REPLACE INTO entries VALUES (?,?,?,?,?,?,?)",
+                            (sha(norm), exact_key, prompt, emb.tobytes(), name, gen_seconds, time.time()))
+            self.db.commit()
         return path
 
     def _hit(self, file, kind, sim, matched, secs) -> Hit:
