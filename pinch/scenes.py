@@ -1,10 +1,12 @@
 """Turn a dialogue into comic panels, each with an image prompt.
 
-One LLM call per comic invents the setting and a fixed look for each character, plus a
-short scene description per panel. The final image prompt is then assembled in code:
-character descriptions are repeated verbatim in every panel (keeps characters
-consistent across images) and facial expressions come from our emotion classifier, not
-the LLM. Without an LLM configured, a template fallback keeps the pipeline working.
+People texting each other are in different places, so each panel shows one character
+(the "focus": whoever feels the most in that moment) in their own location. The camera
+shot, facial expression and default pose come from the emotion classifier; an optional
+LLM call invents the cast, their locations and a specific action per panel.
+
+Character descriptions are repeated verbatim in every panel to keep characters
+consistent. Without an LLM configured, templates keep the pipeline working.
 """
 import json
 import math
@@ -12,7 +14,8 @@ import re
 from dataclasses import dataclass, field
 
 from .llm import LLMClient, LLMError
-from .style import ART_STYLE, BUBBLE, EXPRESSION
+from .style import (ART_STYLE, BUBBLE, DEFAULT_CHARACTERS, DEFAULT_LOCATIONS, EXPRESSION,
+                    POSE, SHOT, SHOT_ALTERNATIVES)
 
 MAX_PANELS = 6
 
@@ -32,16 +35,25 @@ class Line:
 @dataclass
 class Panel:
     lines: list[Line]
-    scene: str
+    focus: str = "me"      # which character the camera shows
+    action: str = ""       # what they are doing
+    shot: str = "medium shot"
     prompt: str = ""
+
+    @property
+    def emotion(self) -> str:
+        return panel_emotion(self.lines, self.focus)
 
 
 @dataclass
 class Script:
-    setting: str
     characters: dict[str, str]
+    locations: dict[str, str]
     panels: list[Panel] = field(default_factory=list)
     source: str = "template"   # "llm" or "template"
+
+    def location(self, panel: Panel) -> str:
+        return self.locations.get(panel.focus, "")
 
 
 def group_panels(lines: list[Line], max_panels: int = MAX_PANELS) -> list[list[Line]]:
@@ -58,24 +70,42 @@ def panel_emotion(lines: list[Line], speaker: str) -> str:
     return max(felt, key=lambda l: l.confidence).emotion if felt else "neutral"
 
 
+def choose_focus(lines: list[Line], previous: str | None) -> str:
+    """Show whoever feels the most; if nobody does, alternate so both characters appear."""
+    felt = [l for l in lines if l.emotion != "neutral"]
+    if felt:
+        return max(felt, key=lambda l: l.confidence).speaker
+    speakers = [l.speaker for l in lines]
+    others = [s for s in speakers if s != previous]
+    return others[-1] if others else speakers[-1]
+
+
+def choose_shot(emotion: str, index: int, previous: str | None) -> str:
+    shot = "wide shot" if index == 0 and emotion == "neutral" else SHOT[emotion]
+    if shot == previous:  # never the same framing twice in a row
+        shot = next(s for s in SHOT_ALTERNATIVES if s != previous)
+    return shot
+
+
 def build_prompt(script: Script, panel: Panel) -> str:
     """Most important first: SD's CLIP text encoder ignores everything past 77 tokens,
-    so the action and characters come before the background setting."""
-    people = []
-    for speaker in sorted({l.speaker for l in panel.lines}):
-        look = script.characters.get(speaker, "a young person")
-        people.append(f"{look}, {EXPRESSION[panel_emotion(panel.lines, speaker)]}")
-    return ", ".join([ART_STYLE, panel.scene, *people, script.setting])
+    so shot, character and expression come before the action and the background."""
+    look = script.characters.get(panel.focus, "a young person")
+    return ", ".join([ART_STYLE, panel.shot, f"single character, {look}",
+                      EXPRESSION[panel.emotion], panel.action, script.location(panel)])
 
 
 SYSTEM = """You write scripts for short comics made from text-message conversations.
+The two people are texting, so they are in different places. Each panel shows ONE of them.
 Reply with JSON only, no prose, in exactly this shape:
-{"setting": "<one place where the story happens, 4-8 words>",
- "characters": {"me": "<fixed visual description, 6-10 words>", "them": "<same>"},
- "panels": ["<what is visibly happening in panel 1, 6-14 words>", ...]}
-Rules: one entry in "panels" per panel given, in order. Describe only what a camera
-would see: poses, actions, props, framing. No dialogue, no text, no speech bubbles in
-the descriptions. Messages may be in Hinglish or slang; infer the meaning."""
+{"characters": {"me": "<fixed visual look: age, gender, hair, clothes, 6-12 words>", "them": "<same>"},
+ "locations": {"me": "<where 'me' is while texting, 3-8 words>", "them": "<same>"},
+ "panels": [{"focus": "me" or "them", "action": "<what they visibly do, 4-10 words>"}, ...]}
+Rules: one entry in "panels" per panel given, in order. Pick as focus the person whose
+reaction matters most in that panel. The action must fit the emotion shown in brackets
+and the location, and should involve their phone or surroundings. Describe only what a
+camera sees: no dialogue, no text, no speech bubbles. Messages may be in Hinglish or
+slang; infer the meaning. Make the two characters look clearly different."""
 
 
 def _user_prompt(groups: list[list[Line]]) -> str:
@@ -86,45 +116,41 @@ def _user_prompt(groups: list[list[Line]]) -> str:
     return "\n".join(out)
 
 
-def _parse(raw: str, n_panels: int) -> tuple[str, dict, list[str]]:
+def _parse(raw: str, n_panels: int) -> tuple[dict, dict, list[tuple[str, str]]]:
     raw = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw.strip())
     data = json.loads(raw)
-    scenes = [str(s) for s in data["panels"]]
-    if len(scenes) != n_panels:
-        raise ValueError(f"expected {n_panels} panels, got {len(scenes)}")
-    chars = data["characters"]
-    return str(data["setting"]), {"me": str(chars["me"]), "them": str(chars["them"])}, scenes
-
-
-def _template(groups: list[list[Line]]) -> tuple[str, dict, list[str]]:
-    scenes = []
-    for group in groups:
-        speakers = {l.speaker for l in group}
-        who = "two friends texting each other" if len(speakers) > 1 else \
-              f"{'the main character' if 'me' in speakers else 'their friend'} looking at a phone"
-        scenes.append(f"{who}, medium shot")
-    chars = {"me": "young person with short dark hair, blue hoodie",
-             "them": "young person with curly hair, yellow t-shirt"}
-    return "a cozy bedroom at night lit by a phone screen", chars, scenes
+    panels = [(str(p["focus"]), str(p["action"])) for p in data["panels"]]
+    if len(panels) != n_panels:
+        raise ValueError(f"expected {n_panels} panels, got {len(panels)}")
+    chars, locs = data["characters"], data["locations"]
+    return ({"me": str(chars["me"]), "them": str(chars["them"])},
+            {"me": str(locs["me"]), "them": str(locs["them"])}, panels)
 
 
 def write_script(lines: list[Line], llm: LLMClient | None = None) -> Script:
     groups = group_panels(lines)
-    source = "template"
-    setting, chars, scenes = _template(groups)
+    script = Script(dict(DEFAULT_CHARACTERS), dict(DEFAULT_LOCATIONS))
+    directions: list[tuple[str, str]] = []
     if llm is not None and groups:
         try:
             raw = llm.chat([{"role": "system", "content": SYSTEM},
                             {"role": "user", "content": _user_prompt(groups)}])
-            setting, chars, scenes = _parse(raw, len(groups))
-            source = "llm"
+            script.characters, script.locations, directions = _parse(raw, len(groups))
+            script.source = "llm"
         except (LLMError, ValueError, KeyError, TypeError) as e:
             # Comic still renders with template prompts; surface why.
             print(f"[pinch] LLM scene writing failed, using template: {e}")
 
-    script = Script(setting, chars, source=source)
-    for group, scene in zip(groups, scenes):
-        panel = Panel(group, scene)
+    prev_focus = prev_shot = None
+    for i, group in enumerate(groups):
+        speakers = {l.speaker for l in group}
+        focus, action = directions[i] if directions else (None, "")
+        if focus not in speakers:  # LLM picked someone silent in this panel, or no LLM
+            focus = choose_focus(group, prev_focus)
+        panel = Panel(group, focus)
+        panel.action = action or POSE[panel.emotion]
+        panel.shot = choose_shot(panel.emotion, i, prev_shot)
         panel.prompt = build_prompt(script, panel)
         script.panels.append(panel)
+        prev_focus, prev_shot = focus, panel.shot
     return script
