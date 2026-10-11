@@ -42,7 +42,9 @@ Copy `.env.example` to `.env` and add an LLM key (optional; without one, prompts
 
 ```
 .venv\Scripts\python training\train_emotion.py      # train the emotion model on the GPU
-.venv\Scripts\python -m pinch path\to\screenshot.png
+.venv\Scripts\python -m pinch path\to\screenshot.png            # script as JSON
+.venv\Scripts\python -m pinch path\to\screenshot.png --images   # comic in outputs/
+.venv\Scripts\python -m uvicorn pinch.server:app --port 8000     # web app at localhost:8000
 .venv\Scripts\python -m pytest
 ```
 
