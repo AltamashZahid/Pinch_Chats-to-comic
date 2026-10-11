@@ -5,3 +5,10 @@ pytesseract
 fastapi
 uvicorn[standard]
 python-multipart
+torch
+transformers
+datasets
+scikit-learn
+accelerate
+diffusers
+httpx
