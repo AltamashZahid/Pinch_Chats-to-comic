@@ -4,12 +4,18 @@ Turn chat screenshots into AI-generated comic panels.
 
 ## Pipeline
 
-1. **Dialogue extraction** (done): detect chat bubbles with OpenCV, assign speakers by bubble
-   alignment, OCR each bubble with Tesseract.
-2. **Emotion classifier**: fine-tuned DistilBERT on GoEmotions; drives expressions and bubble style.
-3. **Scene prompts**: an LLM turns dialogue and emotions into panel descriptions.
+1. **Dialogue extraction** (done): OpenCV finds chat bubbles (background-colour masking,
+   fill-ratio and per-side colour filtering), speakers come from bubble alignment, and each
+   bubble is OCR'd with Tesseract. Low-confidence reads (emoji, kaomoji) are dropped.
+2. **Emotion classifier** (done): DistilBERT fine-tuned on GoEmotions, collapsed to 7 Ekman
+   emotions, compared against a TF-IDF + logistic regression baseline. See
+   `reports/emotion_metrics.json`.
+3. **Scene prompts** (done): one LLM call writes the setting, a fixed look per character and a
+   scene per panel. Image prompts are assembled in code, so character descriptions repeat
+   verbatim across panels and expressions come from the classifier. Falls back to templates
+   when no LLM is configured or the reply is malformed.
 4. **Image generation and caching**: diffusion backend with an embedding-similarity cache.
-5. **Comic layout**: compose panels and speech bubbles.
+5. **Comic layout**: compose panels and emotion-shaped speech bubbles.
 6. **Web app**: FastAPI backend and a simple frontend.
 
 ## Setup
@@ -17,14 +23,22 @@ Turn chat screenshots into AI-generated comic panels.
 ```
 python -m venv .venv
 .venv\Scripts\pip install -r requirements-dev.txt
+.venv\Scripts\pip install torch --index-url https://download.pytorch.org/whl/cu124
+.venv\Scripts\pip install transformers datasets scikit-learn accelerate
 ```
 
-Install [Tesseract](https://github.com/UB-Mannheim/tesseract/wiki). If it's not on PATH,
-set `PINCH_TESSERACT_CMD` to the full path of `tesseract.exe`.
+Install [Tesseract](https://github.com/UB-Mannheim/tesseract/wiki). If it isn't on PATH or in
+`D:\Tesseract-OCR`, set `PINCH_TESSERACT_CMD`.
+
+Copy `.env.example` to `.env` and add an LLM key (optional; without one, prompts come from templates).
 
 ## Usage
 
 ```
+.venv\Scripts\python training\train_emotion.py      # train the emotion model on the GPU
 .venv\Scripts\python -m pinch path\to\screenshot.png
 .venv\Scripts\python -m pytest
 ```
+
+Real screenshots for regression tests go in `samples/` with a `samples/expected.json`
+(git-ignored, since they contain real conversations).

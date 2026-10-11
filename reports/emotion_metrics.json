@@ -1,0 +1,21 @@
+{
+  "model": "distilbert-base-uncased",
+  "quick": false,
+  "epochs": 3,
+  "train_minutes": 9.7,
+  "test_macro_f1": 0.6406112836626887,
+  "test_accuracy": 0.7026972624798712,
+  "baseline_tfidf_logreg": {
+    "macro_f1": 0.551004025907571,
+    "accuracy": 0.6099033816425121
+  },
+  "per_class_f1": {
+    "anger": 0.5827505827505828,
+    "disgust": 0.5485714285714286,
+    "fear": 0.6238532110091743,
+    "joy": 0.8365039977943204,
+    "sadness": 0.6219739292364991,
+    "surprise": 0.6194174757281553,
+    "neutral": 0.651208360548661
+  }
+}

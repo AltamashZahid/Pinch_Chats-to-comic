@@ -147,12 +147,13 @@ def main() -> None:
         print(f"epoch {epoch}: val macro-F1 {val_f1:.3f}")
         if val_f1 > best_f1:
             best_f1 = val_f1
-            os.makedirs(args.out, exist_ok=True)
-            model.save_pretrained(args.out)
-            tokenizer.save_pretrained(args.out)
+            best_state = {k: v.detach().cpu().clone() for k, v in model.state_dict().items()}
 
-    # Evaluate the best checkpoint on the held-out test set.
-    model = AutoModelForSequenceClassification.from_pretrained(args.out).to(device)
+    # Evaluate the best epoch on the held-out test set, then save it.
+    model.load_state_dict(best_state)
+    os.makedirs(args.out, exist_ok=True)
+    model.save_pretrained(args.out)
+    tokenizer.save_pretrained(args.out)
     pred = predict(model, test_dl, device)
     report = classification_report(test[1], pred, target_names=LABELS, output_dict=True, zero_division=0)
     metrics = {
