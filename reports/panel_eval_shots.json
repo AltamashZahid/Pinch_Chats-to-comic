@@ -1,0 +1,124 @@
+{
+  "tag": "shots",
+  "panels": 17,
+  "clip_score": 31.15,
+  "diversity": 0.248,
+  "expression_acc": 0.588,
+  "render_minutes": 0.6,
+  "comics": [
+    {
+      "id": "deadline",
+      "script": "template",
+      "clip_score": 32.15,
+      "diversity": 0.274,
+      "wanted": [
+        "surprise",
+        "joy",
+        "anger"
+      ],
+      "clip_saw": [
+        "surprise",
+        "joy",
+        "neutral"
+      ]
+    },
+    {
+      "id": "promotion",
+      "script": "template",
+      "clip_score": 31.12,
+      "diversity": 0.168,
+      "wanted": [
+        "surprise",
+        "joy"
+      ],
+      "clip_saw": [
+        "surprise",
+        "joy"
+      ]
+    },
+    {
+      "id": "breakup",
+      "script": "template",
+      "clip_score": 32.81,
+      "diversity": 0.238,
+      "wanted": [
+        "sadness",
+        "sadness"
+      ],
+      "clip_saw": [
+        "neutral",
+        "neutral"
+      ]
+    },
+    {
+      "id": "horror",
+      "script": "template",
+      "clip_score": 29.76,
+      "diversity": 0.36,
+      "wanted": [
+        "surprise",
+        "fear"
+      ],
+      "clip_saw": [
+        "surprise",
+        "neutral"
+      ]
+    },
+    {
+      "id": "food",
+      "script": "template",
+      "clip_score": 29.93,
+      "diversity": 0.36,
+      "wanted": [
+        "surprise",
+        "disgust"
+      ],
+      "clip_saw": [
+        "surprise",
+        "neutral"
+      ]
+    },
+    {
+      "id": "gamer",
+      "script": "template",
+      "clip_score": 31.12,
+      "diversity": 0.168,
+      "wanted": [
+        "surprise",
+        "joy"
+      ],
+      "clip_saw": [
+        "surprise",
+        "joy"
+      ]
+    },
+    {
+      "id": "concert",
+      "script": "template",
+      "clip_score": 31.12,
+      "diversity": 0.168,
+      "wanted": [
+        "surprise",
+        "joy"
+      ],
+      "clip_saw": [
+        "surprise",
+        "joy"
+      ]
+    },
+    {
+      "id": "lost_dog",
+      "script": "template",
+      "clip_score": 30.71,
+      "diversity": 0.25,
+      "wanted": [
+        "fear",
+        "fear"
+      ],
+      "clip_saw": [
+        "surprise",
+        "neutral"
+      ]
+    }
+  ]
+}
