@@ -61,13 +61,16 @@ class ClipScorer:
     @torch.no_grad()
     def image(self, paths: list[Path]) -> np.ndarray:
         imgs = [Image.open(p).convert("RGB") for p in paths]
-        e = self.model.get_image_features(**self.proc(images=imgs, return_tensors="pt"))
+        pixels = self.proc(images=imgs, return_tensors="pt")["pixel_values"]
+        # Towers + projections directly: get_*_features changed return type in transformers 5.
+        e = self.model.visual_projection(self.model.vision_model(pixel_values=pixels).pooler_output)
         return torch.nn.functional.normalize(e, dim=-1).numpy()
 
     @torch.no_grad()
     def text(self, texts: list[str]) -> np.ndarray:
         enc = self.proc(text=texts, return_tensors="pt", padding=True, truncation=True, max_length=77)
-        e = self.model.get_text_features(**enc)
+        out = self.model.text_model(input_ids=enc["input_ids"], attention_mask=enc["attention_mask"])
+        e = self.model.text_projection(out.pooler_output)
         return torch.nn.functional.normalize(e, dim=-1).numpy()
 
 
