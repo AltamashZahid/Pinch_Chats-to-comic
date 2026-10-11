@@ -1,0 +1,39 @@
+from dataclasses import dataclass, asdict
+
+
+@dataclass(frozen=True)
+class Box:
+    x: int
+    y: int
+    w: int
+    h: int
+
+    @property
+    def cx(self) -> float:
+        return self.x + self.w / 2
+
+    @property
+    def right(self) -> int:
+        return self.x + self.w
+
+    @property
+    def bottom(self) -> int:
+        return self.y + self.h
+
+
+@dataclass
+class Bubble:
+    box: Box
+    side: str             # "left" or "right"
+    fill: tuple[int, int, int]  # BGR fill colour of the bubble
+    dark: bool            # True if the fill is dark (light text on dark bubble)
+
+
+@dataclass
+class Message:
+    speaker: str          # "A" (left side) or "B" (right side, usually the phone's owner)
+    text: str
+    box: Box
+
+    def to_dict(self) -> dict:
+        return asdict(self)
