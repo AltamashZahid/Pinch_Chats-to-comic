@@ -5,7 +5,7 @@ texting on a couch" vs "two friends on a sofa texting"). So each prompt is also 
 with a small sentence encoder, and a lookup returns a stored image when a previous prompt
 is close enough in meaning.
 
-Only the scene text (setting + action) is embedded. Everything that must match exactly
+Only the scene text (action + location) is embedded. Everything that must match exactly
 goes in a separate "exact key": art style, character looks, expressions, backend, model,
 size and seed. Embedding the full prompt doesn't work: the shared style/character
 boilerplate pushes unrelated scenes to cosine 0.87-0.93, overlapping with paraphrases.

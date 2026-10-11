@@ -3,7 +3,8 @@ import json
 import httpx
 
 from pinch.llm import LLMClient, LLMError
-from pinch.scenes import Line, group_panels, panel_emotion, write_script
+from pinch.scenes import (Line, choose_focus, choose_shot, group_panels, panel_emotion,
+                          write_script)
 
 LINES = [
     Line("them", "the deadline is today", "fear", 0.8),
@@ -13,10 +14,11 @@ LINES = [
 ]
 
 GOOD_REPLY = {
-    "setting": "a messy college dorm room late at night",
     "characters": {"me": "tall guy with glasses and a grey hoodie",
                    "them": "girl with a ponytail and a red jacket"},
-    "panels": ["girl typing on her phone on a bus", "guy jumps up from his desk, papers flying"],
+    "locations": {"me": "messy dorm room at night", "them": "crowded city bus"},
+    "panels": [{"focus": "me", "action": "jumps up from his desk, papers flying"},
+               {"focus": "them", "action": "laughing at her phone by the window"}],
 }
 
 
@@ -42,16 +44,55 @@ def test_panel_emotion_picks_strongest_non_neutral():
     assert panel_emotion(lines, "them") == "neutral"
 
 
-def test_llm_script_reuses_character_looks_and_classifier_expressions():
+def test_focus_is_the_most_emotional_speaker():
+    assert choose_focus(LINES[:2], None) == "me"  # surprise 0.9 beats fear 0.8
+
+
+def test_focus_alternates_when_nobody_feels_anything():
+    calm = [Line("me", "ok"), Line("them", "sure")]
+    assert choose_focus(calm, previous="them") == "me"
+    assert choose_focus(calm, previous="me") == "them"
+
+
+def test_shot_follows_emotion_and_never_repeats():
+    assert choose_shot("surprise", 1, None) == "extreme close-up"
+    assert choose_shot("neutral", 0, None) == "wide shot"
+    assert choose_shot("surprise", 2, previous="extreme close-up") != "extreme close-up"
+
+
+def test_template_script_shows_one_character_in_their_own_place():
+    script = write_script(LINES)
+    assert script.source == "template"
+    p1, p2 = script.panels
+    assert p1.focus == "me" and p2.focus == "them"
+    assert script.location(p1) != script.location(p2)
+    assert "extreme close-up" in p1.prompt and "jaw dropped" in p1.prompt  # surprise
+    assert "single character" in p1.prompt
+    assert script.characters["me"] in p1.prompt and script.characters["them"] not in p1.prompt
+
+
+def test_consecutive_template_panels_differ():
+    lines = [Line("me", "ok"), Line("them", "sure"), Line("me", "fine"), Line("them", "cool")]
+    a, b = write_script(lines).panels
+    assert a.prompt != b.prompt
+
+
+def test_llm_script_uses_its_cast_locations_and_actions():
     script = write_script(LINES, fake_llm(json.dumps(GOOD_REPLY)))
     assert script.source == "llm"
     p1, p2 = script.panels
-    # Same character description in every panel the character appears in.
-    assert "grey hoodie" in p1.prompt and "grey hoodie" in p2.prompt
-    # Expression comes from the classifier's emotion, not the LLM.
-    assert "shocked expression" in p1.prompt   # me: surprise (0.9) beats nothing else in panel 1
-    assert "scared expression" in p1.prompt    # them: fear
-    assert "papers flying" in p2.prompt
+    assert "grey hoodie" in p1.prompt and "messy dorm room" in p1.prompt
+    assert "papers flying" in p1.prompt
+    assert "red jacket" in p2.prompt and "crowded city bus" in p2.prompt
+    # Expression and shot still come from the classifier, not the LLM.
+    assert "shocked expression" in p1.prompt and "extreme close-up" in p1.prompt
+
+
+def test_llm_focus_on_silent_character_is_overridden():
+    reply = dict(GOOD_REPLY, panels=[{"focus": "nobody", "action": "x"},
+                                     {"focus": "them", "action": "y"}])
+    script = write_script(LINES, fake_llm(json.dumps(reply)))
+    assert script.panels[0].focus == "me"
 
 
 def test_code_fenced_json_is_accepted():
@@ -61,19 +102,13 @@ def test_code_fenced_json_is_accepted():
 
 def test_bad_llm_output_falls_back_to_template():
     assert write_script(LINES, fake_llm("sorry, I can't do that")).source == "template"
-    wrong_count = dict(GOOD_REPLY, panels=["only one"])
+    wrong_count = dict(GOOD_REPLY, panels=GOOD_REPLY["panels"][:1])
     assert write_script(LINES, fake_llm(json.dumps(wrong_count))).source == "template"
 
 
 def test_http_error_falls_back_to_template():
     script = write_script(LINES, fake_llm("", status=521))
     assert script.source == "template" and len(script.panels) == 2
-
-
-def test_no_llm_uses_template():
-    script = write_script(LINES)
-    assert script.source == "template"
-    assert all(p.prompt for p in script.panels)
 
 
 def test_llm_error_message_includes_status():
@@ -92,11 +127,11 @@ def test_bubble_style_follows_emotion():
 
 def test_prompt_fits_clip_window_with_longest_llm_output():
     """CLIP reads 77 tokens; at ~1.3 tokens/word the prompt must stay under ~58 words."""
-    long_reply = {"setting": " ".join(["word"] * 8),
-                  "characters": {"me": " ".join(["m"] * 10), "them": " ".join(["t"] * 10)},
-                  "panels": [" ".join(["scene"] * 14)] * 2}
+    long_reply = {"characters": {"me": " ".join(["m"] * 12), "them": " ".join(["t"] * 12)},
+                  "locations": {"me": " ".join(["place"] * 8), "them": " ".join(["place"] * 8)},
+                  "panels": [{"focus": "me", "action": " ".join(["act"] * 10)},
+                             {"focus": "them", "action": " ".join(["act"] * 10)}]}
     script = write_script(LINES, fake_llm(json.dumps(long_reply)))
     for p in script.panels:
-        words = p.prompt.replace(",", " ").split()
-        assert len(words) <= 64
-        assert p.prompt.index("scene") < p.prompt.index("word")  # action before setting
+        assert len(p.prompt.replace(",", " ").split()) <= 58
+        assert p.prompt.index("act") < p.prompt.index("place")  # action before location

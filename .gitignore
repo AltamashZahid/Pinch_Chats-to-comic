@@ -8,3 +8,5 @@ outputs/
 models/
 data/raw/
 samples/
+eval/cache/
+eval/out/

@@ -58,9 +58,11 @@ def make_comic(data: bytes) -> dict:
     return {
         "comic_url": f"/outputs/{name}",
         "script_source": script.source,
-        "setting": script.setting,
+        "locations": script.locations,
         "panels": [{
             "source": r.source,
+            "focus": r.panel.focus,
+            "shot": r.panel.shot,
             "seconds": round(r.seconds, 2),
             "prompt": r.panel.prompt,
             "lines": [{"speaker": l.speaker, "text": l.text, "emotion": l.emotion,

@@ -1,0 +1,43 @@
+[
+  {"id": "deadline", "lines": [
+    ["them", "the report is due in one hour"],
+    ["me", "WHAT?? I thought it was next week"],
+    ["me", "I'm so dead, I haven't even started"],
+    ["them", "lol good luck, I'm already done"],
+    ["me", "I hate you so much right now"]]},
+  {"id": "promotion", "lines": [
+    ["me", "guess who just got promoted!!"],
+    ["them", "no way, are you serious?"],
+    ["me", "yes!! team lead starting monday"],
+    ["them", "I'm so proud of you, drinks on me tonight"]]},
+  {"id": "breakup", "lines": [
+    ["them", "she left me today"],
+    ["me", "oh no, I'm so sorry"],
+    ["them", "I can't stop crying, I really thought it would work"],
+    ["me", "I'm coming over right now"]]},
+  {"id": "horror", "lines": [
+    ["them", "did you hear that noise outside?"],
+    ["me", "what noise"],
+    ["them", "someone is knocking on my window and I live on the third floor"],
+    ["me", "that is terrifying, call the police"]]},
+  {"id": "food", "lines": [
+    ["me", "I tried the new sushi place"],
+    ["them", "how was it?"],
+    ["me", "disgusting, the fish smelled rotten"],
+    ["them", "ew gross, never going there"]]},
+  {"id": "gamer", "lines": [
+    ["them", "you rage quit again?"],
+    ["me", "my teammate stole my kill AGAIN"],
+    ["me", "so annoying, I'm uninstalling this game"],
+    ["them", "you said that yesterday haha"]]},
+  {"id": "concert", "lines": [
+    ["me", "I got front row tickets!!"],
+    ["them", "WAIT what? how??"],
+    ["me", "won them on the radio, you're coming with me"],
+    ["them", "best day ever, I love you"]]},
+  {"id": "lost_dog", "lines": [
+    ["them", "have you seen max? he ran out this morning"],
+    ["me", "no, I'm so worried, I'll check the park"],
+    ["me", "found him! he was sleeping under the slide"],
+    ["them", "thank god, I was so scared"]]}
+]

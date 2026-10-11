@@ -36,7 +36,7 @@ def test_bubbles_stack_downward_and_stay_inside():
 def _panel(tmp_path, i):
     path = tmp_path / f"p{i}.png"
     Image.new("RGB", (512, 512), (40 * i, 90, 140)).save(path)
-    return RenderedPanel(Panel([Line("me", "hi", "surprise", 1.0)], "scene"), path, "generated", 0.0)
+    return RenderedPanel(Panel([Line("me", "hi", "surprise", 1.0)], "me"), path, "generated", 0.0)
 
 
 def test_page_size_and_centred_last_row(tmp_path):

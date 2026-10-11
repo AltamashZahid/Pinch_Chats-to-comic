@@ -6,7 +6,7 @@ from pathlib import Path
 
 from .cache import ImageCache, sha
 from .imagegen import ImageRequest
-from .scenes import Panel, Script, panel_emotion
+from .scenes import Panel, Script
 from .style import ART_STYLE
 
 
@@ -25,13 +25,17 @@ def cast_seed(script: Script) -> int:
 
 def panel_key(cache: ImageCache, backend, script: Script, panel: Panel,
               seed: int, width: int, height: int) -> str:
-    speakers = sorted({l.speaker for l in panel.lines})
+    """Everything that must match exactly for a cached image to be reused."""
     return cache.exact_key(
         backend=backend.name, model=backend.model, width=width, height=height, seed=seed,
-        style=ART_STYLE,
-        characters={s: script.characters.get(s, "") for s in speakers},
-        expressions={s: panel_emotion(panel.lines, s) for s in speakers},
+        style=ART_STYLE, shot=panel.shot,
+        character=script.characters.get(panel.focus, ""), expression=panel.emotion,
     )
+
+
+def scene_text(script: Script, panel: Panel) -> str:
+    """The free-text part compared by embedding similarity: what happens, and where."""
+    return f"{panel.action}, {script.location(panel)}"
 
 
 def render_panels(script: Script, backend, cache: ImageCache,
@@ -39,15 +43,15 @@ def render_panels(script: Script, backend, cache: ImageCache,
     seed = cast_seed(script)
     out = []
     for panel in script.panels:
-        scene_text = f"{script.setting}, {panel.scene}"
+        text = scene_text(script, panel)
         key = panel_key(cache, backend, script, panel, seed, width, height)
         start = time.perf_counter()
-        hit = cache.get(scene_text, key)
+        hit = cache.get(text, key)
         if hit:
             out.append(RenderedPanel(panel, hit.path, hit.kind, time.perf_counter() - start))
             continue
         image = backend.generate(ImageRequest(panel.prompt, seed, width, height))
         took = time.perf_counter() - start
-        path = cache.put(scene_text, key, image, gen_seconds=took)
+        path = cache.put(text, key, image, gen_seconds=took)
         out.append(RenderedPanel(panel, path, "generated", took))
     return out
