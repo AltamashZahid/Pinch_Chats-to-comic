@@ -1,0 +1,59 @@
+{
+  "lora": "D:\\Pinch\\models\\lora\\expressions",
+  "scale": 0.5,
+  "variants": {
+    "base": {
+      "correct": 28,
+      "n": 56,
+      "rate": 0.5,
+      "ci95": [
+        0.373,
+        0.627
+      ]
+    },
+    "lora": {
+      "correct": 32,
+      "n": 56,
+      "rate": 0.571,
+      "ci95": [
+        0.441,
+        0.692
+      ]
+    }
+  },
+  "per_emotion": {
+    "anger": {
+      "base": "4/8",
+      "lora": "5/8"
+    },
+    "disgust": {
+      "base": "2/8",
+      "lora": "2/8"
+    },
+    "fear": {
+      "base": "4/8",
+      "lora": "3/8"
+    },
+    "joy": {
+      "base": "8/8",
+      "lora": "8/8"
+    },
+    "neutral": {
+      "base": "4/8",
+      "lora": "6/8"
+    },
+    "sadness": {
+      "base": "3/8",
+      "lora": "4/8"
+    },
+    "surprise": {
+      "base": "3/8",
+      "lora": "4/8"
+    }
+  },
+  "mcnemar": {
+    "only_base_right": 3,
+    "only_lora_right": 7,
+    "p_value": 0.3438
+  }
+}
