@@ -1,0 +1,28 @@
+{
+  "labeller": "Claude, blind to the requested emotion (shuffled). Art style partly reveals the model, so blinding to the variant is imperfect.",
+  "labels": {
+    "000": "neutral", "001": "surprise", "002": "neutral", "003": "joy", "004": "joy",
+    "005": "fear", "006": "anger", "007": "anger", "008": "surprise", "009": "anger",
+    "010": "neutral", "011": "fear", "012": "sadness", "013": "sadness", "014": "joy",
+    "015": "surprise", "016": "joy", "017": "fear", "018": "fear", "019": "neutral",
+    "020": "fear", "021": "sadness", "022": "disgust", "023": "sadness", "024": "anger",
+    "025": "disgust", "026": "neutral", "027": "fear", "028": "anger", "029": "fear",
+    "030": "joy", "031": "surprise", "032": "neutral", "033": "fear", "034": "neutral",
+    "035": "surprise", "036": "joy", "037": "anger", "038": "neutral", "039": "joy",
+    "040": "neutral", "041": "joy", "042": "surprise", "043": "fear", "044": "neutral",
+    "045": "fear", "046": "neutral", "047": "joy", "048": "anger", "049": "anger",
+    "050": "joy", "051": "sadness", "052": "anger", "053": "neutral", "054": "neutral",
+    "055": "neutral", "056": "surprise", "057": "surprise", "058": "disgust", "059": "neutral",
+    "060": "anger", "061": "anger", "062": "neutral", "063": "neutral", "064": "disgust",
+    "065": "neutral", "066": "neutral", "067": "sadness", "068": "anger", "069": "sadness",
+    "070": "surprise", "071": "neutral", "072": "surprise", "073": "anger", "074": "joy",
+    "075": "anger", "076": "joy", "077": "surprise", "078": "joy", "079": "joy",
+    "080": "surprise", "081": "fear", "082": "fear", "083": "neutral", "084": "neutral",
+    "085": "joy", "086": "anger", "087": "anger", "088": "anger", "089": "sadness",
+    "090": "surprise", "091": "joy", "092": "anger", "093": "surprise", "094": "sadness",
+    "095": "joy", "096": "sadness", "097": "disgust", "098": "joy", "099": "anger",
+    "100": "anger", "101": "disgust", "102": "anger", "103": "surprise", "104": "anger",
+    "105": "sadness", "106": "neutral", "107": "neutral", "108": "joy", "109": "neutral",
+    "110": "joy", "111": "fear"
+  }
+}
