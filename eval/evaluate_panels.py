@@ -86,9 +86,13 @@ class ClipScorer:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--tag", required=True, help="name for this run, e.g. baseline, shots, lora")
+    ap.add_argument("--backend", help="image backend to use (default: PINCH_IMAGE_BACKEND)")
     args = ap.parse_args()
 
     convos = json.loads((ROOT / "eval" / "conversations.json").read_text(encoding="utf-8"))
+    if args.backend:
+        import os
+        os.environ["PINCH_IMAGE_BACKEND"] = args.backend
     backend = backend_from_env()
     cache = ImageCache(ROOT / "eval" / "cache")
     llm = LLMClient.from_env()
