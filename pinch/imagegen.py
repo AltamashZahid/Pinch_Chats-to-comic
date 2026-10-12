@@ -11,6 +11,7 @@ import os
 import textwrap
 import urllib.parse
 from dataclasses import dataclass
+from pathlib import Path
 
 import httpx
 from PIL import Image, ImageDraw, ImageFont
@@ -41,20 +42,32 @@ class LocalTurboBackend:
     Adversarial diffusion distillation lets it make a usable 512x512 image in 1-4 steps
     with no classifier-free guidance, so it fits a 4 GB laptop GPU (~3 GB peak) at ~1 s/image.
     Note: SD-Turbo's licence is non-commercial.
+
+    If a LoRA from training/train_lora.py exists (PINCH_LORA, default models/lora/expressions;
+    set PINCH_LORA=none to disable) it is loaded and its name becomes part of `model`, so
+    cached images made with and without it never mix.
     """
     name = "local"
-    model = "stabilityai/sd-turbo"
+    base = "stabilityai/sd-turbo"
 
-    def __init__(self, steps: int = 4):
+    def __init__(self, steps: int = 4, lora: str | None = None, lora_scale: float | None = None):
         self.steps = steps
         self._pipe = None
+        default = Path(__file__).resolve().parent.parent / "models" / "lora" / "expressions"
+        choice = lora if lora is not None else os.environ.get("PINCH_LORA", str(default))
+        self.lora = None if choice.lower() == "none" or not Path(choice).exists() else Path(choice)
+        self.lora_scale = lora_scale if lora_scale is not None else float(os.environ.get("PINCH_LORA_SCALE", "1.0"))
+        self.model = self.base if self.lora is None else f"{self.base}+{self.lora.name}@{self.lora_scale}"
 
     def _load(self):
         import torch
         from diffusers import AutoPipelineForText2Image
         if not torch.cuda.is_available():
             raise ImageGenError("local backend needs a CUDA GPU; set PINCH_IMAGE_BACKEND to another backend")
-        pipe = AutoPipelineForText2Image.from_pretrained(self.model, torch_dtype=torch.float16, variant="fp16")
+        pipe = AutoPipelineForText2Image.from_pretrained(self.base, torch_dtype=torch.float16, variant="fp16")
+        if self.lora is not None:
+            pipe.load_lora_weights(str(self.lora))
+            pipe.fuse_lora(lora_scale=self.lora_scale)
         pipe.to("cuda")
         pipe.set_progress_bar_config(disable=True)
         self._torch, self._pipe = torch, pipe

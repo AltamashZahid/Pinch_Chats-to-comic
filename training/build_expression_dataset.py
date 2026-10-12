@@ -1,45 +1,29 @@
-"""Build a LoRA training set of comic panels whose facial expression is clearly correct.
+"""Build a curated LoRA training set of comic faces that clearly show each emotion.
 
-    python training/build_expression_dataset.py --per-emotion 200 --keep 60
-    python training/build_expression_dataset.py --probe          # hit rate per emotion only
+Self-training with a human-style curator (generate -> curate -> fine-tune):
 
-Self-training (generate -> filter -> fine-tune): SD-Turbo draws many candidates per
-emotion with varied characters, shots and places; a CLIP judge keeps only those where the
-intended expression clearly wins. A LoRA trained on the kept images learns to produce
-those expressions more reliably.
+    python training/build_expression_dataset.py generate --per-emotion 48
+        SD-Turbo draws candidates per emotion with varied characters, shots and places,
+        using the same prompt format as the app. Writes data/expressions/candidates/ and
+        contact sheets data/expressions/sheets/<emotion>_<n>.png for review.
 
-The filter judge (CLIP ViT-B/16) is deliberately a different model from the evaluation
-judge (ViT-L/14 in eval/evaluate_panels.py), so the LoRA isn't graded by the same model
-that picked its training data.
+    python training/build_expression_dataset.py finalize data/expressions/keep.json
+        keep.json maps emotion -> list of candidate numbers that clearly show it.
+        Copies the keepers to data/expressions/train/ and writes train/metadata.jsonl in
+        the {"file_name", "text"} format train_lora.py reads.
 
-Output: data/expressions/<emotion>/<n>.png plus data/expressions/metadata.jsonl in the
-{"file_name", "text"} format diffusers' LoRA training script expects.
+Automatic judges were tried as the filter and rejected: CLIP ViT-B/16 and ViT-L/14 and a
+Qwen VLM agreed with blind labels only 47-58% of the time (reports/judge_agreement.json).
 """
 import argparse
-import io
 import json
 import random
+import shutil
 import sys
-from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
-from pinch.pipeline import load_env  # noqa: E402
-
-load_env()
-
-import torch  # noqa: E402
-from PIL import Image  # noqa: E402
-
-from pinch.emotions import LABELS  # noqa: E402
-from pinch.imagegen import ImageRequest, LocalTurboBackend  # noqa: E402
-from pinch.style import ART_STYLE, EXPRESSION, POSE  # noqa: E402
-
-FILTER_MODEL = "openai/clip-vit-base-patch16"
-FACE = {"anger": "angry", "disgust": "disgusted", "fear": "scared", "joy": "happy",
-        "sadness": "sad", "surprise": "shocked", "neutral": "calm"}
-TRIGGER = "pinchface"  # rare token the LoRA binds the "clear expression" look to
 
 LOOKS = [
     "young man with short black hair and a blue hoodie",
@@ -52,82 +36,95 @@ LOOKS = [
     "girl with glasses, ponytail and a striped sweater",
     "man with long hair in a bun and a leather jacket",
     "woman with hijab and a purple cardigan",
+    "chubby man with a mustache and a brown vest",
+    "old woman with grey curly hair and pearl necklace",
 ]
-SHOTS = ["close-up", "extreme close-up", "close-up portrait", "medium close-up"]
-PLACES = ["bedroom at night", "coffee shop", "city street", "office desk", "kitchen",
-          "bus seat", "living room couch", "park bench", "school hallway", "train station"]
+SHOTS = ["close-up", "extreme close-up", "close-up portrait", "medium close-up", "medium shot"]
+PLACES = ["bedroom at night", "coffee shop", "city street", "office", "kitchen", "bus",
+          "living room", "park", "school hallway", "train station", "restaurant", "beach"]
+OUT = ROOT / "data" / "expressions"
 
 
 def caption(emotion: str, look: str, shot: str, place: str) -> str:
-    return ", ".join([f"{TRIGGER} {ART_STYLE}", shot, f"single character, {look}",
-                      EXPRESSION[emotion], POSE[emotion], place])
+    """Same structure the app's build_prompt() produces, so the LoRA trains on what it will see."""
+    from pinch.style import ART_STYLE, EXPRESSION, STORY_POSE
+    return ", ".join([ART_STYLE, shot, look, EXPRESSION[emotion], STORY_POSE[emotion], place])
 
 
-class Judge:
-    def __init__(self):
-        from transformers import CLIPModel, CLIPProcessor
-        self.model = CLIPModel.from_pretrained(FILTER_MODEL).eval()
-        self.proc = CLIPProcessor.from_pretrained(FILTER_MODEL)
-        enc = self.proc(text=[f"a comic drawing of a person with a {FACE[l]} face" for l in LABELS],
-                        return_tensors="pt", padding=True)
-        with torch.no_grad():
-            t = self.model.text_projection(self.model.text_model(
-                input_ids=enc["input_ids"], attention_mask=enc["attention_mask"]).pooler_output)
-        self.text = torch.nn.functional.normalize(t, dim=-1)
+def generate(per_emotion: int, seed: int, emotions: list[str] | None = None, start: int = 0) -> None:
+    from pinch.pipeline import load_env
+    load_env()
+    import torch
+    from PIL import Image, ImageDraw, ImageFont
+    from pinch.emotions import LABELS
+    from pinch.imagegen import LocalTurboBackend
 
-    @torch.no_grad()
-    def probs(self, img: Image.Image) -> torch.Tensor:
-        px = self.proc(images=[img], return_tensors="pt")["pixel_values"]
-        e = self.model.visual_projection(self.model.vision_model(pixel_values=px).pooler_output)
-        e = torch.nn.functional.normalize(e, dim=-1)
-        return (100 * e @ self.text.T).softmax(-1)[0]
+    rng = random.Random(seed)
+    backend = LocalTurboBackend()
+    backend._load()
+    cand, sheets = OUT / "candidates", OUT / "sheets"
+    cand.mkdir(parents=True, exist_ok=True)
+    sheets.mkdir(parents=True, exist_ok=True)
+    font = ImageFont.truetype(r"C:\Windows\Fonts\arialbd.ttf", 24)
+    meta_file = OUT / "candidates.json"
+    meta = json.loads(meta_file.read_text()) if meta_file.exists() else {}
+    for emotion in emotions or LABELS:
+        imgs = []
+        for k in range(start, start + per_emotion):
+            text = caption(emotion, rng.choice(LOOKS), rng.choice(SHOTS), rng.choice(PLACES))
+            g = torch.Generator("cuda").manual_seed(rng.randrange(2**31))
+            img = backend._pipe(text, num_inference_steps=4, guidance_scale=0.0, generator=g,
+                                width=512, height=512).images[0]
+            name = f"{emotion}_{k:03d}.png"
+            img.save(cand / name)
+            meta[name] = {"emotion": emotion, "text": text}
+            imgs.append(img)
+        for s in range(0, len(imgs), 24):  # 6x4 sheets with candidate numbers
+            sheet = Image.new("RGB", (6 * 220, 4 * 245), "white")
+            d = ImageDraw.Draw(sheet)
+            for j, img in enumerate(imgs[s:s + 24]):
+                x, y = (j % 6) * 220, (j // 6) * 245
+                sheet.paste(img.resize((210, 210)), (x + 5, y + 30))
+                d.text((x + 8, y + 2), f"{start + s + j}", font=font, fill="black")
+            sheet.save(sheets / f"{emotion}_{(start + s) // 24}.png")
+        print(f"generated {emotion}")
+    meta_file.write_text(json.dumps(meta, indent=1))
+
+
+def finalize(keep_file: Path) -> None:
+    meta = json.loads((OUT / "candidates.json").read_text())
+    keep = json.loads(Path(keep_file).read_text())
+    train = OUT / "train"
+    if train.exists():
+        shutil.rmtree(train)
+    train.mkdir(parents=True)
+    rows = []
+    for emotion, numbers in keep.items():
+        for n in numbers:
+            name = f"{emotion}_{n:03d}.png"
+            shutil.copy(OUT / "candidates" / name, train / name)
+            rows.append({"file_name": name, "text": meta[name]["text"], "emotion": emotion})
+    with open(train / "metadata.jsonl", "w", encoding="utf-8") as f:
+        f.writelines(json.dumps(r) + "\n" for r in rows)
+    counts = {e: len(v) for e, v in keep.items()}
+    print(f"{len(rows)} training images: {counts}")
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--per-emotion", type=int, default=200, help="candidates generated per emotion")
-    ap.add_argument("--keep", type=int, default=60, help="max images kept per emotion")
-    ap.add_argument("--min-prob", type=float, default=0.35, help="judge probability needed to keep")
-    ap.add_argument("--probe", action="store_true", help="20 candidates per emotion, report hit rate")
-    ap.add_argument("--out", default=str(ROOT / "data" / "expressions"))
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    g = sub.add_parser("generate")
+    g.add_argument("--per-emotion", type=int, default=48)
+    g.add_argument("--seed", type=int, default=11)
+    g.add_argument("--emotions", nargs="*", help="only these emotions (default: all)")
+    g.add_argument("--start", type=int, default=0, help="first candidate number, to add to an existing set")
+    f = sub.add_parser("finalize")
+    f.add_argument("keep_file")
     args = ap.parse_args()
-    if args.probe:
-        args.per_emotion = 20
-
-    rng = random.Random(0)
-    backend, judge = LocalTurboBackend(), Judge()
-    out = Path(args.out)
-    rows, stats = [], {}
-    for emotion in LABELS:
-        scored = []
-        for _ in range(args.per_emotion):
-            look, shot, place = rng.choice(LOOKS), rng.choice(SHOTS), rng.choice(PLACES)
-            text = caption(emotion, look, shot, place)
-            data = backend.generate(ImageRequest(text.replace(f"{TRIGGER} ", ""), rng.randrange(2**31)))
-            img = Image.open(io.BytesIO(data)).convert("RGB")
-            p = judge.probs(img)
-            scored.append((float(p[LABELS.index(emotion)]), LABELS[int(p.argmax())], img, text))
-
-        hits = [s for s in scored if s[1] == emotion and s[0] >= args.min_prob]
-        stats[emotion] = {"generated": len(scored), "passed": len(hits),
-                          "hit_rate": round(len(hits) / len(scored), 3),
-                          "judge_saw": dict(Counter(s[1] for s in scored).most_common(3))}
-        print(f"{emotion:9} {len(hits):3}/{len(scored)} passed  judge saw {stats[emotion]['judge_saw']}")
-        if args.probe:
-            continue
-        hits.sort(key=lambda s: -s[0])
-        (out / emotion).mkdir(parents=True, exist_ok=True)
-        for i, (prob, _, img, text) in enumerate(hits[:args.keep]):
-            name = f"{emotion}/{i:03d}.png"
-            img.save(out / name)
-            rows.append({"file_name": name, "text": text, "emotion": emotion, "judge_prob": round(prob, 3)})
-
-    if not args.probe:
-        with open(out / "metadata.jsonl", "w", encoding="utf-8") as f:
-            for r in rows:
-                f.write(json.dumps(r) + "\n")
-        (out / "stats.json").write_text(json.dumps(stats, indent=2))
-        print(f"kept {len(rows)} images in {out}")
+    if args.cmd == "generate":
+        generate(args.per_emotion, args.seed, args.emotions, args.start)
+    else:
+        finalize(Path(args.keep_file))
 
 
 if __name__ == "__main__":

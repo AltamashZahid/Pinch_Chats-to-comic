@@ -23,7 +23,7 @@ from PIL import Image, ImageDraw, ImageFont  # noqa: E402
 
 from pinch.emotions import LABELS  # noqa: E402
 from pinch.imagegen import LocalTurboBackend  # noqa: E402
-from training.build_expression_dataset import LOOKS, PLACES, SHOTS, TRIGGER, caption  # noqa: E402
+from training.build_expression_dataset import LOOKS, PLACES, SHOTS, caption  # noqa: E402
 
 OUT = ROOT / "eval" / "judge_set"
 PER_EMOTION = 10
@@ -41,7 +41,6 @@ def main() -> None:
         for k in range(PER_EMOTION):
             s = SETTINGS[k % 2]
             prompt = caption(emotion, rng.choice(LOOKS), rng.choice(SHOTS), rng.choice(PLACES))
-            prompt = prompt.replace(f"{TRIGGER} ", "")
             g = torch.Generator("cuda").manual_seed(rng.randrange(2**31))
             img = backend._pipe(prompt, negative_prompt=s["neg"], num_inference_steps=s["steps"],
                                 guidance_scale=s["cfg"], generator=g, width=512, height=512).images[0]
