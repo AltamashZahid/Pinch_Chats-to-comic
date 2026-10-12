@@ -41,7 +41,10 @@ FONT = r"C:\Windows\Fonts\seguiemj.ttf"
 GALLERY_DIR = Path(__file__).resolve().parent.parent / "data" / "emoji_gallery"
 CLIP_MODEL = "openai/clip-vit-large-patch14"  # ViT-L: 86% vs 71% emotion acc on unseen styles
 GRAY = (128, 128, 128)
-MIN_SIMILARITY = 0.80  # below this a blob isn't treated as an emoji (avatars, photos)
+MIN_DENSITY = 0.5       # share of a candidate box that must be saturated colour
+# Detection (colour density + position) decides whether something is an emoji; recognition
+# only picks which one. Real in-bubble emoji matched at 0.78-0.98, so keep this low.
+MIN_SIMILARITY = 0.70
 
 
 def emoji_in_text(text: str) -> list[str]:
@@ -75,8 +78,11 @@ def _blobs(mask: np.ndarray, min_side: int) -> list[tuple[int, int, int, int]]:
     merged = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, np.ones((k, k), np.uint8))
     n, _, stats, _ = cv2.connectedComponentsWithStats(merged)
     out = []
-    for x, y, w, h, area in stats[1:]:
-        if min(w, h) >= min_side and 0.55 <= w / h <= 1.8 and area >= 0.3 * w * h:
+    for x, y, w, h, _ in stats[1:]:
+        # Solidly coloured: real emoji measured 0.76 of the box; ClearType colour fringes on
+        # plain text (Windows screenshots) measured <= 0.34.
+        density = (mask[y:y + h, x:x + w] > 0).mean()
+        if min(w, h) >= min_side and 0.55 <= w / h <= 1.8 and density >= MIN_DENSITY:
             out.append((int(x), int(y), int(w), int(h)))
     return sorted(out, key=lambda b: b[0])
 
@@ -105,7 +111,12 @@ def crop_on_gray(crop: np.ndarray, mask: np.ndarray) -> np.ndarray:
     cv2.drawContours(filled, cs, -1, 255, cv2.FILLED)  # keep eyes/mouth inside the face
     out = np.full_like(crop, GRAY[0])
     out[filled > 0] = crop[filled > 0]
-    return out
+    # Same framing as the gallery (glyph ~68% of a square frame), upscaled smoothly.
+    h, w = out.shape[:2]
+    side = int(max(h, w) / 0.68)
+    framed = np.full((side, side, 3), GRAY[0], np.uint8)
+    framed[(side - h) // 2:(side - h) // 2 + h, (side - w) // 2:(side - w) // 2 + w] = out
+    return cv2.resize(framed, (224, 224), interpolation=cv2.INTER_CUBIC)
 
 
 # --- recognition --------------------------------------------------------------------------
