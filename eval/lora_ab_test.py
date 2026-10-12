@@ -39,7 +39,7 @@ TEST_PLACES = ["airport gate", "rainy rooftop", "hospital waiting room", "superm
 TEST_SHOTS = ["close-up", "medium close-up", "medium shot"]
 
 
-def generate(lora: Path, seed: int) -> None:
+def generate(lora: Path, seed: int, scale: float) -> None:
     from pinch.pipeline import load_env
     load_env()
     import torch
@@ -54,7 +54,7 @@ def generate(lora: Path, seed: int) -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     images = []
     for variant, lora_arg in (("base", "none"), ("lora", str(lora))):
-        backend = LocalTurboBackend(lora=lora_arg)
+        backend = LocalTurboBackend(lora=lora_arg, lora_scale=scale)
         backend._load()
         for p, (emotion, text, s) in enumerate(prompts):
             g = torch.Generator("cuda").manual_seed(s)
@@ -79,7 +79,7 @@ def generate(lora: Path, seed: int) -> None:
             sheet.paste(it["img"].resize((250, 250)), (x + 5, y + 30))
             d.text((x + 8, y + 2), f"{n + j:03d}", font=font, fill="black")
         sheet.save(OUT / f"sheet_{n // 20}.png")
-    (OUT / "items.json").write_text(json.dumps(items, indent=1))
+    (OUT / "items.json").write_text(json.dumps({"lora": str(lora), "scale": scale, "items": items}, indent=1))
     print(f"{len(images)} images in {len(range(0, len(images), 20))} sheets")
 
 
@@ -94,11 +94,12 @@ def mcnemar_exact(b: int, c: int) -> float:
 
 def score(labels_file: Path) -> None:
     from eval.evaluate_panels import wilson
-    items = {it["id"]: it for it in json.loads((OUT / "items.json").read_text())}
+    run = json.loads((OUT / "items.json").read_text())
+    items = {it["id"]: it for it in run["items"]}
     labels = json.loads(Path(labels_file).read_text())["labels"]
     hit = {i: labels[i] == items[i]["emotion"] for i in labels}
 
-    report = {"variants": {}, "per_emotion": {}}
+    report = {"lora": run["lora"], "scale": run["scale"], "variants": {}, "per_emotion": {}}
     for v in ("base", "lora"):
         ids = [i for i in hit if items[i]["variant"] == v]
         k = sum(hit[i] for i in ids)
@@ -129,11 +130,13 @@ def main() -> None:
     g = sub.add_parser("generate")
     g.add_argument("--lora", default=str(ROOT / "models" / "lora" / "expressions"))
     g.add_argument("--seed", type=int, default=2024)
+    g.add_argument("--scale", type=float, default=0.5,
+                   help="LoRA strength; 1.0 blurs 4-step SD-Turbo output (fine-tuning erodes its distillation)")
     s = sub.add_parser("score")
     s.add_argument("labels")
     args = ap.parse_args()
     if args.cmd == "generate":
-        generate(Path(args.lora), args.seed)
+        generate(Path(args.lora), args.seed, args.scale)
     else:
         score(Path(args.labels))
 

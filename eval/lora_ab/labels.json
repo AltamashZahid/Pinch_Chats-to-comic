@@ -1,0 +1,28 @@
+{
+  "labeller": "Claude, blind (shuffled; variant and requested emotion hidden). LoRA scale 0.5, seed 7319.",
+  "labels": {
+    "000": "neutral", "001": "anger", "002": "neutral", "003": "disgust", "004": "surprise",
+    "005": "anger", "006": "disgust", "007": "anger", "008": "fear", "009": "fear",
+    "010": "joy", "011": "joy", "012": "joy", "013": "neutral", "014": "neutral",
+    "015": "joy", "016": "fear", "017": "anger", "018": "fear", "019": "neutral",
+    "020": "disgust", "021": "sadness", "022": "disgust", "023": "disgust", "024": "fear",
+    "025": "sadness", "026": "joy", "027": "sadness", "028": "surprise", "029": "disgust",
+    "030": "neutral", "031": "joy", "032": "anger", "033": "anger", "034": "neutral",
+    "035": "joy", "036": "anger", "037": "anger", "038": "joy", "039": "disgust",
+    "040": "surprise", "041": "neutral", "042": "surprise", "043": "surprise", "044": "surprise",
+    "045": "anger", "046": "fear", "047": "fear", "048": "anger", "049": "joy",
+    "050": "surprise", "051": "neutral", "052": "joy", "053": "neutral", "054": "neutral",
+    "055": "disgust", "056": "disgust", "057": "fear", "058": "fear", "059": "joy",
+    "060": "disgust", "061": "fear", "062": "surprise", "063": "neutral", "064": "anger",
+    "065": "disgust", "066": "neutral", "067": "fear", "068": "neutral", "069": "anger",
+    "070": "neutral", "071": "disgust", "072": "sadness", "073": "disgust", "074": "joy",
+    "075": "sadness", "076": "surprise", "077": "surprise", "078": "surprise", "079": "joy",
+    "080": "neutral", "081": "surprise", "082": "anger", "083": "fear", "084": "surprise",
+    "085": "joy", "086": "disgust", "087": "sadness", "088": "sadness", "089": "fear",
+    "090": "anger", "091": "sadness", "092": "neutral", "093": "joy", "094": "sadness",
+    "095": "fear", "096": "surprise", "097": "anger", "098": "fear", "099": "joy",
+    "100": "anger", "101": "anger", "102": "sadness", "103": "surprise", "104": "sadness",
+    "105": "anger", "106": "surprise", "107": "sadness", "108": "fear", "109": "neutral",
+    "110": "surprise", "111": "disgust"
+  }
+}
