@@ -65,8 +65,9 @@ def make_comic(data: bytes) -> dict:
             "shot": r.panel.shot,
             "seconds": round(r.seconds, 2),
             "prompt": r.panel.prompt,
-            "lines": [{"speaker": l.speaker, "text": l.text, "emotion": l.emotion,
-                       "confidence": l.confidence, "bubble": l.bubble} for l in r.panel.lines],
+            "lines": [{"speaker": l.speaker, "text": l.text, "emoji": l.emoji, "emotion": l.emotion,
+                       "confidence": l.confidence, "bubble": l.bubble, "ironic": l.ironic,
+                       "situation": l.situation} for l in r.panel.lines],
         } for r in rendered],
         "cache": run,
     }

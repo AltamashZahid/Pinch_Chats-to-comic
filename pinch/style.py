@@ -59,6 +59,18 @@ BUBBLE = {
 
 ART_STYLE = "comic panel, clean ink lines, flat colors"
 
+# Ironic panels: the face shows the emoji's emotion, the scene shows what the words mean
+# ("I failed physics 😂" -> laughing while everything goes wrong). Keyed by the text's emotion.
+IRONY = {
+    "sadness": "while everything around them falls apart, rain cloud over head",
+    "anger": "while the room behind them is on fire",
+    "fear": "while a disaster unfolds right behind them",
+    "disgust": "surrounded by a gross mess, flies buzzing",
+    "joy": "surrounded by confetti and balloons",
+    "surprise": "while chaos erupts around them",
+    "neutral": "",
+}
+
 DEFAULT_CHARACTERS = {
     "me": "young man with short black hair and a blue hoodie",
     "them": "young woman with curly red hair and a yellow sweater",

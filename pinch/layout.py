@@ -70,15 +70,31 @@ def _wrap(text: str, font, max_width: int, draw: ImageDraw.ImageDraw) -> list[st
     return textwrap.wrap(text, 6)
 
 
-def draw_bubble(img: Image.Image, text: str, style: str, side: str, top: int, scale: int = 1) -> int:
+EMOJI_FONT = r"C:\Windows\Fonts\seguiemj.ttf"
+
+
+def _emoji_font(size: int):
+    try:
+        return ImageFont.truetype(EMOJI_FONT, size)
+    except OSError:
+        return None
+
+
+def draw_bubble(img: Image.Image, text: str, style: str, side: str, top: int, scale: int = 1,
+                emoji: list[str] | None = None) -> int:
     """Draw one bubble near the top of a panel. Returns the y where the next bubble may start.
-    `scale` > 1 when drawing on a supersampled canvas (PIL polygons aren't anti-aliased)."""
+    `scale` > 1 when drawing on a supersampled canvas (PIL polygons aren't anti-aliased).
+    Emoji are drawn in colour on their own row under the text."""
     draw = ImageDraw.Draw(img)
     font = _font(22 * scale)
-    lines = _wrap(text, font, int(img.width * 0.5), draw)
+    lines = _wrap(text, font, int(img.width * 0.5), draw) if text else []
     line_h = font.getbbox("Ag")[3] + 4 * scale
-    tw = max(draw.textlength(l, font=font) for l in lines)
-    th = line_h * len(lines)
+    efont = _emoji_font(26 * scale) if emoji else None
+    erow = "".join(emoji[:6]) if efont else ""
+    ew = draw.textlength(erow, font=efont, embedded_color=True) if erow else 0
+    eh = efont.getbbox("😀")[3] + 4 * scale if erow else 0
+    tw = max([draw.textlength(l, font=font) for l in lines] + [ew, 20 * scale])
+    th = line_h * len(lines) + eh
     a, b = tw / 2 * 1.18 + 16 * scale, th / 2 * 1.3 + 12 * scale
     reach = 1.42 if style == "burst" else 1.16 if style == "jagged" else 1.1
     cx = 14 * scale + a * reach if side == "left" else img.width - 14 * scale - a * reach
@@ -98,6 +114,8 @@ def draw_bubble(img: Image.Image, text: str, style: str, side: str, top: int, sc
     for line in lines:
         draw.text((cx - draw.textlength(line, font=font) / 2, y), line, font=font, fill="black")
         y += line_h
+    if erow:
+        draw.text((cx - ew / 2, y), erow, font=efont, embedded_color=True)
     return int(cy + b * reach + 34 * scale)
 
 
@@ -113,7 +131,7 @@ def compose_page(panels: list[RenderedPanel], out_path: Path) -> Path:
         top = 10 * ss
         for line in rp.panel.lines:
             side = "right" if line.speaker == "me" else "left"
-            top = draw_bubble(art, line.text, line.bubble, side, top, scale=ss)
+            top = draw_bubble(art, line.text, line.bubble, side, top, scale=ss, emoji=line.emoji)
         art = art.resize((PANEL, PANEL), Image.LANCZOS)
         r, c = divmod(i, COLUMNS)
         in_row = min(COLUMNS, len(panels) - r * COLUMNS)

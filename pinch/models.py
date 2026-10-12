@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass, field
 
 
 @dataclass(frozen=True)
@@ -31,9 +31,10 @@ class Bubble:
 
 @dataclass
 class Message:
-    speaker: str          # "A" (left side) or "B" (right side, usually the phone's owner)
+    speaker: str          # "them" (left side) or "me" (right side, usually the phone's owner)
     text: str
     box: Box
+    emoji: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return asdict(self)

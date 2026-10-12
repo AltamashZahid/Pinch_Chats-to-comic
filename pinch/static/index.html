@@ -135,8 +135,8 @@ $("go").addEventListener("click", async () => {
         ${p.lines.map(l => `
           <div class="line">
             <span class="who">${esc(l.speaker)}</span>
-            <span>${esc(l.text)}</span>
-            <span class="emo">${esc(l.emotion)} ${Math.round(l.confidence * 100)}% · ${esc(l.bubble)}</span>
+            <span>${esc(l.text)} ${esc((l.emoji || []).join(""))}</span>
+            <span class="emo">${l.ironic ? `ironic: acts ${esc(l.emotion)}, really ${esc(l.situation)}` : esc(l.emotion) + " " + Math.round(l.confidence * 100) + "%"} · ${esc(l.bubble)}</span>
           </div>`).join("")}
         <details><summary>Image prompt</summary>${esc(p.prompt)}</details>
       </div>`).join("");
