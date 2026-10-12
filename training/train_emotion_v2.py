@@ -107,6 +107,9 @@ def main() -> None:
     ap.add_argument("--neutral-cap", type=int, default=6000)
     ap.add_argument("--hinglish-repeat", type=int, default=3)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--freeze-embeddings", action="store_true",
+                    help="don't train the word-embedding table (XLM-R style models have a 250k vocab; "
+                         "its AdamW state alone overflows a 4 GB GPU)")
     args = ap.parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -130,10 +133,15 @@ def main() -> None:
     model = AutoModelForSequenceClassification.from_pretrained(
         args.base, num_labels=len(LABELS), id2label=dict(enumerate(LABELS)),
         label2id={l: i for i, l in enumerate(LABELS)}, ignore_mismatched_sizes=True).to(device)
+    if args.freeze_embeddings:
+        model.get_input_embeddings().weight.requires_grad_(False)
+    trainable = [p for p in model.parameters() if p.requires_grad]
+    print(f"  trainable params {sum(p.numel() for p in trainable) / 1e6:.0f}M "
+          f"of {sum(p.numel() for p in model.parameters()) / 1e6:.0f}M")
     weights = torch.tensor((counts.max() / counts) ** 0.5, dtype=torch.float, device=device)
     loss_fn = torch.nn.CrossEntropyLoss(weight=weights)
     dl = batches(tok, train, args.batch_size, True)
-    opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01)
+    opt = torch.optim.AdamW(trainable, lr=args.lr, weight_decay=0.01)
     total = len(dl) * args.epochs
     sched = get_linear_schedule_with_warmup(opt, int(0.06 * total), total)
     scaler = torch.amp.GradScaler(enabled=device.type == "cuda")
@@ -150,7 +158,7 @@ def main() -> None:
             opt.zero_grad(set_to_none=True)
             scaler.scale(loss).backward()
             scaler.unscale_(opt)
-            torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+            torch.nn.utils.clip_grad_norm_(trainable, 1.0)
             scaler.step(opt)
             scaler.update()
             sched.step()
