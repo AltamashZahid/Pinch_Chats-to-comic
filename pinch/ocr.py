@@ -12,6 +12,12 @@ from .bubbles import background_color, detect_bubbles
 from .models import Box, Bubble, Message
 
 SPEAKER_BY_SIDE = {"left": "them", "right": "me"}
+
+
+def emoji_enabled() -> bool:
+    """Emoji reading is parked (off by default) while the core comic builder is finished.
+    PINCH_EMOJI=on turns it back on."""
+    return os.environ.get("PINCH_EMOJI", "off").lower() in ("on", "1", "true", "yes")
 MIN_CONFIDENCE = 60
 
 _TIMESTAMP = re.compile(r"\s*\d{1,2}[:.]\d{2}\s*([ap]\.?m\.?)?\s*[✓✔vV/]*\s*$", re.IGNORECASE)
@@ -73,7 +79,7 @@ def read_bubble(img: np.ndarray, bubble: Bubble) -> tuple[str, float, list[str]]
     b = bubble.box
     inset = max(2, min(b.w, b.h) // 12)  # skip the rounded corners / outline
     crop = img[b.y + inset:b.bottom - inset, b.x + inset:b.right - inset]
-    crop, emojis = bubble_emoji(crop, bubble.fill)
+    crop, emojis = bubble_emoji(crop, bubble.fill) if emoji_enabled() else (crop, [])
     data = pytesseract.image_to_data(preprocess(crop), config="--psm 6",
                                      output_type=pytesseract.Output.DICT)
     words = [(w, float(c)) for w, c in zip(data["text"], data["conf"]) if w.strip() and float(c) >= 0]
@@ -121,7 +127,8 @@ def extract_dialogue(img: np.ndarray) -> list[Message]:
             text = ""
         if text or emojis:
             messages.append(Message(SPEAKER_BY_SIDE[bubble.side], text, bubble.box, emojis))
-    messages += loose_emoji(img, bubbles)
+    if emoji_enabled():
+        messages += loose_emoji(img, bubbles)
     messages.sort(key=lambda m: (m.box.y, m.box.x))
     return messages
 

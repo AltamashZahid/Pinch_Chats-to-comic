@@ -18,7 +18,8 @@ cases = json.loads(EXPECTED.read_text(encoding="utf-8")) if EXPECTED.exists() el
 
 @pytest.mark.skipif(not tesseract_available(), reason="tesseract not installed")
 @pytest.mark.parametrize("name", sorted(cases))
-def test_real_screenshot(name):
+def test_real_screenshot(name, monkeypatch):
+    monkeypatch.setenv("PINCH_EMOJI", "on")  # expected.json includes the emoji-only messages
     got = extract_dialogue(load_image(str(SAMPLES / name)))
     want = cases[name]
     assert [m.speaker for m in got] == [s for s, _ in want]
