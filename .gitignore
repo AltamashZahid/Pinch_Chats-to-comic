@@ -10,3 +10,4 @@ data/raw/
 samples/
 eval/cache/
 eval/out/
+eval/judge_set/*.png

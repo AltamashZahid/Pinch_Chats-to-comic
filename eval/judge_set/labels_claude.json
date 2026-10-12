@@ -1,0 +1,19 @@
+{
+  "labeller": "Claude (blind visual inspection: sheets shuffled, requested emotion hidden)",
+  "labels": {
+    "00": "surprise", "01": "anger", "02": "anger", "03": "fear", "04": "neutral",
+    "05": "neutral", "06": "fear", "07": "disgust", "08": "surprise", "09": "anger",
+    "10": "anger", "11": "neutral", "12": "anger", "13": "joy", "14": "neutral",
+    "15": "anger", "16": "disgust", "17": "joy", "18": "neutral", "19": "sadness",
+    "20": "neutral", "21": "neutral", "22": "fear", "23": "joy", "24": "surprise",
+    "25": "surprise", "26": "neutral", "27": "sadness", "28": "joy", "29": "joy",
+    "30": "surprise", "31": "anger", "32": "anger", "33": "neutral", "34": "anger",
+    "35": "neutral", "36": "sadness", "37": "disgust", "38": "sadness", "39": "sadness",
+    "40": "sadness", "41": "neutral", "42": "neutral", "43": "fear", "44": "joy",
+    "45": "anger", "46": "sadness", "47": "joy", "48": "joy", "49": "surprise",
+    "50": "anger", "51": "fear", "52": "disgust", "53": "anger", "54": "fear",
+    "55": "joy", "56": "anger", "57": "sadness", "58": "fear", "59": "surprise",
+    "60": "fear", "61": "joy", "62": "joy", "63": "anger", "64": "anger",
+    "65": "joy", "66": "anger", "67": "neutral", "68": "fear", "69": "disgust"
+  }
+}
