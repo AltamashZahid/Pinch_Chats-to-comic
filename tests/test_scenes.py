@@ -60,8 +60,8 @@ def test_shot_follows_emotion_and_never_repeats():
     assert choose_shot("surprise", 2, previous="extreme close-up") != "extreme close-up"
 
 
-def test_template_script_shows_one_character_in_their_own_place():
-    script = write_script(LINES)
+def test_texting_mode_shows_one_character_in_their_own_place():
+    script = write_script(LINES, mode="texting")
     assert script.source == "template"
     p1, p2 = script.panels
     assert p1.focus == "me" and p2.focus == "them"
@@ -73,12 +73,12 @@ def test_template_script_shows_one_character_in_their_own_place():
 
 def test_consecutive_template_panels_differ():
     lines = [Line("me", "ok"), Line("them", "sure"), Line("me", "fine"), Line("them", "cool")]
-    a, b = write_script(lines).panels
+    a, b = write_script(lines, mode="texting").panels
     assert a.prompt != b.prompt
 
 
 def test_llm_script_uses_its_cast_locations_and_actions():
-    script = write_script(LINES, fake_llm(json.dumps(GOOD_REPLY)))
+    script = write_script(LINES, fake_llm(json.dumps(GOOD_REPLY)), mode="texting")
     assert script.source == "llm"
     p1, p2 = script.panels
     assert "grey hoodie" in p1.prompt and "messy dorm room" in p1.prompt
@@ -149,3 +149,31 @@ def test_wrong_panel_count_is_retried_once():
     script = write_script(LINES, llm)
     assert script.source == "llm" and len(calls) == 2
     assert "invalid" in calls[1]["messages"][-1]["content"]
+
+
+def test_story_mode_is_default_and_acts_it_out_without_phones(monkeypatch):
+    monkeypatch.delenv("PINCH_SCENE_MODE", raising=False)
+    script = write_script(LINES)
+    assert script.mode == "story"
+    p1, p2 = script.panels
+    assert script.location(p1) == script.location(p2)          # together, one place
+    assert "phone" not in p1.prompt and "phone" not in p2.prompt
+    assert "single character" not in p1.prompt
+    assert "hands on cheeks" in p1.prompt                       # surprise, acted out
+
+
+def test_story_mode_uses_story_system_prompt():
+    seen = []
+
+    def handler(request):
+        seen.append(json.loads(request.content))
+        return httpx.Response(200, json={"choices": [{"message": {"content": json.dumps(GOOD_REPLY)}}]})
+
+    llm = LLMClient("https://fake/v1", "key", "model", transport=httpx.MockTransport(handler))
+    write_script(LINES, llm, mode="story")
+    assert "TOGETHER in one place" in seen[0]["messages"][0]["content"]
+
+
+def test_scene_mode_from_env(monkeypatch):
+    monkeypatch.setenv("PINCH_SCENE_MODE", "texting")
+    assert write_script(LINES).mode == "texting"

@@ -10,7 +10,7 @@ EXPRESSION = {
     "neutral": "calm relaxed expression",
 }
 
-# What the character does with the phone (texting is the one constant of a chat comic).
+# Texting mode: what the character does with the phone.
 POSE = {
     "anger": "glaring at phone, gripping it tightly",
     "disgust": "holding phone at arm's length, recoiling",
@@ -19,6 +19,17 @@ POSE = {
     "sadness": "slumped, staring at phone",
     "surprise": "staring at phone in shock, jaw dropped",
     "neutral": "casually texting on phone",
+}
+
+# Story mode: the conversation acted out in person, no phones.
+STORY_POSE = {
+    "anger": "pointing a finger, shouting",
+    "disgust": "recoiling, covering nose with hand",
+    "fear": "cowering, hands raised defensively",
+    "joy": "laughing, arms thrown open",
+    "sadness": "head down, wiping away tears",
+    "surprise": "jaw dropped, hands on cheeks",
+    "neutral": "talking, gesturing casually",
 }
 
 # Stronger emotions get tighter framing, the way comic artists cut in for reactions.
@@ -49,7 +60,8 @@ DEFAULT_CHARACTERS = {
     "me": "young man with short black hair and a blue hoodie",
     "them": "young woman with curly red hair and a yellow sweater",
 }
-DEFAULT_LOCATIONS = {
+TEXTING_LOCATIONS = {
     "me": "cozy bedroom at night, warm lamp light",
     "them": "busy coffee shop, daytime",
 }
+STORY_LOCATION = "cozy living room, warm evening light"

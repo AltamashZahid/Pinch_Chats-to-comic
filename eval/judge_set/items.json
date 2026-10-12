@@ -1,0 +1,422 @@
+[
+  {
+    "id": "00",
+    "emotion": "fear",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, young woman with short blonde bob and a red coat, scared expression, wide eyes, sweat drop, clutching phone with both hands, trembling, park bench"
+  },
+  {
+    "id": "01",
+    "emotion": "fear",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up portrait, single character, woman with a long black braid and a denim jacket, scared expression, wide eyes, sweat drop, clutching phone with both hands, trembling, city street"
+  },
+  {
+    "id": "02",
+    "emotion": "fear",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, medium close-up, single character, man with dark skin, shaved head and a white shirt, scared expression, wide eyes, sweat drop, clutching phone with both hands, trembling, park bench"
+  },
+  {
+    "id": "03",
+    "emotion": "anger",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, woman with a long black braid and a denim jacket, angry expression, furrowed brows, gritted teeth, glaring at phone, gripping it tightly, train station"
+  },
+  {
+    "id": "04",
+    "emotion": "neutral",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, woman with a long black braid and a denim jacket, calm relaxed expression, casually texting on phone, kitchen"
+  },
+  {
+    "id": "05",
+    "emotion": "neutral",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, girl with glasses, ponytail and a striped sweater, calm relaxed expression, casually texting on phone, living room couch"
+  },
+  {
+    "id": "06",
+    "emotion": "surprise",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up portrait, single character, teenage boy with messy brown hair and a green t-shirt, shocked expression, wide eyes, open mouth, staring at phone in shock, jaw dropped, office desk"
+  },
+  {
+    "id": "07",
+    "emotion": "anger",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, medium close-up, single character, young woman with curly red hair and a yellow sweater, angry expression, furrowed brows, gritted teeth, glaring at phone, gripping it tightly, bedroom at night"
+  },
+  {
+    "id": "08",
+    "emotion": "fear",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, medium close-up, single character, older man with grey beard and a flannel shirt, scared expression, wide eyes, sweat drop, clutching phone with both hands, trembling, coffee shop"
+  },
+  {
+    "id": "09",
+    "emotion": "fear",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up portrait, single character, man with dark skin, shaved head and a white shirt, scared expression, wide eyes, sweat drop, clutching phone with both hands, trembling, living room couch"
+  },
+  {
+    "id": "10",
+    "emotion": "disgust",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up portrait, single character, young woman with short blonde bob and a red coat, disgusted expression, wrinkled nose, grimace, holding phone at arm's length, recoiling, office desk"
+  },
+  {
+    "id": "11",
+    "emotion": "neutral",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, medium close-up, single character, older man with grey beard and a flannel shirt, calm relaxed expression, casually texting on phone, city street"
+  },
+  {
+    "id": "12",
+    "emotion": "sadness",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, woman with hijab and a purple cardigan, sad expression, teary eyes, downturned mouth, slumped, staring at phone, school hallway"
+  },
+  {
+    "id": "13",
+    "emotion": "joy",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up portrait, single character, woman with hijab and a purple cardigan, happy expression, big smile, bright eyes, grinning at phone, laughing, city street"
+  },
+  {
+    "id": "14",
+    "emotion": "disgust",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, man with dark skin, shaved head and a white shirt, disgusted expression, wrinkled nose, grimace, holding phone at arm's length, recoiling, coffee shop"
+  },
+  {
+    "id": "15",
+    "emotion": "fear",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, medium close-up, single character, older man with grey beard and a flannel shirt, scared expression, wide eyes, sweat drop, clutching phone with both hands, trembling, kitchen"
+  },
+  {
+    "id": "16",
+    "emotion": "anger",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up portrait, single character, woman with hijab and a purple cardigan, angry expression, furrowed brows, gritted teeth, glaring at phone, gripping it tightly, school hallway"
+  },
+  {
+    "id": "17",
+    "emotion": "joy",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, young man with short black hair and a blue hoodie, happy expression, big smile, bright eyes, grinning at phone, laughing, coffee shop"
+  },
+  {
+    "id": "18",
+    "emotion": "sadness",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, medium close-up, single character, woman with hijab and a purple cardigan, sad expression, teary eyes, downturned mouth, slumped, staring at phone, city street"
+  },
+  {
+    "id": "19",
+    "emotion": "neutral",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, older man with grey beard and a flannel shirt, calm relaxed expression, casually texting on phone, train station"
+  },
+  {
+    "id": "20",
+    "emotion": "neutral",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, young man with short black hair and a blue hoodie, calm relaxed expression, casually texting on phone, train station"
+  },
+  {
+    "id": "21",
+    "emotion": "disgust",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, man with long hair in a bun and a leather jacket, disgusted expression, wrinkled nose, grimace, holding phone at arm's length, recoiling, train station"
+  },
+  {
+    "id": "22",
+    "emotion": "fear",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, medium close-up, single character, teenage boy with messy brown hair and a green t-shirt, scared expression, wide eyes, sweat drop, clutching phone with both hands, trembling, living room couch"
+  },
+  {
+    "id": "23",
+    "emotion": "joy",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, woman with a long black braid and a denim jacket, happy expression, big smile, bright eyes, grinning at phone, laughing, bedroom at night"
+  },
+  {
+    "id": "24",
+    "emotion": "surprise",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, young woman with curly red hair and a yellow sweater, shocked expression, wide eyes, open mouth, staring at phone in shock, jaw dropped, living room couch"
+  },
+  {
+    "id": "25",
+    "emotion": "surprise",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up portrait, single character, girl with glasses, ponytail and a striped sweater, shocked expression, wide eyes, open mouth, staring at phone in shock, jaw dropped, office desk"
+  },
+  {
+    "id": "26",
+    "emotion": "neutral",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, medium close-up, single character, young woman with curly red hair and a yellow sweater, calm relaxed expression, casually texting on phone, park bench"
+  },
+  {
+    "id": "27",
+    "emotion": "disgust",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, woman with a long black braid and a denim jacket, disgusted expression, wrinkled nose, grimace, holding phone at arm's length, recoiling, train station"
+  },
+  {
+    "id": "28",
+    "emotion": "neutral",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, man with long hair in a bun and a leather jacket, calm relaxed expression, casually texting on phone, bedroom at night"
+  },
+  {
+    "id": "29",
+    "emotion": "joy",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, man with dark skin, shaved head and a white shirt, happy expression, big smile, bright eyes, grinning at phone, laughing, park bench"
+  },
+  {
+    "id": "30",
+    "emotion": "fear",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, teenage boy with messy brown hair and a green t-shirt, scared expression, wide eyes, sweat drop, clutching phone with both hands, trembling, park bench"
+  },
+  {
+    "id": "31",
+    "emotion": "anger",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, man with long hair in a bun and a leather jacket, angry expression, furrowed brows, gritted teeth, glaring at phone, gripping it tightly, bedroom at night"
+  },
+  {
+    "id": "32",
+    "emotion": "disgust",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up portrait, single character, teenage boy with messy brown hair and a green t-shirt, disgusted expression, wrinkled nose, grimace, holding phone at arm's length, recoiling, city street"
+  },
+  {
+    "id": "33",
+    "emotion": "disgust",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, medium close-up, single character, young woman with short blonde bob and a red coat, disgusted expression, wrinkled nose, grimace, holding phone at arm's length, recoiling, train station"
+  },
+  {
+    "id": "34",
+    "emotion": "disgust",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, medium close-up, single character, man with long hair in a bun and a leather jacket, disgusted expression, wrinkled nose, grimace, holding phone at arm's length, recoiling, bus seat"
+  },
+  {
+    "id": "35",
+    "emotion": "sadness",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up portrait, single character, young woman with short blonde bob and a red coat, sad expression, teary eyes, downturned mouth, slumped, staring at phone, park bench"
+  },
+  {
+    "id": "36",
+    "emotion": "sadness",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, teenage boy with messy brown hair and a green t-shirt, sad expression, teary eyes, downturned mouth, slumped, staring at phone, office desk"
+  },
+  {
+    "id": "37",
+    "emotion": "anger",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, young man with short black hair and a blue hoodie, angry expression, furrowed brows, gritted teeth, glaring at phone, gripping it tightly, bedroom at night"
+  },
+  {
+    "id": "38",
+    "emotion": "sadness",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, teenage boy with messy brown hair and a green t-shirt, sad expression, teary eyes, downturned mouth, slumped, staring at phone, school hallway"
+  },
+  {
+    "id": "39",
+    "emotion": "sadness",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, medium close-up, single character, young woman with curly red hair and a yellow sweater, sad expression, teary eyes, downturned mouth, slumped, staring at phone, park bench"
+  },
+  {
+    "id": "40",
+    "emotion": "sadness",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, young woman with short blonde bob and a red coat, sad expression, teary eyes, downturned mouth, slumped, staring at phone, coffee shop"
+  },
+  {
+    "id": "41",
+    "emotion": "neutral",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, young woman with curly red hair and a yellow sweater, calm relaxed expression, casually texting on phone, city street"
+  },
+  {
+    "id": "42",
+    "emotion": "fear",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, medium close-up, single character, woman with hijab and a purple cardigan, scared expression, wide eyes, sweat drop, clutching phone with both hands, trembling, coffee shop"
+  },
+  {
+    "id": "43",
+    "emotion": "anger",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, medium close-up, single character, man with dark skin, shaved head and a white shirt, angry expression, furrowed brows, gritted teeth, glaring at phone, gripping it tightly, coffee shop"
+  },
+  {
+    "id": "44",
+    "emotion": "joy",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, medium close-up, single character, girl with glasses, ponytail and a striped sweater, happy expression, big smile, bright eyes, grinning at phone, laughing, living room couch"
+  },
+  {
+    "id": "45",
+    "emotion": "anger",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, medium close-up, single character, older man with grey beard and a flannel shirt, angry expression, furrowed brows, gritted teeth, glaring at phone, gripping it tightly, city street"
+  },
+  {
+    "id": "46",
+    "emotion": "sadness",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up portrait, single character, young woman with curly red hair and a yellow sweater, sad expression, teary eyes, downturned mouth, slumped, staring at phone, kitchen"
+  },
+  {
+    "id": "47",
+    "emotion": "joy",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, woman with hijab and a purple cardigan, happy expression, big smile, bright eyes, grinning at phone, laughing, coffee shop"
+  },
+  {
+    "id": "48",
+    "emotion": "joy",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, teenage boy with messy brown hair and a green t-shirt, happy expression, big smile, bright eyes, grinning at phone, laughing, city street"
+  },
+  {
+    "id": "49",
+    "emotion": "surprise",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, woman with a long black braid and a denim jacket, shocked expression, wide eyes, open mouth, staring at phone in shock, jaw dropped, school hallway"
+  },
+  {
+    "id": "50",
+    "emotion": "surprise",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, woman with a long black braid and a denim jacket, shocked expression, wide eyes, open mouth, staring at phone in shock, jaw dropped, office desk"
+  },
+  {
+    "id": "51",
+    "emotion": "anger",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, young woman with curly red hair and a yellow sweater, angry expression, furrowed brows, gritted teeth, glaring at phone, gripping it tightly, bus seat"
+  },
+  {
+    "id": "52",
+    "emotion": "surprise",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, woman with a long black braid and a denim jacket, shocked expression, wide eyes, open mouth, staring at phone in shock, jaw dropped, office desk"
+  },
+  {
+    "id": "53",
+    "emotion": "surprise",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up portrait, single character, woman with a long black braid and a denim jacket, shocked expression, wide eyes, open mouth, staring at phone in shock, jaw dropped, office desk"
+  },
+  {
+    "id": "54",
+    "emotion": "anger",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, young woman with short blonde bob and a red coat, angry expression, furrowed brows, gritted teeth, glaring at phone, gripping it tightly, living room couch"
+  },
+  {
+    "id": "55",
+    "emotion": "joy",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, girl with glasses, ponytail and a striped sweater, happy expression, big smile, bright eyes, grinning at phone, laughing, coffee shop"
+  },
+  {
+    "id": "56",
+    "emotion": "disgust",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, woman with hijab and a purple cardigan, disgusted expression, wrinkled nose, grimace, holding phone at arm's length, recoiling, park bench"
+  },
+  {
+    "id": "57",
+    "emotion": "sadness",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up portrait, single character, young woman with curly red hair and a yellow sweater, sad expression, teary eyes, downturned mouth, slumped, staring at phone, school hallway"
+  },
+  {
+    "id": "58",
+    "emotion": "fear",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, medium close-up, single character, teenage boy with messy brown hair and a green t-shirt, scared expression, wide eyes, sweat drop, clutching phone with both hands, trembling, school hallway"
+  },
+  {
+    "id": "59",
+    "emotion": "surprise",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up portrait, single character, girl with glasses, ponytail and a striped sweater, shocked expression, wide eyes, open mouth, staring at phone in shock, jaw dropped, bus seat"
+  },
+  {
+    "id": "60",
+    "emotion": "anger",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, young woman with curly red hair and a yellow sweater, angry expression, furrowed brows, gritted teeth, glaring at phone, gripping it tightly, bus seat"
+  },
+  {
+    "id": "61",
+    "emotion": "joy",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, woman with hijab and a purple cardigan, happy expression, big smile, bright eyes, grinning at phone, laughing, kitchen"
+  },
+  {
+    "id": "62",
+    "emotion": "joy",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, young man with short black hair and a blue hoodie, happy expression, big smile, bright eyes, grinning at phone, laughing, living room couch"
+  },
+  {
+    "id": "63",
+    "emotion": "disgust",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up portrait, single character, young woman with short blonde bob and a red coat, disgusted expression, wrinkled nose, grimace, holding phone at arm's length, recoiling, train station"
+  },
+  {
+    "id": "64",
+    "emotion": "disgust",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, older man with grey beard and a flannel shirt, disgusted expression, wrinkled nose, grimace, holding phone at arm's length, recoiling, coffee shop"
+  },
+  {
+    "id": "65",
+    "emotion": "neutral",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, medium close-up, single character, teenage boy with messy brown hair and a green t-shirt, calm relaxed expression, casually texting on phone, bus seat"
+  },
+  {
+    "id": "66",
+    "emotion": "surprise",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, young woman with short blonde bob and a red coat, shocked expression, wide eyes, open mouth, staring at phone in shock, jaw dropped, bedroom at night"
+  },
+  {
+    "id": "67",
+    "emotion": "neutral",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, extreme close-up, single character, young woman with curly red hair and a yellow sweater, calm relaxed expression, casually texting on phone, living room couch"
+  },
+  {
+    "id": "68",
+    "emotion": "surprise",
+    "cfg": 0.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up, single character, woman with hijab and a purple cardigan, shocked expression, wide eyes, open mouth, staring at phone in shock, jaw dropped, park bench"
+  },
+  {
+    "id": "69",
+    "emotion": "sadness",
+    "cfg": 4.0,
+    "prompt": "comic panel, clean ink lines, flat colors, close-up portrait, single character, girl with glasses, ponytail and a striped sweater, sad expression, teary eyes, downturned mouth, slumped, staring at phone, coffee shop"
+  }
+]
