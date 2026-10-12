@@ -11,3 +11,5 @@ samples/
 eval/cache/
 eval/out/
 eval/judge_set/*.png
+eval/lora_ab/*.png
+data/
