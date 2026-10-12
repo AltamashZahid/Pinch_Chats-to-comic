@@ -135,3 +135,17 @@ def test_prompt_fits_clip_window_with_longest_llm_output():
     for p in script.panels:
         assert len(p.prompt.replace(",", " ").split()) <= 58
         assert p.prompt.index("act") < p.prompt.index("place")  # action before location
+
+
+def test_wrong_panel_count_is_retried_once():
+    replies = iter([json.dumps(dict(GOOD_REPLY, panels=GOOD_REPLY["panels"] * 2)), json.dumps(GOOD_REPLY)])
+    calls = []
+
+    def handler(request):
+        calls.append(json.loads(request.content))
+        return httpx.Response(200, json={"choices": [{"message": {"content": next(replies)}}]})
+
+    llm = LLMClient("https://fake/v1", "key", "model", transport=httpx.MockTransport(handler))
+    script = write_script(LINES, llm)
+    assert script.source == "llm" and len(calls) == 2
+    assert "invalid" in calls[1]["messages"][-1]["content"]

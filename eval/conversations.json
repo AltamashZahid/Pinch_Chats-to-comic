@@ -39,5 +39,85 @@
     ["them", "have you seen max? he ran out this morning"],
     ["me", "no, I'm so worried, I'll check the park"],
     ["me", "found him! he was sleeping under the slide"],
-    ["them", "thank god, I was so scared"]]}
+    ["them", "thank god, I was so scared"]]},
+  {"id": "exam_result", "lines": [
+    ["me", "results are out"],
+    ["them", "and??"],
+    ["me", "I failed physics, I studied for weeks"],
+    ["them", "that's awful, I'm really sorry"]]},
+  {"id": "roommate", "lines": [
+    ["them", "who ate my leftover pizza"],
+    ["me", "not me"],
+    ["them", "this is the third time this week, I'm furious"],
+    ["me", "ok fine it was me, sorry"]]},
+  {"id": "spider", "lines": [
+    ["me", "there is a giant spider on my ceiling"],
+    ["them", "just kill it"],
+    ["me", "I'm too scared to move, it's huge"],
+    ["them", "you're such a baby lol"]]},
+  {"id": "proposal", "lines": [
+    ["them", "he proposed last night!!"],
+    ["me", "OMG what??"],
+    ["them", "on the beach at sunset, I said yes"],
+    ["me", "congratulations, I'm so happy for you"]]},
+  {"id": "bad_milk", "lines": [
+    ["me", "just drank milk that expired two weeks ago"],
+    ["them", "why would you do that"],
+    ["me", "it was chunky, I want to throw up"],
+    ["them", "that is so nasty"]]},
+  {"id": "traffic", "lines": [
+    ["them", "where are you? the movie started"],
+    ["me", "stuck in traffic for an hour"],
+    ["me", "this city drives me insane, I'm so angry"],
+    ["them", "I'll save you some popcorn"]]},
+  {"id": "grandma", "lines": [
+    ["me", "grandma passed away this morning"],
+    ["them", "I'm so sorry, she was wonderful"],
+    ["me", "I miss her already, it hurts so much"],
+    ["them", "I'm here for you"]]},
+  {"id": "lottery", "lines": [
+    ["them", "I just won ten thousand dollars on a scratch card"],
+    ["me", "no way, that's insane!"],
+    ["them", "I can't believe it, I'm shaking"],
+    ["me", "dinner is on you then"]]},
+  {"id": "job_interview", "lines": [
+    ["me", "interview in ten minutes"],
+    ["them", "you'll do great"],
+    ["me", "my hands won't stop shaking, I'm so nervous"],
+    ["them", "breathe, you've got this"]]},
+  {"id": "cheating", "lines": [
+    ["them", "I saw your boyfriend with another girl"],
+    ["me", "what? are you sure?"],
+    ["them", "yes, they were kissing at the mall"],
+    ["me", "I'm going to kill him, I'm so mad"]]},
+  {"id": "puppy", "lines": [
+    ["me", "we adopted a puppy today"],
+    ["them", "send pictures right now"],
+    ["me", "he is so tiny and fluffy, I love him"],
+    ["them", "omg he is adorable"]]},
+  {"id": "gym", "lines": [
+    ["them", "someone left sweaty towels all over the gym bench"],
+    ["me", "ugh"],
+    ["them", "and the locker room smelled like rotten eggs, so gross"],
+    ["me", "disgusting, I'm cancelling my membership"]]},
+  {"id": "phone_broke", "lines": [
+    ["me", "I dropped my phone in the toilet"],
+    ["them", "noooo"],
+    ["me", "it won't turn on, all my photos are gone"],
+    ["them", "that's heartbreaking"]]},
+  {"id": "surprise_party", "lines": [
+    ["them", "come to my place at 8"],
+    ["me", "why?"],
+    ["them", "just come"],
+    ["me", "WAIT is this a surprise party for me?? I can't believe this"]]},
+  {"id": "landlord", "lines": [
+    ["them", "the landlord raised the rent again"],
+    ["me", "by how much?"],
+    ["them", "500 a month, I'm so angry I could scream"],
+    ["me", "that's outrageous"]]},
+  {"id": "dark_street", "lines": [
+    ["me", "someone has been following me for three blocks"],
+    ["them", "where are you?"],
+    ["me", "near the station, I'm really scared"],
+    ["them", "stay on the phone, I'm coming"]]}
 ]
