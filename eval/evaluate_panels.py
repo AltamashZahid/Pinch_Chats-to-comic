@@ -45,6 +45,15 @@ FACE = {"anger": "angry", "disgust": "disgusted", "fear": "scared", "joy": "happ
         "sadness": "sad", "surprise": "shocked", "neutral": "calm"}
 
 
+def wilson(k: int, n: int, z: float = 1.96) -> list[float]:
+    """95% confidence interval for a proportion; honest error bars on small eval sets."""
+    if n == 0:
+        return [0.0, 0.0]
+    p, d = k / n, 1 + z * z / n
+    c, h = (p + z * z / (2 * n)) / d, z * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5) / d
+    return [round(c - h, 3), round(c + h, 3)]
+
+
 def intended_emotion(lines: list[Line]) -> str:
     felt = [l for l in lines if l.emotion != "neutral"]
     return max(felt, key=lambda l: l.confidence).emotion if felt else "neutral"
@@ -103,6 +112,7 @@ def main() -> None:
     clip = ClipScorer()
 
     per_comic, clip_scores, diversities, hits, total = [], [], [], 0, 0
+    unique: dict[str, bool] = {}  # image file -> expression correct; counts reused images once
     for cid, source, rendered in comics:
         img = clip.image([r.image for r in rendered])
         txt = clip.text([r.panel.prompt for r in rendered])
@@ -112,6 +122,8 @@ def main() -> None:
         predicted = [LABELS[int(i)] for i in (img @ clip.face_emb.T).argmax(1)]
         wanted = [intended_emotion(r.panel.lines) for r in rendered]
         correct = sum(p == w for p, w in zip(predicted, wanted))
+        for r, p, w in zip(rendered, predicted, wanted):
+            unique.setdefault(str(r.image), p == w)
         hits, total = hits + correct, total + len(wanted)
         clip_scores += scores.tolist()
         diversities.append(div)
@@ -125,13 +137,18 @@ def main() -> None:
         "clip_score": round(float(np.mean(clip_scores)), 2),
         "diversity": round(float(np.mean(diversities)), 3),
         "expression_acc": round(hits / total, 3),
+        "unique_images": len(unique),
+        "expression_acc_unique": round(sum(unique.values()) / len(unique), 3),
+        "expression_acc_unique_ci95": wilson(sum(unique.values()), len(unique)),
         "render_minutes": round(render_minutes, 1),
         "comics": per_comic,
     }
     (ROOT / "reports").mkdir(exist_ok=True)
     (ROOT / "reports" / f"panel_eval_{args.tag}.json").write_text(json.dumps(report, indent=2))
     print(f"\n{args.tag}: clip_score {report['clip_score']}  diversity {report['diversity']}  "
-          f"expression_acc {report['expression_acc']}  ({total} panels)")
+          f"expression_acc {report['expression_acc']}  ({total} panels)  "
+          f"unique: {report['unique_images']} images, expression_acc {report['expression_acc_unique']} "
+          f"(95% CI {report['expression_acc_unique_ci95']})")
 
 
 if __name__ == "__main__":

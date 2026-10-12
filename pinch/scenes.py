@@ -132,14 +132,27 @@ def write_script(lines: list[Line], llm: LLMClient | None = None) -> Script:
     script = Script(dict(DEFAULT_CHARACTERS), dict(DEFAULT_LOCATIONS))
     directions: list[tuple[str, str]] = []
     if llm is not None and groups:
-        try:
-            raw = llm.chat([{"role": "system", "content": SYSTEM},
-                            {"role": "user", "content": _user_prompt(groups)}])
-            script.characters, script.locations, directions = _parse(raw, len(groups))
-            script.source = "llm"
-        except (LLMError, ValueError, KeyError, TypeError) as e:
-            # Comic still renders with template prompts; surface why.
-            print(f"[pinch] LLM scene writing failed, using template: {e}")
+        messages = [{"role": "system", "content": SYSTEM},
+                    {"role": "user", "content": _user_prompt(groups) +
+                     f'\n\nReturn exactly {len(groups)} entries in "panels".'}]
+        for attempt in (1, 2):
+            try:
+                raw = llm.chat(messages)
+                script.characters, script.locations, directions = _parse(raw, len(groups))
+                script.source = "llm"
+                break
+            except LLMError as e:  # network/HTTP: retrying the same request rarely helps
+                print(f"[pinch] LLM scene writing failed, using template: {e}")
+                break
+            except (ValueError, KeyError, TypeError) as e:
+                if attempt == 2:
+                    # Comic still renders with template prompts; surface why.
+                    print(f"[pinch] LLM scene writing failed, using template: {e}")
+                    break
+                # Malformed reply: show the model its mistake once.
+                messages += [{"role": "assistant", "content": raw},
+                             {"role": "user", "content": f"That reply was invalid ({e}). "
+                              f"Reply again with JSON only and exactly {len(groups)} panels."}]
 
     prev_focus = prev_shot = None
     for i, group in enumerate(groups):

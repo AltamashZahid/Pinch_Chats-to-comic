@@ -19,7 +19,7 @@ def client(tmp_path, monkeypatch):
     monkeypatch.setattr(server, "OUTPUTS", tmp_path)
     monkeypatch.setitem(server._state, "backend", PlaceholderBackend())
     monkeypatch.setitem(server._state, "cache", ImageCache(tmp_path / "cache"))
-    monkeypatch.delenv("PINCH_LLM_API_KEY", raising=False)
+    monkeypatch.setenv("PINCH_LLM_API_KEY", "")  # empty, not deleted: load_env() would re-add .env's key
     return TestClient(server.app)
 
 
