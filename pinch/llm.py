@@ -16,7 +16,7 @@ import httpx
 PROVIDERS = {
     # name: (base URL, default model)
     "mira": ("https://apis.mira.network/v1", "llama-3.3-70b-instruct"),
-    "groq": ("https://api.groq.com/openai/v1", "llama-3.3-70b-versatile"),
+    "groq": ("https://api.groq.com/openai/v1", "openai/gpt-oss-120b"),
     "gemini": ("https://generativelanguage.googleapis.com/v1beta/openai", "gemini-2.0-flash"),
     "openrouter": ("https://openrouter.ai/api/v1", "meta-llama/llama-3.3-70b-instruct:free"),
 }
