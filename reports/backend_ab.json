@@ -1,0 +1,59 @@
+{
+  "a": "local",
+  "b": "sdxl",
+  "variants": {
+    "local": {
+      "correct": 32,
+      "n": 56,
+      "rate": 0.571,
+      "ci95": [
+        0.441,
+        0.692
+      ]
+    },
+    "sdxl": {
+      "correct": 32,
+      "n": 56,
+      "rate": 0.571,
+      "ci95": [
+        0.441,
+        0.692
+      ]
+    }
+  },
+  "per_emotion": {
+    "anger": {
+      "local": "4/8",
+      "sdxl": "8/8"
+    },
+    "disgust": {
+      "local": "2/8",
+      "sdxl": "0/8"
+    },
+    "fear": {
+      "local": "4/8",
+      "sdxl": "2/8"
+    },
+    "joy": {
+      "local": "8/8",
+      "sdxl": "8/8"
+    },
+    "neutral": {
+      "local": "5/8",
+      "sdxl": "8/8"
+    },
+    "sadness": {
+      "local": "7/8",
+      "sdxl": "2/8"
+    },
+    "surprise": {
+      "local": "2/8",
+      "sdxl": "4/8"
+    }
+  },
+  "mcnemar": {
+    "only_local_right": 12,
+    "only_sdxl_right": 12,
+    "p_value": 1.0
+  }
+}
