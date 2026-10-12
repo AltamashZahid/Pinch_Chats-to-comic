@@ -85,7 +85,7 @@ def test_llm_script_uses_its_cast_locations_and_actions():
     assert "papers flying" in p1.prompt
     assert "red jacket" in p2.prompt and "crowded city bus" in p2.prompt
     # Expression and shot still come from the classifier, not the LLM.
-    assert "shocked expression" in p1.prompt and "extreme close-up" in p1.prompt
+    assert "shocked face" in p1.prompt and "extreme close-up" in p1.prompt
 
 
 def test_llm_focus_on_silent_character_is_overridden():

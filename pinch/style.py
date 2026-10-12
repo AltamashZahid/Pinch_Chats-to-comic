@@ -1,13 +1,16 @@
 """How each emotion looks on the page: face, body, camera and speech bubble."""
 
+# Comic-artist visual shorthand, not emotion words: SD-Turbo drew "disgusted expression"
+# correctly 0/10 times but "grossed out face, tongue sticking out..." about 5/10 (fear 2 -> ~7,
+# anger 2 -> ~5, blind visual check of 10 images each).
 EXPRESSION = {
-    "anger": "angry expression, furrowed brows, gritted teeth",
-    "disgust": "disgusted expression, wrinkled nose, grimace",
-    "fear": "scared expression, wide eyes, sweat drop",
-    "joy": "happy expression, big smile, bright eyes",
-    "sadness": "sad expression, teary eyes, downturned mouth",
-    "surprise": "shocked expression, wide eyes, open mouth",
-    "neutral": "calm relaxed expression",
+    "anger": "furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead",
+    "disgust": "grossed out face, tongue sticking out, nose scrunched, eyes squinted",
+    "fear": "terrified face, wide eyes with tiny pupils, screaming, sweat drops",
+    "joy": "happy face, big smile, bright eyes",
+    "sadness": "crying face, tears streaming down cheeks, trembling lip",
+    "surprise": "shocked face, eyes popping wide, jaw dropped",
+    "neutral": "calm relaxed face",
 }
 
 # Texting mode: what the character does with the phone.
