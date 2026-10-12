@@ -1,0 +1,25 @@
+{
+  "folds": {
+    "segoe": {
+      "exact": 0.586,
+      "emotion": 0.839
+    },
+    "twemoji": {
+      "exact": 0.46,
+      "emotion": 0.885
+    },
+    "openmoji": {
+      "exact": 0.552,
+      "emotion": 0.851
+    }
+  },
+  "emotion_acc": 0.858,
+  "emotion_ci95": [
+    0.811,
+    0.895
+  ],
+  "similarity_of_correct_matches": {
+    "p5": 0.832,
+    "median": 0.897
+  }
+}
