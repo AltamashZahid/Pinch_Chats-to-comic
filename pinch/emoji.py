@@ -16,6 +16,7 @@ combine() merges an emoji's emotion with the text classifier's: agreement streng
 neutral text takes the emoji's tone, and opposite tones (or a sarcasm emoji like 🙃) mark
 the line ironic, which the comic plays for laughs.
 """
+import json
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -102,17 +103,19 @@ def find_loose(img: np.ndarray, bg: np.ndarray, taken: list, min_left: int) -> l
     return [b for b in _blobs(mask, min_side=max(24, H // 40)) if b[0] + b[2] > min_left]
 
 
-def crop_on_gray(crop: np.ndarray, mask: np.ndarray) -> np.ndarray:
-    """Put the emoji on a neutral background so screenshots and the gallery look alike."""
-    m = cv2.dilate(mask, np.ones((5, 5), np.uint8))
-    m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, np.ones((9, 9), np.uint8))
-    filled = np.zeros_like(m)
-    cs, _ = cv2.findContours(m, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    cv2.drawContours(filled, cs, -1, 255, cv2.FILLED)  # keep eyes/mouth inside the face
-    out = np.full_like(crop, GRAY[0])
-    out[filled > 0] = crop[filled > 0]
-    # Same framing as the gallery (glyph ~68% of a square frame), upscaled smoothly.
-    h, w = out.shape[:2]
+def crop_on_gray(img: np.ndarray, box: tuple[int, int, int, int], fill, pad: int = 3) -> np.ndarray:
+    """Cut an emoji out of `img` onto the gallery's neutral gray, in the gallery's framing.
+
+    Soft alpha: each pixel blends toward gray by how close it is to the background `fill`,
+    which keeps anti-aliased edges. A hard mask leaves jagged edges that CLIP misreads
+    (synthetic test: 7/10 correct with a hard mask, 10/10 soft)."""
+    x, y, w, h = box
+    H, W = img.shape[:2]
+    sub = img[max(0, y - pad):min(H, y + h + pad), max(0, x - pad):min(W, x + w + pad)]
+    dist = np.abs(sub.astype(np.int16) - np.array(fill, np.int16)).max(axis=2).astype(np.float32)
+    alpha = np.clip(dist / 60.0, 0, 1)[..., None]
+    out = (sub * alpha + GRAY[0] * (1 - alpha)).astype(np.uint8)
+    h, w = out.shape[:2]  # glyph ~68% of a square frame, like the gallery
     side = int(max(h, w) / 0.68)
     framed = np.full((side, side, 3), GRAY[0], np.uint8)
     framed[(side - h) // 2:(side - h) // 2 + h, (side - w) // 2:(side - w) // 2 + w] = out
@@ -145,28 +148,59 @@ class EmojiHit:
     similarity: float
 
 
+# Chat emoji are tiny (20-75 px); once shrunk and blown back up, CLIP can barely tell 😭 from
+# 🥲 against crisp references. So every reference is also stored at these sizes.
+GALLERY_SIZES = (None, 64, 40, 24)
+
+
+def at_size(img, px: int | None):
+    from PIL import Image
+    if px is None:
+        return img
+    return img.resize((px, px), Image.LANCZOS).resize((224, 224), Image.BICUBIC)
+
+
+def reference_images(styles: tuple[str, ...]) -> tuple[list[str], list]:
+    """(chars, images) for the requested styles: "segoe" (system font), a folder name in
+    data/emoji_gallery/, or "*" for every folder."""
+    chars, images = [], []
+    if "segoe" in styles:
+        for ch in EMOTION_OF:
+            chars.append(ch)
+            images.append(render_reference(ch))
+    for d in sorted(GALLERY_DIR.glob("*")) if GALLERY_DIR.exists() else []:
+        if d.is_dir() and ("*" in styles or d.name in styles):
+            for ch in EMOTION_OF:
+                p = d / f"{ord(ch):x}.png"
+                if p.exists():
+                    chars.append(ch)
+                    images.append(_load_png(p))
+    return chars, images
+
+
 class EmojiRecognizer:
-    def __init__(self, styles: tuple[str, ...] = ("segoe", "*")):
+    def __init__(self, styles: tuple[str, ...] = ("segoe", "*"), sizes=GALLERY_SIZES):
+        import hashlib
         import torch
         from transformers import CLIPModel, CLIPProcessor
         self._torch = torch
         self.model = CLIPModel.from_pretrained(CLIP_MODEL).eval()
         self.proc = CLIPProcessor.from_pretrained(CLIP_MODEL)
-        chars, images = [], []
-        if "segoe" in styles:
-            for ch in EMOTION_OF:
-                chars.append(ch)
-                images.append(render_reference(ch))
-        if styles:
-            for d in sorted(GALLERY_DIR.glob("*")) if GALLERY_DIR.exists() else []:
-                if d.is_dir() and ("*" in styles or d.name in styles):
-                    for ch in EMOTION_OF:
-                        p = d / f"{ord(ch):x}.png"
-                        if p.exists():
-                            chars.append(ch)
-                            images.append(_load_png(p))
-        self.chars = chars
-        self.gallery = self.embed(images) if images else np.zeros((0, 768), np.float32)
+        base_chars, base_images = reference_images(styles)
+        self.chars = [c for _ in sizes for c in base_chars]
+        key = hashlib.sha256(json.dumps([CLIP_MODEL, list(sizes), base_chars,
+                                         sorted(str(s) for s in styles)]).encode()).hexdigest()[:16]
+        cache = GALLERY_DIR / f"embeddings_{key}.npy"
+        if cache.exists():
+            self.gallery = np.load(cache)
+        elif base_images:
+            parts = [self.embed([at_size(im, px) for im in base_images[i:i + 32]])
+                     for px in sizes for i in range(0, len(base_images), 32)]
+            self.gallery = np.concatenate(parts)
+            GALLERY_DIR.mkdir(parents=True, exist_ok=True)
+            np.save(cache, self.gallery)
+        else:
+            self.gallery = np.zeros((0, 768), np.float32)
 
     def embed(self, images) -> np.ndarray:
         with self._torch.no_grad():

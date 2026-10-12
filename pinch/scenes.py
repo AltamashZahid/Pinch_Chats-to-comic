@@ -20,7 +20,7 @@ import re
 from dataclasses import dataclass, field
 
 from .llm import LLMClient, LLMError
-from .style import (ART_STYLE, BUBBLE, DEFAULT_CHARACTERS, EXPRESSION, POSE, SHOT,
+from .style import (ART_STYLE, BUBBLE, DEFAULT_CHARACTERS, EXPRESSION, IRONY, POSE, SHOT,
                     SHOT_ALTERNATIVES, STORY_LOCATION, STORY_POSE, TEXTING_LOCATIONS)
 
 MAX_PANELS = 6
@@ -38,12 +38,20 @@ def scene_mode(mode: str | None = None) -> str:
 class Line:
     speaker: str      # "me" / "them"
     text: str
-    emotion: str = "neutral"
+    emotion: str = "neutral"     # what the face shows (text tone merged with emoji tone)
     confidence: float = 1.0
+    emoji: list[str] = field(default_factory=list)
+    ironic: bool = False         # emoji and words disagree, e.g. "I failed physics 😂"
+    situation: str = ""          # for ironic lines: the words' emotion (what's really going on)
 
     @property
     def bubble(self) -> str:
-        return BUBBLE[self.emotion]
+        return "wavy" if self.ironic else BUBBLE[self.emotion]
+
+    @property
+    def display(self) -> str:
+        """Text plus its emoji, for logs and the LLM."""
+        return " ".join(p for p in (self.text, "".join(self.emoji)) if p)
 
 
 @dataclass
@@ -57,6 +65,13 @@ class Panel:
     @property
     def emotion(self) -> str:
         return panel_emotion(self.lines, self.focus)
+
+    @property
+    def irony(self) -> str:
+        """The focus character's ironic situation, if their strongest line is ironic."""
+        felt = [l for l in self.lines if l.speaker == self.focus and l.emotion != "neutral"]
+        top = max(felt, key=lambda l: l.confidence) if felt else None
+        return IRONY.get(top.situation, "") if top is not None and top.ironic else ""
 
 
 @dataclass
@@ -107,8 +122,10 @@ def build_prompt(script: Script, panel: Panel) -> str:
     so shot, character and expression come before the action and the background."""
     look = script.characters.get(panel.focus, "a young person")
     who = f"single character, {look}" if script.mode == "texting" else look
-    return ", ".join([ART_STYLE, panel.shot, who,
-                      EXPRESSION[panel.emotion], panel.action, script.location(panel)])
+    parts = [ART_STYLE, panel.shot, who, EXPRESSION[panel.emotion]]
+    if panel.irony:  # the joke goes before the action so it survives the 77-token cut
+        parts.append(panel.irony)
+    return ", ".join(parts + [panel.action, script.location(panel)])
 
 
 SYSTEM_STORY = """You turn text-message conversations into short in-person comics.
@@ -123,7 +140,9 @@ Reply with JSON only, no prose, in exactly this shape:
 Rules: one entry in "panels" per panel given, in order. Pick as focus the person whose
 reaction matters most in that panel. The action must fit the emotion shown in brackets.
 Describe only what a camera sees: no dialogue, no text, no speech bubbles. Messages may
-be in Hinglish or slang; infer the meaning. Make the two characters look clearly different."""
+be in Hinglish or slang; infer the meaning. Make the two characters look clearly different.
+Lines marked IRONIC have an emoji that contradicts the words (e.g. "I failed 😂"): make
+that panel funny, with the person reacting like the emoji while the situation matches the words."""
 
 SYSTEM_TEXTING = """You write scripts for short comics made from text-message conversations.
 The two people are texting, so they are in different places. Each panel shows ONE of them.
@@ -135,14 +154,18 @@ Rules: one entry in "panels" per panel given, in order. Pick as focus the person
 reaction matters most in that panel. The action must fit the emotion shown in brackets
 and the location, and should involve their phone or surroundings. Describe only what a
 camera sees: no dialogue, no text, no speech bubbles. Messages may be in Hinglish or
-slang; infer the meaning. Make the two characters look clearly different."""
+slang; infer the meaning. Make the two characters look clearly different.
+Lines marked IRONIC have an emoji that contradicts the words (e.g. "I failed 😂"): make
+that panel funny, with the person reacting like the emoji while the situation matches the words."""
 
 
 def _user_prompt(groups: list[list[Line]]) -> str:
     out = []
     for i, group in enumerate(groups, 1):
         out.append(f"Panel {i}:")
-        out += [f'  {l.speaker} ({l.emotion}): "{l.text}"' for l in group]
+        for l in group:
+            tag = f"IRONIC: acts {l.emotion}, really {l.situation}" if l.ironic else l.emotion
+            out.append(f'  {l.speaker} ({tag}): "{l.display}"')
     return "\n".join(out)
 
 

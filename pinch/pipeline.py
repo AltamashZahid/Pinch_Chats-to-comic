@@ -5,6 +5,7 @@ from pathlib import Path
 import numpy as np
 
 from .classifier import DEFAULT_MODEL_DIR
+from .emoji import combine
 from .llm import LLMClient
 from .ocr import extract_dialogue
 from .scenes import Line, Script, write_script
@@ -38,6 +39,17 @@ def classify(texts: list[str]) -> list[tuple[str, float]]:
 def screenshot_to_script(img: np.ndarray) -> Script:
     load_env()
     messages = extract_dialogue(img)
-    emotions = classify([m.text for m in messages])
-    lines = [Line(m.speaker, m.text, e, p) for m, (e, p) in zip(messages, emotions)]
-    return write_script(lines, LLMClient.from_env())
+    return write_script(lines_from_messages(messages), LLMClient.from_env())
+
+
+def lines_from_messages(messages) -> list[Line]:
+    """Text tone from the classifier, merged with the tone of any emoji (see emoji.combine)."""
+    texts = [m.text for m in messages if m.text]
+    tones = iter(classify(texts)) if texts else iter(())
+    lines = []
+    for m in messages:
+        text_emotion, conf = next(tones) if m.text else ("neutral", 0.0)
+        t = combine(text_emotion, conf, m.emoji, has_text=bool(m.text))
+        lines.append(Line(m.speaker, m.text, t.emotion, t.confidence, emoji=list(m.emoji),
+                          ironic=t.ironic, situation=t.situation))
+    return lines
