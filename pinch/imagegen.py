@@ -1,6 +1,7 @@
 """Image generation backends. All return PNG/JPEG bytes for a prompt.
 
     PINCH_IMAGE_BACKEND = local        SD-Turbo on your GPU (default; free, ~1 s/panel on 4 GB)
+                        | sdxl         SDXL-Turbo, 4-bit, on your GPU (free, ~8.5 s/panel, better art)
                         | huggingface  FLUX.1-schnell via HF Inference (needs HF_TOKEN, free tier)
                         | pollinations hosted (needs POLLINATIONS_TOKEN since anonymous use returns 402)
                         | placeholder  offline coloured cards, for tests and UI work
@@ -76,6 +77,48 @@ class LocalTurboBackend:
         if self._pipe is None:
             self._load()
         g = self._torch.Generator("cuda").manual_seed(req.seed)
+        img = self._pipe(req.prompt, num_inference_steps=self.steps, guidance_scale=0.0,
+                         generator=g, width=req.width, height=req.height).images[0]
+        return _png(img)
+
+
+class LocalSDXLTurboBackend:
+    """SDXL-Turbo on a 4 GB GPU: UNet quantised to 4-bit NF4 (bitsandbytes, ~1.5 GB) and
+    each component moved to the GPU only while it runs (model CPU offload).
+
+    Benchmarked on an RTX 2050 (eval/bench_sdxl_turbo.py): NF4 + offload 8.5 s/image at
+    1.9 GB peak; everything on the GPU spills past 4 GB and drops to 15 s; 8-bit UNet spills
+    too (21 s) and produced broken images. Uses the fp16-fixed SDXL VAE (the stock one
+    overflows in half precision). Licence: non-commercial (SDXL-Turbo research licence).
+    """
+    name = "sdxl"
+    model = "stabilityai/sdxl-turbo@nf4"
+    base = "stabilityai/sdxl-turbo"
+    vae_id = "madebyollin/sdxl-vae-fp16-fix"
+
+    def __init__(self, steps: int = 4):
+        self.steps = steps
+        self._pipe = None
+
+    def _load(self):
+        import torch
+        from diffusers import AutoencoderKL, AutoPipelineForText2Image, BitsAndBytesConfig, UNet2DConditionModel
+        if not torch.cuda.is_available():
+            raise ImageGenError("sdxl backend needs a CUDA GPU; set PINCH_IMAGE_BACKEND to another backend")
+        q = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.float16)
+        unet = UNet2DConditionModel.from_pretrained(self.base, subfolder="unet", variant="fp16",
+                                                    torch_dtype=torch.float16, quantization_config=q)
+        vae = AutoencoderKL.from_pretrained(self.vae_id, torch_dtype=torch.float16)
+        pipe = AutoPipelineForText2Image.from_pretrained(self.base, unet=unet, vae=vae,
+                                                         torch_dtype=torch.float16, variant="fp16")
+        pipe.enable_model_cpu_offload()
+        pipe.set_progress_bar_config(disable=True)
+        self._torch, self._pipe = torch, pipe
+
+    def generate(self, req: ImageRequest) -> bytes:
+        if self._pipe is None:
+            self._load()
+        g = self._torch.Generator("cpu").manual_seed(req.seed)
         img = self._pipe(req.prompt, num_inference_steps=self.steps, guidance_scale=0.0,
                          generator=g, width=req.width, height=req.height).images[0]
         return _png(img)
@@ -157,7 +200,7 @@ class PlaceholderBackend:
         return _png(img)
 
 
-BACKENDS = {"local": LocalTurboBackend, "huggingface": HuggingFaceBackend,
+BACKENDS = {"local": LocalTurboBackend, "sdxl": LocalSDXLTurboBackend, "huggingface": HuggingFaceBackend,
             "pollinations": PollinationsBackend, "placeholder": PlaceholderBackend}
 
 
