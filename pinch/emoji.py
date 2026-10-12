@@ -59,18 +59,26 @@ def strip_emoji(text: str) -> str:
 
 # --- detection ----------------------------------------------------------------------------
 
-def _hue_gap(h: np.ndarray, ref: float) -> np.ndarray:
-    d = np.abs(h.astype(np.int16) - int(ref))
-    return np.minimum(d, 180 - d)
+def _off_blend(img: np.ndarray, fill) -> np.ndarray:
+    """Distance of each pixel from the colour blends fill->white and fill->black.
+
+    Chat text is white or black on the fill, so anti-aliased text edges lie on those blends,
+    whatever the theme (Instagram blue, WhatsApp dark green, light grey...). Emoji colours
+    don't."""
+    p = img.reshape(-1, 3).astype(np.float32)
+    f = np.array(fill, np.float32)
+    best = np.full(len(p), np.inf, np.float32)
+    for end in (np.full(3, 255.0, np.float32), np.zeros(3, np.float32)):
+        d = end - f
+        t = np.clip((p - f) @ d / max(float(d @ d), 1.0), 0, 1)
+        best = np.minimum(best, np.linalg.norm(p - (f + t[:, None] * d), axis=1))
+    return best.reshape(img.shape[:2])
 
 
 def emoji_mask(crop: np.ndarray, fill: tuple[int, int, int]) -> np.ndarray:
     """Pixels that belong to colourful glyphs (emoji) rather than the fill or the text."""
     hsv = cv2.cvtColor(crop, cv2.COLOR_BGR2HSV)
-    fh, fs, _ = cv2.cvtColor(np.uint8([[fill]]), cv2.COLOR_BGR2HSV)[0, 0]
-    colourful = (hsv[..., 1] > 90) & (hsv[..., 2] > 80)
-    if fs > 60:  # saturated bubble (e.g. Instagram blue): its anti-aliased edges share its hue
-        colourful &= _hue_gap(hsv[..., 0], fh) > 18
+    colourful = (hsv[..., 1] > 90) & (hsv[..., 2] > 80) & (_off_blend(crop, fill) > 45)
     return colourful.astype(np.uint8) * 255
 
 
@@ -100,7 +108,17 @@ def find_loose(img: np.ndarray, bg: np.ndarray, taken: list, min_left: int) -> l
     for b in taken:
         mask[b.y:b.bottom, b.x:b.right] = 0
     H = img.shape[0]
-    return [b for b in _blobs(mask, min_side=max(24, H // 40)) if b[0] + b[2] > min_left]
+    min_side = max(24, H // 40)
+    found = [b for b in _blobs(mask, min_side) if b[0] + b[2] > min_left]
+    # Big emoji without much colour (💀, 👀) still stand out from the background: solid,
+    # square, large. Text (dates, names) closes into wide strips and fails the aspect check.
+    other = (np.abs(img.astype(np.int16) - bg.astype(np.int16)).max(axis=2) > 40).astype(np.uint8) * 255
+    for b in taken:
+        other[b.y:b.bottom, b.x:b.right] = 0
+    for x, y, w, h in _blobs(other, max(40, min_side)):
+        if x + w > min_left and not any(abs(x - fx) < w / 2 and abs(y - fy) < h / 2 for fx, fy, _, _ in found):
+            found.append((x, y, w, h))
+    return sorted(found, key=lambda b: (b[1], b[0]))
 
 
 def crop_on_gray(img: np.ndarray, box: tuple[int, int, int, int], fill, pad: int = 3) -> np.ndarray:
