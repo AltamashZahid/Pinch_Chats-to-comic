@@ -112,7 +112,8 @@ def test_bubble_draws_emoji_in_colour():
 # --- recognition (loads CLIP ViT-L) -------------------------------------------------------
 
 @slow
-def test_end_to_end_reads_text_and_emoji():
+def test_end_to_end_reads_text_and_emoji(monkeypatch):
+    monkeypatch.setenv("PINCH_EMOJI", "on")
     from pinch.ocr import extract_dialogue, tesseract_available
     if not tesseract_available():
         pytest.skip("tesseract not installed")
