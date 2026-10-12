@@ -1,0 +1,354 @@
+{
+  "tag": "llm_pose",
+  "panels": 49,
+  "clip_score": 30.71,
+  "diversity": 0.21,
+  "expression_acc": 0.347,
+  "unique_images": 49,
+  "expression_acc_unique": 0.347,
+  "expression_acc_unique_ci95": [
+    0.229,
+    0.487
+  ],
+  "render_minutes": 4.0,
+  "comics": [
+    {
+      "id": "deadline",
+      "script": "llm",
+      "clip_score": 27.65,
+      "diversity": 0.188,
+      "wanted": [
+        "surprise",
+        "joy",
+        "anger"
+      ],
+      "clip_saw": [
+        "fear",
+        "joy",
+        "neutral"
+      ]
+    },
+    {
+      "id": "promotion",
+      "script": "llm",
+      "clip_score": 32.59,
+      "diversity": 0.166,
+      "wanted": [
+        "surprise",
+        "joy"
+      ],
+      "clip_saw": [
+        "neutral",
+        "joy"
+      ]
+    },
+    {
+      "id": "breakup",
+      "script": "llm",
+      "clip_score": 31.55,
+      "diversity": 0.264,
+      "wanted": [
+        "sadness",
+        "sadness"
+      ],
+      "clip_saw": [
+        "neutral",
+        "neutral"
+      ]
+    },
+    {
+      "id": "horror",
+      "script": "llm",
+      "clip_score": 31.57,
+      "diversity": 0.313,
+      "wanted": [
+        "surprise",
+        "fear"
+      ],
+      "clip_saw": [
+        "fear",
+        "neutral"
+      ]
+    },
+    {
+      "id": "food",
+      "script": "llm",
+      "clip_score": 30.62,
+      "diversity": 0.143,
+      "wanted": [
+        "surprise",
+        "disgust"
+      ],
+      "clip_saw": [
+        "neutral",
+        "surprise"
+      ]
+    },
+    {
+      "id": "gamer",
+      "script": "llm",
+      "clip_score": 29.76,
+      "diversity": 0.295,
+      "wanted": [
+        "surprise",
+        "joy"
+      ],
+      "clip_saw": [
+        "anger",
+        "neutral"
+      ]
+    },
+    {
+      "id": "concert",
+      "script": "llm",
+      "clip_score": 30.07,
+      "diversity": 0.182,
+      "wanted": [
+        "surprise",
+        "joy"
+      ],
+      "clip_saw": [
+        "neutral",
+        "joy"
+      ]
+    },
+    {
+      "id": "lost_dog",
+      "script": "llm",
+      "clip_score": 28.63,
+      "diversity": 0.149,
+      "wanted": [
+        "fear",
+        "fear"
+      ],
+      "clip_saw": [
+        "anger",
+        "neutral"
+      ]
+    },
+    {
+      "id": "exam_result",
+      "script": "llm",
+      "clip_score": 30.76,
+      "diversity": 0.056,
+      "wanted": [
+        "neutral",
+        "disgust"
+      ],
+      "clip_saw": [
+        "neutral",
+        "neutral"
+      ]
+    },
+    {
+      "id": "roommate",
+      "script": "llm",
+      "clip_score": 33.08,
+      "diversity": 0.155,
+      "wanted": [
+        "neutral",
+        "sadness"
+      ],
+      "clip_saw": [
+        "neutral",
+        "neutral"
+      ]
+    },
+    {
+      "id": "spider",
+      "script": "llm",
+      "clip_score": 24.35,
+      "diversity": 0.124,
+      "wanted": [
+        "anger",
+        "joy"
+      ],
+      "clip_saw": [
+        "anger",
+        "joy"
+      ]
+    },
+    {
+      "id": "proposal",
+      "script": "llm",
+      "clip_score": 34.28,
+      "diversity": 0.16,
+      "wanted": [
+        "surprise",
+        "joy"
+      ],
+      "clip_saw": [
+        "neutral",
+        "joy"
+      ]
+    },
+    {
+      "id": "bad_milk",
+      "script": "llm",
+      "clip_score": 31.42,
+      "diversity": 0.112,
+      "wanted": [
+        "surprise",
+        "disgust"
+      ],
+      "clip_saw": [
+        "neutral",
+        "neutral"
+      ]
+    },
+    {
+      "id": "traffic",
+      "script": "llm",
+      "clip_score": 26.7,
+      "diversity": 0.287,
+      "wanted": [
+        "surprise",
+        "anger"
+      ],
+      "clip_saw": [
+        "surprise",
+        "neutral"
+      ]
+    },
+    {
+      "id": "grandma",
+      "script": "llm",
+      "clip_score": 31.46,
+      "diversity": 0.257,
+      "wanted": [
+        "sadness",
+        "sadness"
+      ],
+      "clip_saw": [
+        "neutral",
+        "neutral"
+      ]
+    },
+    {
+      "id": "lottery",
+      "script": "llm",
+      "clip_score": 29.06,
+      "diversity": 0.329,
+      "wanted": [
+        "anger",
+        "fear"
+      ],
+      "clip_saw": [
+        "neutral",
+        "fear"
+      ]
+    },
+    {
+      "id": "job_interview",
+      "script": "llm",
+      "clip_score": 30.97,
+      "diversity": 0.325,
+      "wanted": [
+        "joy",
+        "fear"
+      ],
+      "clip_saw": [
+        "joy",
+        "neutral"
+      ]
+    },
+    {
+      "id": "cheating",
+      "script": "llm",
+      "clip_score": 30.84,
+      "diversity": 0.147,
+      "wanted": [
+        "surprise",
+        "anger"
+      ],
+      "clip_saw": [
+        "surprise",
+        "neutral"
+      ]
+    },
+    {
+      "id": "puppy",
+      "script": "llm",
+      "clip_score": 34.06,
+      "diversity": 0.262,
+      "wanted": [
+        "neutral",
+        "joy"
+      ],
+      "clip_saw": [
+        "neutral",
+        "joy"
+      ]
+    },
+    {
+      "id": "gym",
+      "script": "llm",
+      "clip_score": 34.73,
+      "diversity": 0.324,
+      "wanted": [
+        "neutral",
+        "disgust"
+      ],
+      "clip_saw": [
+        "neutral",
+        "neutral"
+      ]
+    },
+    {
+      "id": "phone_broke",
+      "script": "llm",
+      "clip_score": 29.68,
+      "diversity": 0.134,
+      "wanted": [
+        "anger",
+        "sadness"
+      ],
+      "clip_saw": [
+        "neutral",
+        "neutral"
+      ]
+    },
+    {
+      "id": "surprise_party",
+      "script": "llm",
+      "clip_score": 30.48,
+      "diversity": 0.114,
+      "wanted": [
+        "surprise",
+        "surprise"
+      ],
+      "clip_saw": [
+        "surprise",
+        "neutral"
+      ]
+    },
+    {
+      "id": "landlord",
+      "script": "llm",
+      "clip_score": 31.65,
+      "diversity": 0.287,
+      "wanted": [
+        "neutral",
+        "anger"
+      ],
+      "clip_saw": [
+        "neutral",
+        "neutral"
+      ]
+    },
+    {
+      "id": "dark_street",
+      "script": "llm",
+      "clip_score": 32.61,
+      "diversity": 0.27,
+      "wanted": [
+        "surprise",
+        "fear"
+      ],
+      "clip_saw": [
+        "neutral",
+        "neutral"
+      ]
+    }
+  ]
+}
