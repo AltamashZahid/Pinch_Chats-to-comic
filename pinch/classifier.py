@@ -1,7 +1,13 @@
 """Run the fine-tuned emotion model on chat messages."""
+import os
 from pathlib import Path
 
-DEFAULT_MODEL_DIR = Path(__file__).resolve().parent.parent / "models" / "emotion"
+_MODELS = Path(__file__).resolve().parent.parent / "models"
+# v2 (HingRoBERTa fine-tuned on GoEmotions + DailyDialog + MELD + Hinglish + tweets) when it
+# exists: mean macro-F1 0.546 across five test domains vs 0.372 for v1 (reports/*_eval.json).
+DEFAULT_MODEL_DIR = Path(os.environ.get("PINCH_EMOTION_MODEL") or
+                         (_MODELS / "emotion_v2_hing" if (_MODELS / "emotion_v2_hing" / "config.json").exists()
+                          else _MODELS / "emotion"))
 
 
 class EmotionClassifier:
