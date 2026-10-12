@@ -1,0 +1,62 @@
+{
+  "train_faces": 2187,
+  "test_faces": 934,
+  "comic_test": {
+    "trained_judge": {
+      "accuracy": 0.562,
+      "ci95": [
+        0.53,
+        0.594
+      ],
+      "macro_f1": 0.485
+    },
+    "zero_shot_clip": {
+      "accuracy": 0.479,
+      "ci95": [
+        0.447,
+        0.511
+      ],
+      "macro_f1": 0.37
+    }
+  },
+  "generated_images_vs_blind_labels": {
+    "judge_set": {
+      "n": 70,
+      "trained_judge": {
+        "accuracy": 0.414,
+        "ci95": [
+          0.306,
+          0.531
+        ],
+        "macro_f1": 0.366
+      },
+      "zero_shot_clip": {
+        "accuracy": 0.571,
+        "ci95": [
+          0.455,
+          0.681
+        ],
+        "macro_f1": 0.508
+      }
+    },
+    "lora_ab": {
+      "n": 112,
+      "trained_judge": {
+        "accuracy": 0.402,
+        "ci95": [
+          0.316,
+          0.494
+        ],
+        "macro_f1": 0.359
+      },
+      "zero_shot_clip": {
+        "accuracy": 0.545,
+        "ci95": [
+          0.452,
+          0.634
+        ],
+        "macro_f1": 0.471
+      }
+    }
+  }
+}
