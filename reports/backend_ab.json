@@ -1,59 +1,59 @@
 {
   "a": "local",
-  "b": "faceshape",
+  "b": "lcm",
   "variants": {
     "local": {
-      "correct": 28,
+      "correct": 27,
       "n": 56,
-      "rate": 0.5,
+      "rate": 0.482,
       "ci95": [
-        0.373,
-        0.627
+        0.357,
+        0.61
       ]
     },
-    "faceshape": {
-      "correct": 16,
+    "lcm": {
+      "correct": 33,
       "n": 56,
-      "rate": 0.286,
+      "rate": 0.589,
       "ci95": [
-        0.184,
-        0.415
+        0.459,
+        0.708
       ]
     }
   },
   "per_emotion": {
     "anger": {
-      "local": "3/8",
-      "faceshape": "2/8"
+      "local": "5/8",
+      "lcm": "5/8"
     },
     "disgust": {
       "local": "0/8",
-      "faceshape": "0/8"
+      "lcm": "3/8"
     },
     "fear": {
-      "local": "4/8",
-      "faceshape": "0/8"
+      "local": "3/8",
+      "lcm": "2/8"
     },
     "joy": {
       "local": "8/8",
-      "faceshape": "5/8"
+      "lcm": "8/8"
     },
     "neutral": {
       "local": "6/8",
-      "faceshape": "6/8"
+      "lcm": "7/8"
     },
     "sadness": {
-      "local": "6/8",
-      "faceshape": "0/8"
+      "local": "5/8",
+      "lcm": "2/8"
     },
     "surprise": {
-      "local": "1/8",
-      "faceshape": "3/8"
+      "local": "0/8",
+      "lcm": "6/8"
     }
   },
   "mcnemar": {
-    "only_local_right": 18,
-    "only_faceshape_right": 6,
-    "p_value": 0.0227
+    "only_local_right": 7,
+    "only_lcm_right": 13,
+    "p_value": 0.2632
   }
 }

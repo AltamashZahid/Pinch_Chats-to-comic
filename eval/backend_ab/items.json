@@ -1,791 +1,791 @@
 {
  "a": "local",
- "b": "faceshape",
- "seed": 5151,
+ "b": "lcm",
+ "seed": 6161,
  "items": [
   {
    "id": "000",
-   "pair": 35,
-   "variant": "faceshape",
-   "emotion": "sadness",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, elderly woman with a white bun and round spectacles, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, supermarket aisle"
+   "pair": 17,
+   "variant": "local",
+   "emotion": "fear",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, freckled teenage girl with red pigtails and overalls, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, football stadium"
   },
   {
    "id": "001",
-   "pair": 4,
-   "variant": "local",
-   "emotion": "anger",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, freckled teenage girl with red pigtails and overalls, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, supermarket aisle"
+   "pair": 24,
+   "variant": "lcm",
+   "emotion": "joy",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, freckled teenage girl with red pigtails and overalls, happy face, big smile, bright eyes, laughing, arms thrown open, airport gate"
   },
   {
    "id": "002",
-   "pair": 15,
+   "pair": 47,
    "variant": "local",
-   "emotion": "disgust",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, tall man with a black beard and a beanie, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, library"
+   "emotion": "surprise",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, tall man with a black beard and a beanie, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, hospital waiting room"
   },
   {
    "id": "003",
-   "pair": 30,
-   "variant": "faceshape",
-   "emotion": "joy",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, woman with long silver hair and a green scarf, happy face, big smile, bright eyes, laughing, arms thrown open, supermarket aisle"
+   "pair": 42,
+   "variant": "lcm",
+   "emotion": "surprise",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, middle-aged woman with a pixie cut and a business suit, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, football stadium"
   },
   {
    "id": "004",
-   "pair": 27,
-   "variant": "faceshape",
-   "emotion": "joy",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, bald man with tattoos and a tank top, happy face, big smile, bright eyes, laughing, arms thrown open, hospital waiting room"
+   "pair": 3,
+   "variant": "lcm",
+   "emotion": "anger",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, tall man with a black beard and a beanie, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, football stadium"
   },
   {
    "id": "005",
-   "pair": 19,
-   "variant": "faceshape",
-   "emotion": "fear",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, boy with a buzz cut and a soccer jersey, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, airport gate"
+   "pair": 5,
+   "variant": "local",
+   "emotion": "anger",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, elderly woman with a white bun and round spectacles, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, football stadium"
   },
   {
    "id": "006",
-   "pair": 34,
-   "variant": "local",
+   "pair": 32,
+   "variant": "lcm",
    "emotion": "sadness",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, bald man with tattoos and a tank top, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, elevator"
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, young man with dreadlocks and a yellow raincoat, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, airport gate"
   },
   {
    "id": "007",
-   "pair": 5,
-   "variant": "faceshape",
-   "emotion": "anger",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, boy with a buzz cut and a soccer jersey, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, rainy rooftop"
+   "pair": 31,
+   "variant": "lcm",
+   "emotion": "joy",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, middle-aged woman with a pixie cut and a business suit, happy face, big smile, bright eyes, laughing, arms thrown open, elevator"
   },
   {
    "id": "008",
-   "pair": 46,
-   "variant": "faceshape",
-   "emotion": "surprise",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, boy with a buzz cut and a soccer jersey, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, supermarket aisle"
+   "pair": 51,
+   "variant": "local",
+   "emotion": "neutral",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, boy with a buzz cut and a soccer jersey, calm relaxed face, talking, gesturing casually, supermarket aisle"
   },
   {
    "id": "009",
-   "pair": 39,
-   "variant": "faceshape",
-   "emotion": "sadness",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, boy with a buzz cut and a soccer jersey, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, rainy rooftop"
+   "pair": 8,
+   "variant": "lcm",
+   "emotion": "disgust",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, tall man with a black beard and a beanie, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, football stadium"
   },
   {
    "id": "010",
-   "pair": 49,
-   "variant": "local",
-   "emotion": "neutral",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, tall man with a black beard and a beanie, calm relaxed face, talking, gesturing casually, elevator"
+   "pair": 15,
+   "variant": "lcm",
+   "emotion": "disgust",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, freckled teenage girl with red pigtails and overalls, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, elevator"
   },
   {
    "id": "011",
-   "pair": 41,
-   "variant": "local",
-   "emotion": "surprise",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, boy with a buzz cut and a soccer jersey, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, elevator"
+   "pair": 35,
+   "variant": "lcm",
+   "emotion": "sadness",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, freckled teenage girl with red pigtails and overalls, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, elevator"
   },
   {
    "id": "012",
-   "pair": 35,
-   "variant": "local",
-   "emotion": "sadness",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, elderly woman with a white bun and round spectacles, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, supermarket aisle"
-  },
-  {
-   "id": "013",
-   "pair": 36,
-   "variant": "local",
-   "emotion": "sadness",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, tall man with a black beard and a beanie, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, rainy rooftop"
-  },
-  {
-   "id": "014",
    "pair": 24,
    "variant": "local",
    "emotion": "joy",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, elderly woman with a white bun and round spectacles, happy face, big smile, bright eyes, laughing, arms thrown open, elevator"
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, freckled teenage girl with red pigtails and overalls, happy face, big smile, bright eyes, laughing, arms thrown open, airport gate"
+  },
+  {
+   "id": "013",
+   "pair": 52,
+   "variant": "lcm",
+   "emotion": "neutral",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, woman with long silver hair and a green scarf, calm relaxed face, talking, gesturing casually, camping tent"
+  },
+  {
+   "id": "014",
+   "pair": 0,
+   "variant": "lcm",
+   "emotion": "anger",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, freckled teenage girl with red pigtails and overalls, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, elevator"
   },
   {
    "id": "015",
-   "pair": 17,
-   "variant": "faceshape",
-   "emotion": "fear",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, freckled teenage girl with red pigtails and overalls, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, library"
+   "pair": 37,
+   "variant": "lcm",
+   "emotion": "sadness",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, bald man with tattoos and a tank top, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, supermarket aisle"
   },
   {
    "id": "016",
-   "pair": 30,
+   "pair": 7,
    "variant": "local",
-   "emotion": "joy",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, woman with long silver hair and a green scarf, happy face, big smile, bright eyes, laughing, arms thrown open, supermarket aisle"
+   "emotion": "anger",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, elderly woman with a white bun and round spectacles, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, camping tent"
   },
   {
    "id": "017",
-   "pair": 40,
-   "variant": "local",
-   "emotion": "surprise",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, bald man with tattoos and a tank top, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, elevator"
-  },
-  {
-   "id": "018",
-   "pair": 18,
-   "variant": "faceshape",
-   "emotion": "fear",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, freckled teenage girl with red pigtails and overalls, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, hospital waiting room"
-  },
-  {
-   "id": "019",
-   "pair": 53,
-   "variant": "local",
-   "emotion": "neutral",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, elderly woman with a white bun and round spectacles, calm relaxed face, talking, gesturing casually, rainy rooftop"
-  },
-  {
-   "id": "020",
-   "pair": 22,
-   "variant": "local",
-   "emotion": "fear",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, young man with dreadlocks and a yellow raincoat, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, supermarket aisle"
-  },
-  {
-   "id": "021",
    "pair": 37,
    "variant": "local",
    "emotion": "sadness",
    "prompt": "comic panel, clean ink lines, flat colors, close-up, bald man with tattoos and a tank top, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, supermarket aisle"
   },
   {
-   "id": "022",
-   "pair": 12,
+   "id": "018",
+   "pair": 55,
+   "variant": "lcm",
+   "emotion": "neutral",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, young man with dreadlocks and a yellow raincoat, calm relaxed face, talking, gesturing casually, airport gate"
+  },
+  {
+   "id": "019",
+   "pair": 36,
    "variant": "local",
-   "emotion": "disgust",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, young man with dreadlocks and a yellow raincoat, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, camping tent"
+   "emotion": "sadness",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, middle-aged woman with a pixie cut and a business suit, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, rainy rooftop"
+  },
+  {
+   "id": "020",
+   "pair": 54,
+   "variant": "lcm",
+   "emotion": "neutral",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, boy with a buzz cut and a soccer jersey, calm relaxed face, talking, gesturing casually, rainy rooftop"
+  },
+  {
+   "id": "021",
+   "pair": 29,
+   "variant": "lcm",
+   "emotion": "joy",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, woman with long silver hair and a green scarf, happy face, big smile, bright eyes, laughing, arms thrown open, football stadium"
+  },
+  {
+   "id": "022",
+   "pair": 41,
+   "variant": "lcm",
+   "emotion": "surprise",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, freckled teenage girl with red pigtails and overalls, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, hospital waiting room"
   },
   {
    "id": "023",
-   "pair": 39,
+   "pair": 53,
    "variant": "local",
-   "emotion": "sadness",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, boy with a buzz cut and a soccer jersey, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, rainy rooftop"
+   "emotion": "neutral",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, elderly woman with a white bun and round spectacles, calm relaxed face, talking, gesturing casually, supermarket aisle"
   },
   {
    "id": "024",
-   "pair": 4,
-   "variant": "faceshape",
-   "emotion": "anger",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, freckled teenage girl with red pigtails and overalls, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, supermarket aisle"
-  },
-  {
-   "id": "025",
-   "pair": 33,
-   "variant": "faceshape",
-   "emotion": "sadness",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, woman with long silver hair and a green scarf, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, hospital waiting room"
-  },
-  {
-   "id": "026",
-   "pair": 47,
-   "variant": "faceshape",
-   "emotion": "surprise",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, middle-aged woman with a pixie cut and a business suit, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, airport gate"
-  },
-  {
-   "id": "027",
-   "pair": 20,
-   "variant": "local",
-   "emotion": "fear",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, freckled teenage girl with red pigtails and overalls, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, football stadium"
-  },
-  {
-   "id": "028",
-   "pair": 1,
-   "variant": "local",
-   "emotion": "anger",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, tall man with a black beard and a beanie, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, library"
-  },
-  {
-   "id": "029",
-   "pair": 18,
-   "variant": "local",
-   "emotion": "fear",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, freckled teenage girl with red pigtails and overalls, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, hospital waiting room"
-  },
-  {
-   "id": "030",
-   "pair": 28,
-   "variant": "faceshape",
-   "emotion": "joy",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, bald man with tattoos and a tank top, happy face, big smile, bright eyes, laughing, arms thrown open, supermarket aisle"
-  },
-  {
-   "id": "031",
    "pair": 52,
    "variant": "local",
    "emotion": "neutral",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, freckled teenage girl with red pigtails and overalls, calm relaxed face, talking, gesturing casually, library"
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, woman with long silver hair and a green scarf, calm relaxed face, talking, gesturing casually, camping tent"
+  },
+  {
+   "id": "025",
+   "pair": 55,
+   "variant": "local",
+   "emotion": "neutral",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, young man with dreadlocks and a yellow raincoat, calm relaxed face, talking, gesturing casually, airport gate"
+  },
+  {
+   "id": "026",
+   "pair": 48,
+   "variant": "lcm",
+   "emotion": "neutral",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, tall man with a black beard and a beanie, calm relaxed face, talking, gesturing casually, library"
+  },
+  {
+   "id": "027",
+   "pair": 4,
+   "variant": "lcm",
+   "emotion": "anger",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, bald man with tattoos and a tank top, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, rainy rooftop"
+  },
+  {
+   "id": "028",
+   "pair": 23,
+   "variant": "local",
+   "emotion": "fear",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, young man with dreadlocks and a yellow raincoat, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, hospital waiting room"
+  },
+  {
+   "id": "029",
+   "pair": 46,
+   "variant": "lcm",
+   "emotion": "surprise",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, tall man with a black beard and a beanie, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, rainy rooftop"
+  },
+  {
+   "id": "030",
+   "pair": 27,
+   "variant": "local",
+   "emotion": "joy",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, elderly woman with a white bun and round spectacles, happy face, big smile, bright eyes, laughing, arms thrown open, supermarket aisle"
+  },
+  {
+   "id": "031",
+   "pair": 32,
+   "variant": "local",
+   "emotion": "sadness",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, young man with dreadlocks and a yellow raincoat, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, airport gate"
   },
   {
    "id": "032",
-   "pair": 9,
-   "variant": "faceshape",
-   "emotion": "disgust",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, tall man with a black beard and a beanie, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, elevator"
+   "pair": 45,
+   "variant": "lcm",
+   "emotion": "surprise",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, middle-aged woman with a pixie cut and a business suit, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, football stadium"
   },
   {
    "id": "033",
-   "pair": 8,
-   "variant": "local",
-   "emotion": "disgust",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, bald man with tattoos and a tank top, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, library"
+   "pair": 1,
+   "variant": "lcm",
+   "emotion": "anger",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, boy with a buzz cut and a soccer jersey, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, elevator"
   },
   {
    "id": "034",
-   "pair": 16,
-   "variant": "faceshape",
-   "emotion": "fear",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, tall man with a black beard and a beanie, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, rainy rooftop"
+   "pair": 10,
+   "variant": "lcm",
+   "emotion": "disgust",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, boy with a buzz cut and a soccer jersey, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, football stadium"
   },
   {
    "id": "035",
-   "pair": 10,
-   "variant": "local",
-   "emotion": "disgust",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, boy with a buzz cut and a soccer jersey, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, library"
-  },
-  {
-   "id": "036",
    "pair": 29,
    "variant": "local",
    "emotion": "joy",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, woman with long silver hair and a green scarf, happy face, big smile, bright eyes, laughing, arms thrown open, supermarket aisle"
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, woman with long silver hair and a green scarf, happy face, big smile, bright eyes, laughing, arms thrown open, football stadium"
+  },
+  {
+   "id": "036",
+   "pair": 43,
+   "variant": "local",
+   "emotion": "surprise",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, freckled teenage girl with red pigtails and overalls, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, airport gate"
   },
   {
    "id": "037",
-   "pair": 21,
+   "pair": 18,
    "variant": "local",
    "emotion": "fear",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, bald man with tattoos and a tank top, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, football stadium"
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, middle-aged woman with a pixie cut and a business suit, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, hospital waiting room"
   },
   {
    "id": "038",
    "pair": 54,
    "variant": "local",
    "emotion": "neutral",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, bald man with tattoos and a tank top, calm relaxed face, talking, gesturing casually, camping tent"
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, boy with a buzz cut and a soccer jersey, calm relaxed face, talking, gesturing casually, rainy rooftop"
   },
   {
    "id": "039",
-   "pair": 31,
-   "variant": "faceshape",
+   "pair": 15,
+   "variant": "local",
+   "emotion": "disgust",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, freckled teenage girl with red pigtails and overalls, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, elevator"
+  },
+  {
+   "id": "040",
+   "pair": 6,
+   "variant": "local",
+   "emotion": "anger",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, woman with long silver hair and a green scarf, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, supermarket aisle"
+  },
+  {
+   "id": "041",
+   "pair": 14,
+   "variant": "lcm",
+   "emotion": "disgust",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, young man with dreadlocks and a yellow raincoat, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, library"
+  },
+  {
+   "id": "042",
+   "pair": 53,
+   "variant": "lcm",
+   "emotion": "neutral",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, elderly woman with a white bun and round spectacles, calm relaxed face, talking, gesturing casually, supermarket aisle"
+  },
+  {
+   "id": "043",
+   "pair": 28,
+   "variant": "lcm",
    "emotion": "joy",
    "prompt": "comic panel, clean ink lines, flat colors, close-up, middle-aged woman with a pixie cut and a business suit, happy face, big smile, bright eyes, laughing, arms thrown open, football stadium"
   },
   {
-   "id": "040",
-   "pair": 48,
-   "variant": "faceshape",
-   "emotion": "neutral",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, tall man with a black beard and a beanie, calm relaxed face, talking, gesturing casually, football stadium"
-  },
-  {
-   "id": "041",
-   "pair": 24,
-   "variant": "faceshape",
-   "emotion": "joy",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, elderly woman with a white bun and round spectacles, happy face, big smile, bright eyes, laughing, arms thrown open, elevator"
-  },
-  {
-   "id": "042",
-   "pair": 6,
-   "variant": "local",
-   "emotion": "anger",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, woman with long silver hair and a green scarf, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, elevator"
-  },
-  {
-   "id": "043",
-   "pair": 45,
+   "id": "044",
+   "pair": 42,
    "variant": "local",
    "emotion": "surprise",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, young man with dreadlocks and a yellow raincoat, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, library"
-  },
-  {
-   "id": "044",
-   "pair": 11,
-   "variant": "faceshape",
-   "emotion": "disgust",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, elderly woman with a white bun and round spectacles, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, hospital waiting room"
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, middle-aged woman with a pixie cut and a business suit, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, football stadium"
   },
   {
    "id": "045",
-   "pair": 23,
+   "pair": 16,
    "variant": "local",
    "emotion": "fear",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, elderly woman with a white bun and round spectacles, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, rainy rooftop"
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, young man with dreadlocks and a yellow raincoat, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, elevator"
   },
   {
    "id": "046",
-   "pair": 50,
-   "variant": "faceshape",
-   "emotion": "neutral",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, young man with dreadlocks and a yellow raincoat, calm relaxed face, talking, gesturing casually, camping tent"
+   "pair": 28,
+   "variant": "local",
+   "emotion": "joy",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, middle-aged woman with a pixie cut and a business suit, happy face, big smile, bright eyes, laughing, arms thrown open, football stadium"
   },
   {
    "id": "047",
-   "pair": 50,
-   "variant": "local",
-   "emotion": "neutral",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, young man with dreadlocks and a yellow raincoat, calm relaxed face, talking, gesturing casually, camping tent"
+   "pair": 2,
+   "variant": "lcm",
+   "emotion": "anger",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, boy with a buzz cut and a soccer jersey, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, hospital waiting room"
   },
   {
    "id": "048",
-   "pair": 15,
-   "variant": "faceshape",
-   "emotion": "disgust",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, tall man with a black beard and a beanie, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, library"
+   "pair": 33,
+   "variant": "lcm",
+   "emotion": "sadness",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, elderly woman with a white bun and round spectacles, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, football stadium"
   },
   {
    "id": "049",
-   "pair": 38,
-   "variant": "faceshape",
-   "emotion": "sadness",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, tall man with a black beard and a beanie, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, library"
+   "pair": 20,
+   "variant": "lcm",
+   "emotion": "fear",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, woman with long silver hair and a green scarf, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, airport gate"
   },
   {
    "id": "050",
-   "pair": 29,
-   "variant": "faceshape",
-   "emotion": "joy",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, woman with long silver hair and a green scarf, happy face, big smile, bright eyes, laughing, arms thrown open, supermarket aisle"
+   "pair": 17,
+   "variant": "lcm",
+   "emotion": "fear",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, freckled teenage girl with red pigtails and overalls, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, football stadium"
   },
   {
    "id": "051",
-   "pair": 32,
-   "variant": "faceshape",
+   "pair": 39,
+   "variant": "lcm",
    "emotion": "sadness",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, tall man with a black beard and a beanie, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, elevator"
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, young man with dreadlocks and a yellow raincoat, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, rainy rooftop"
   },
   {
    "id": "052",
-   "pair": 2,
-   "variant": "faceshape",
-   "emotion": "anger",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, middle-aged woman with a pixie cut and a business suit, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, airport gate"
+   "pair": 31,
+   "variant": "local",
+   "emotion": "joy",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, middle-aged woman with a pixie cut and a business suit, happy face, big smile, bright eyes, laughing, arms thrown open, elevator"
   },
   {
    "id": "053",
-   "pair": 12,
-   "variant": "faceshape",
-   "emotion": "disgust",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, young man with dreadlocks and a yellow raincoat, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, camping tent"
+   "pair": 20,
+   "variant": "local",
+   "emotion": "fear",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, woman with long silver hair and a green scarf, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, airport gate"
   },
   {
    "id": "054",
-   "pair": 46,
+   "pair": 14,
    "variant": "local",
-   "emotion": "surprise",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, boy with a buzz cut and a soccer jersey, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, supermarket aisle"
+   "emotion": "disgust",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, young man with dreadlocks and a yellow raincoat, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, library"
   },
   {
    "id": "055",
-   "pair": 53,
-   "variant": "faceshape",
-   "emotion": "neutral",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, elderly woman with a white bun and round spectacles, calm relaxed face, talking, gesturing casually, rainy rooftop"
+   "pair": 22,
+   "variant": "lcm",
+   "emotion": "fear",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, middle-aged woman with a pixie cut and a business suit, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, airport gate"
   },
   {
    "id": "056",
-   "pair": 17,
-   "variant": "local",
-   "emotion": "fear",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, freckled teenage girl with red pigtails and overalls, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, library"
+   "pair": 6,
+   "variant": "lcm",
+   "emotion": "anger",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, woman with long silver hair and a green scarf, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, supermarket aisle"
   },
   {
    "id": "057",
-   "pair": 23,
-   "variant": "faceshape",
-   "emotion": "fear",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, elderly woman with a white bun and round spectacles, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, rainy rooftop"
+   "pair": 44,
+   "variant": "local",
+   "emotion": "surprise",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, young man with dreadlocks and a yellow raincoat, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, hospital waiting room"
   },
   {
    "id": "058",
-   "pair": 40,
-   "variant": "faceshape",
+   "pair": 44,
+   "variant": "lcm",
    "emotion": "surprise",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, bald man with tattoos and a tank top, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, elevator"
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, young man with dreadlocks and a yellow raincoat, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, hospital waiting room"
   },
   {
    "id": "059",
-   "pair": 14,
-   "variant": "faceshape",
-   "emotion": "disgust",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, young man with dreadlocks and a yellow raincoat, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, camping tent"
-  },
-  {
-   "id": "060",
-   "pair": 36,
-   "variant": "faceshape",
-   "emotion": "sadness",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, tall man with a black beard and a beanie, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, rainy rooftop"
-  },
-  {
-   "id": "061",
-   "pair": 2,
-   "variant": "local",
-   "emotion": "anger",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, middle-aged woman with a pixie cut and a business suit, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, airport gate"
-  },
-  {
-   "id": "062",
-   "pair": 42,
-   "variant": "faceshape",
-   "emotion": "surprise",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, elderly woman with a white bun and round spectacles, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, football stadium"
-  },
-  {
-   "id": "063",
-   "pair": 13,
-   "variant": "faceshape",
-   "emotion": "disgust",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, young man with dreadlocks and a yellow raincoat, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, hospital waiting room"
-  },
-  {
-   "id": "064",
-   "pair": 5,
-   "variant": "local",
-   "emotion": "anger",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, boy with a buzz cut and a soccer jersey, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, rainy rooftop"
-  },
-  {
-   "id": "065",
-   "pair": 49,
-   "variant": "faceshape",
-   "emotion": "neutral",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, tall man with a black beard and a beanie, calm relaxed face, talking, gesturing casually, elevator"
-  },
-  {
-   "id": "066",
-   "pair": 48,
-   "variant": "local",
-   "emotion": "neutral",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, tall man with a black beard and a beanie, calm relaxed face, talking, gesturing casually, football stadium"
-  },
-  {
-   "id": "067",
-   "pair": 13,
-   "variant": "local",
-   "emotion": "disgust",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, young man with dreadlocks and a yellow raincoat, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, hospital waiting room"
-  },
-  {
-   "id": "068",
-   "pair": 8,
-   "variant": "faceshape",
-   "emotion": "disgust",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, bald man with tattoos and a tank top, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, library"
-  },
-  {
-   "id": "069",
-   "pair": 38,
-   "variant": "local",
-   "emotion": "sadness",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, tall man with a black beard and a beanie, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, library"
-  },
-  {
-   "id": "070",
-   "pair": 41,
-   "variant": "faceshape",
-   "emotion": "surprise",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, boy with a buzz cut and a soccer jersey, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, elevator"
-  },
-  {
-   "id": "071",
-   "pair": 9,
-   "variant": "local",
-   "emotion": "disgust",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, tall man with a black beard and a beanie, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, elevator"
-  },
-  {
-   "id": "072",
-   "pair": 44,
-   "variant": "local",
-   "emotion": "surprise",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, boy with a buzz cut and a soccer jersey, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, supermarket aisle"
-  },
-  {
-   "id": "073",
-   "pair": 7,
-   "variant": "local",
-   "emotion": "anger",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, freckled teenage girl with red pigtails and overalls, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, airport gate"
-  },
-  {
-   "id": "074",
-   "pair": 27,
-   "variant": "local",
-   "emotion": "joy",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, bald man with tattoos and a tank top, happy face, big smile, bright eyes, laughing, arms thrown open, hospital waiting room"
-  },
-  {
-   "id": "075",
-   "pair": 0,
-   "variant": "faceshape",
-   "emotion": "anger",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, boy with a buzz cut and a soccer jersey, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, supermarket aisle"
-  },
-  {
-   "id": "076",
-   "pair": 26,
-   "variant": "faceshape",
-   "emotion": "joy",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, middle-aged woman with a pixie cut and a business suit, happy face, big smile, bright eyes, laughing, arms thrown open, camping tent"
-  },
-  {
-   "id": "077",
-   "pair": 43,
-   "variant": "faceshape",
-   "emotion": "surprise",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, boy with a buzz cut and a soccer jersey, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, football stadium"
-  },
-  {
-   "id": "078",
-   "pair": 55,
-   "variant": "local",
-   "emotion": "neutral",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, young man with dreadlocks and a yellow raincoat, calm relaxed face, talking, gesturing casually, supermarket aisle"
-  },
-  {
-   "id": "079",
-   "pair": 3,
-   "variant": "local",
-   "emotion": "anger",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, freckled teenage girl with red pigtails and overalls, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, elevator"
-  },
-  {
-   "id": "080",
-   "pair": 44,
-   "variant": "faceshape",
-   "emotion": "surprise",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, boy with a buzz cut and a soccer jersey, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, supermarket aisle"
-  },
-  {
-   "id": "081",
-   "pair": 11,
-   "variant": "local",
-   "emotion": "disgust",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, elderly woman with a white bun and round spectacles, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, hospital waiting room"
-  },
-  {
-   "id": "082",
-   "pair": 42,
-   "variant": "local",
-   "emotion": "surprise",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, elderly woman with a white bun and round spectacles, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, football stadium"
-  },
-  {
-   "id": "083",
-   "pair": 52,
-   "variant": "faceshape",
-   "emotion": "neutral",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, freckled teenage girl with red pigtails and overalls, calm relaxed face, talking, gesturing casually, library"
-  },
-  {
-   "id": "084",
-   "pair": 55,
-   "variant": "faceshape",
-   "emotion": "neutral",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, young man with dreadlocks and a yellow raincoat, calm relaxed face, talking, gesturing casually, supermarket aisle"
-  },
-  {
-   "id": "085",
-   "pair": 26,
-   "variant": "local",
-   "emotion": "joy",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, middle-aged woman with a pixie cut and a business suit, happy face, big smile, bright eyes, laughing, arms thrown open, camping tent"
-  },
-  {
-   "id": "086",
-   "pair": 3,
-   "variant": "faceshape",
-   "emotion": "anger",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, freckled teenage girl with red pigtails and overalls, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, elevator"
-  },
-  {
-   "id": "087",
-   "pair": 6,
-   "variant": "faceshape",
-   "emotion": "anger",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, woman with long silver hair and a green scarf, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, elevator"
-  },
-  {
-   "id": "088",
-   "pair": 10,
-   "variant": "faceshape",
-   "emotion": "disgust",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, boy with a buzz cut and a soccer jersey, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, library"
-  },
-  {
-   "id": "089",
-   "pair": 34,
-   "variant": "faceshape",
-   "emotion": "sadness",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, bald man with tattoos and a tank top, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, elevator"
-  },
-  {
-   "id": "090",
-   "pair": 22,
-   "variant": "faceshape",
-   "emotion": "fear",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, young man with dreadlocks and a yellow raincoat, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, supermarket aisle"
-  },
-  {
-   "id": "091",
-   "pair": 28,
+   "pair": 25,
    "variant": "local",
    "emotion": "joy",
    "prompt": "comic panel, clean ink lines, flat colors, medium shot, bald man with tattoos and a tank top, happy face, big smile, bright eyes, laughing, arms thrown open, supermarket aisle"
   },
   {
-   "id": "092",
-   "pair": 0,
+   "id": "060",
+   "pair": 22,
    "variant": "local",
-   "emotion": "anger",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, boy with a buzz cut and a soccer jersey, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, supermarket aisle"
+   "emotion": "fear",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, middle-aged woman with a pixie cut and a business suit, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, airport gate"
   },
   {
-   "id": "093",
+   "id": "061",
    "pair": 19,
    "variant": "local",
    "emotion": "fear",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, boy with a buzz cut and a soccer jersey, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, airport gate"
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, woman with long silver hair and a green scarf, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, camping tent"
+  },
+  {
+   "id": "062",
+   "pair": 26,
+   "variant": "local",
+   "emotion": "joy",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, middle-aged woman with a pixie cut and a business suit, happy face, big smile, bright eyes, laughing, arms thrown open, library"
+  },
+  {
+   "id": "063",
+   "pair": 43,
+   "variant": "lcm",
+   "emotion": "surprise",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, freckled teenage girl with red pigtails and overalls, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, airport gate"
+  },
+  {
+   "id": "064",
+   "pair": 34,
+   "variant": "lcm",
+   "emotion": "sadness",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, bald man with tattoos and a tank top, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, elevator"
+  },
+  {
+   "id": "065",
+   "pair": 0,
+   "variant": "local",
+   "emotion": "anger",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, freckled teenage girl with red pigtails and overalls, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, elevator"
+  },
+  {
+   "id": "066",
+   "pair": 34,
+   "variant": "local",
+   "emotion": "sadness",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, bald man with tattoos and a tank top, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, elevator"
+  },
+  {
+   "id": "067",
+   "pair": 41,
+   "variant": "local",
+   "emotion": "surprise",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, freckled teenage girl with red pigtails and overalls, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, hospital waiting room"
+  },
+  {
+   "id": "068",
+   "pair": 48,
+   "variant": "local",
+   "emotion": "neutral",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, tall man with a black beard and a beanie, calm relaxed face, talking, gesturing casually, library"
+  },
+  {
+   "id": "069",
+   "pair": 1,
+   "variant": "local",
+   "emotion": "anger",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, boy with a buzz cut and a soccer jersey, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, elevator"
+  },
+  {
+   "id": "070",
+   "pair": 9,
+   "variant": "lcm",
+   "emotion": "disgust",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, tall man with a black beard and a beanie, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, elevator"
+  },
+  {
+   "id": "071",
+   "pair": 47,
+   "variant": "lcm",
+   "emotion": "surprise",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, tall man with a black beard and a beanie, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, hospital waiting room"
+  },
+  {
+   "id": "072",
+   "pair": 40,
+   "variant": "lcm",
+   "emotion": "surprise",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, bald man with tattoos and a tank top, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, airport gate"
+  },
+  {
+   "id": "073",
+   "pair": 27,
+   "variant": "lcm",
+   "emotion": "joy",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, elderly woman with a white bun and round spectacles, happy face, big smile, bright eyes, laughing, arms thrown open, supermarket aisle"
+  },
+  {
+   "id": "074",
+   "pair": 13,
+   "variant": "local",
+   "emotion": "disgust",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, bald man with tattoos and a tank top, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, supermarket aisle"
+  },
+  {
+   "id": "075",
+   "pair": 11,
+   "variant": "lcm",
+   "emotion": "disgust",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, boy with a buzz cut and a soccer jersey, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, hospital waiting room"
+  },
+  {
+   "id": "076",
+   "pair": 50,
+   "variant": "local",
+   "emotion": "neutral",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, middle-aged woman with a pixie cut and a business suit, calm relaxed face, talking, gesturing casually, camping tent"
+  },
+  {
+   "id": "077",
+   "pair": 10,
+   "variant": "local",
+   "emotion": "disgust",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, boy with a buzz cut and a soccer jersey, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, football stadium"
+  },
+  {
+   "id": "078",
+   "pair": 49,
+   "variant": "local",
+   "emotion": "neutral",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, freckled teenage girl with red pigtails and overalls, calm relaxed face, talking, gesturing casually, airport gate"
+  },
+  {
+   "id": "079",
+   "pair": 19,
+   "variant": "lcm",
+   "emotion": "fear",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, woman with long silver hair and a green scarf, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, camping tent"
+  },
+  {
+   "id": "080",
+   "pair": 11,
+   "variant": "local",
+   "emotion": "disgust",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, boy with a buzz cut and a soccer jersey, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, hospital waiting room"
+  },
+  {
+   "id": "081",
+   "pair": 21,
+   "variant": "lcm",
+   "emotion": "fear",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, freckled teenage girl with red pigtails and overalls, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, hospital waiting room"
+  },
+  {
+   "id": "082",
+   "pair": 18,
+   "variant": "lcm",
+   "emotion": "fear",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, middle-aged woman with a pixie cut and a business suit, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, hospital waiting room"
+  },
+  {
+   "id": "083",
+   "pair": 21,
+   "variant": "local",
+   "emotion": "fear",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, freckled teenage girl with red pigtails and overalls, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, hospital waiting room"
+  },
+  {
+   "id": "084",
+   "pair": 51,
+   "variant": "lcm",
+   "emotion": "neutral",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, boy with a buzz cut and a soccer jersey, calm relaxed face, talking, gesturing casually, supermarket aisle"
+  },
+  {
+   "id": "085",
+   "pair": 13,
+   "variant": "lcm",
+   "emotion": "disgust",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, bald man with tattoos and a tank top, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, supermarket aisle"
+  },
+  {
+   "id": "086",
+   "pair": 36,
+   "variant": "lcm",
+   "emotion": "sadness",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, middle-aged woman with a pixie cut and a business suit, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, rainy rooftop"
+  },
+  {
+   "id": "087",
+   "pair": 38,
+   "variant": "lcm",
+   "emotion": "sadness",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, boy with a buzz cut and a soccer jersey, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, elevator"
+  },
+  {
+   "id": "088",
+   "pair": 16,
+   "variant": "lcm",
+   "emotion": "fear",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, young man with dreadlocks and a yellow raincoat, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, elevator"
+  },
+  {
+   "id": "089",
+   "pair": 12,
+   "variant": "lcm",
+   "emotion": "disgust",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, elderly woman with a white bun and round spectacles, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, camping tent"
+  },
+  {
+   "id": "090",
+   "pair": 12,
+   "variant": "local",
+   "emotion": "disgust",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, elderly woman with a white bun and round spectacles, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, camping tent"
+  },
+  {
+   "id": "091",
+   "pair": 7,
+   "variant": "lcm",
+   "emotion": "anger",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, elderly woman with a white bun and round spectacles, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, camping tent"
+  },
+  {
+   "id": "092",
+   "pair": 8,
+   "variant": "local",
+   "emotion": "disgust",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, tall man with a black beard and a beanie, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, football stadium"
+  },
+  {
+   "id": "093",
+   "pair": 2,
+   "variant": "local",
+   "emotion": "anger",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, boy with a buzz cut and a soccer jersey, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, hospital waiting room"
   },
   {
    "id": "094",
-   "pair": 33,
-   "variant": "local",
-   "emotion": "sadness",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, woman with long silver hair and a green scarf, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, hospital waiting room"
+   "pair": 50,
+   "variant": "lcm",
+   "emotion": "neutral",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, middle-aged woman with a pixie cut and a business suit, calm relaxed face, talking, gesturing casually, camping tent"
   },
   {
    "id": "095",
-   "pair": 25,
+   "pair": 3,
    "variant": "local",
-   "emotion": "joy",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, freckled teenage girl with red pigtails and overalls, happy face, big smile, bright eyes, laughing, arms thrown open, football stadium"
+   "emotion": "anger",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, tall man with a black beard and a beanie, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, football stadium"
   },
   {
    "id": "096",
-   "pair": 45,
-   "variant": "faceshape",
-   "emotion": "surprise",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, young man with dreadlocks and a yellow raincoat, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, library"
+   "pair": 9,
+   "variant": "local",
+   "emotion": "disgust",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, tall man with a black beard and a beanie, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, elevator"
   },
   {
    "id": "097",
-   "pair": 16,
+   "pair": 4,
    "variant": "local",
-   "emotion": "fear",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, tall man with a black beard and a beanie, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, rainy rooftop"
+   "emotion": "anger",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, bald man with tattoos and a tank top, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, rainy rooftop"
   },
   {
    "id": "098",
-   "pair": 20,
-   "variant": "faceshape",
-   "emotion": "fear",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, freckled teenage girl with red pigtails and overalls, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, football stadium"
+   "pair": 40,
+   "variant": "local",
+   "emotion": "surprise",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, bald man with tattoos and a tank top, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, airport gate"
   },
   {
    "id": "099",
-   "pair": 1,
-   "variant": "faceshape",
-   "emotion": "anger",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, tall man with a black beard and a beanie, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, library"
+   "pair": 45,
+   "variant": "local",
+   "emotion": "surprise",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, middle-aged woman with a pixie cut and a business suit, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, football stadium"
   },
   {
    "id": "100",
-   "pair": 7,
-   "variant": "faceshape",
-   "emotion": "anger",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, freckled teenage girl with red pigtails and overalls, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, airport gate"
+   "pair": 30,
+   "variant": "lcm",
+   "emotion": "joy",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, elderly woman with a white bun and round spectacles, happy face, big smile, bright eyes, laughing, arms thrown open, hospital waiting room"
   },
   {
    "id": "101",
-   "pair": 14,
+   "pair": 39,
    "variant": "local",
-   "emotion": "disgust",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, young man with dreadlocks and a yellow raincoat, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, camping tent"
+   "emotion": "sadness",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, young man with dreadlocks and a yellow raincoat, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, rainy rooftop"
   },
   {
    "id": "102",
-   "pair": 37,
-   "variant": "faceshape",
-   "emotion": "sadness",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, bald man with tattoos and a tank top, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, supermarket aisle"
+   "pair": 5,
+   "variant": "lcm",
+   "emotion": "anger",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, elderly woman with a white bun and round spectacles, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, football stadium"
   },
   {
    "id": "103",
-   "pair": 47,
-   "variant": "local",
-   "emotion": "surprise",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, middle-aged woman with a pixie cut and a business suit, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, airport gate"
+   "pair": 26,
+   "variant": "lcm",
+   "emotion": "joy",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, middle-aged woman with a pixie cut and a business suit, happy face, big smile, bright eyes, laughing, arms thrown open, library"
   },
   {
    "id": "104",
-   "pair": 21,
-   "variant": "faceshape",
-   "emotion": "fear",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, bald man with tattoos and a tank top, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, football stadium"
+   "pair": 35,
+   "variant": "local",
+   "emotion": "sadness",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, freckled teenage girl with red pigtails and overalls, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, elevator"
   },
   {
    "id": "105",
-   "pair": 32,
-   "variant": "local",
-   "emotion": "sadness",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, tall man with a black beard and a beanie, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, elevator"
+   "pair": 25,
+   "variant": "lcm",
+   "emotion": "joy",
+   "prompt": "comic panel, clean ink lines, flat colors, medium shot, bald man with tattoos and a tank top, happy face, big smile, bright eyes, laughing, arms thrown open, supermarket aisle"
   },
   {
    "id": "106",
-   "pair": 51,
-   "variant": "faceshape",
-   "emotion": "neutral",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, middle-aged woman with a pixie cut and a business suit, calm relaxed face, talking, gesturing casually, library"
+   "pair": 38,
+   "variant": "local",
+   "emotion": "sadness",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, boy with a buzz cut and a soccer jersey, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, elevator"
   },
   {
    "id": "107",
-   "pair": 54,
-   "variant": "faceshape",
+   "pair": 49,
+   "variant": "lcm",
    "emotion": "neutral",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, bald man with tattoos and a tank top, calm relaxed face, talking, gesturing casually, camping tent"
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, freckled teenage girl with red pigtails and overalls, calm relaxed face, talking, gesturing casually, airport gate"
   },
   {
    "id": "108",
-   "pair": 31,
+   "pair": 46,
    "variant": "local",
-   "emotion": "joy",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, middle-aged woman with a pixie cut and a business suit, happy face, big smile, bright eyes, laughing, arms thrown open, football stadium"
+   "emotion": "surprise",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, tall man with a black beard and a beanie, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, rainy rooftop"
   },
   {
    "id": "109",
-   "pair": 51,
-   "variant": "local",
-   "emotion": "neutral",
-   "prompt": "comic panel, clean ink lines, flat colors, medium shot, middle-aged woman with a pixie cut and a business suit, calm relaxed face, talking, gesturing casually, library"
+   "pair": 23,
+   "variant": "lcm",
+   "emotion": "fear",
+   "prompt": "comic panel, clean ink lines, flat colors, close-up, young man with dreadlocks and a yellow raincoat, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, hospital waiting room"
   },
   {
    "id": "110",
-   "pair": 25,
-   "variant": "faceshape",
-   "emotion": "joy",
-   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, freckled teenage girl with red pigtails and overalls, happy face, big smile, bright eyes, laughing, arms thrown open, football stadium"
+   "pair": 33,
+   "variant": "local",
+   "emotion": "sadness",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, elderly woman with a white bun and round spectacles, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, football stadium"
   },
   {
    "id": "111",
-   "pair": 43,
+   "pair": 30,
    "variant": "local",
-   "emotion": "surprise",
-   "prompt": "comic panel, clean ink lines, flat colors, close-up, boy with a buzz cut and a soccer jersey, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, football stadium"
+   "emotion": "joy",
+   "prompt": "comic panel, clean ink lines, flat colors, medium close-up, elderly woman with a white bun and round spectacles, happy face, big smile, bright eyes, laughing, arms thrown open, hospital waiting room"
   }
  ]
 }
