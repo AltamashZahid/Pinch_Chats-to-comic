@@ -14,7 +14,6 @@ Character descriptions are repeated verbatim in every panel to keep characters
 consistent. Without an LLM configured, templates keep the pipeline working.
 """
 import json
-import math
 import os
 import re
 from dataclasses import dataclass, field
@@ -23,7 +22,7 @@ from .llm import LLMClient, LLMError
 from .style import (ART_STYLE, BUBBLE, DEFAULT_CHARACTERS, EXPRESSION, IRONY, POSE, SHOT,
                     SHOT_ALTERNATIVES, STORY_LOCATION, STORY_POSE, TEXTING_LOCATIONS)
 
-MAX_PANELS = 6
+MAX_PANELS = 8
 MODES = ("story", "texting")
 
 
@@ -87,27 +86,24 @@ class Script:
 
 
 def group_panels(lines: list[Line], max_panels: int = MAX_PANELS) -> list[list[Line]]:
-    """Consecutive lines, at most 2 per panel unless the chat is long."""
-    if not lines:
-        return []
-    per_panel = max(2, math.ceil(len(lines) / max_panels))
-    return [lines[i:i + per_panel] for i in range(0, len(lines), per_panel)]
+    """One panel per turn, in chat order.
+
+    A turn is consecutive messages from the same person ("Awww" + "Me 2" is one reply), so
+    every panel shows exactly one speaker and only their bubbles: the face on screen is
+    always the one talking. Long chats keep their most recent `max_panels` turns."""
+    turns: list[list[Line]] = []
+    for line in lines:
+        if turns and turns[-1][0].speaker == line.speaker:
+            turns[-1].append(line)
+        else:
+            turns.append([line])
+    return turns[-max_panels:]
 
 
 def panel_emotion(lines: list[Line], speaker: str) -> str:
     """The speaker's strongest non-neutral emotion in the panel, else neutral."""
     felt = [l for l in lines if l.speaker == speaker and l.emotion != "neutral"]
     return max(felt, key=lambda l: l.confidence).emotion if felt else "neutral"
-
-
-def choose_focus(lines: list[Line], previous: str | None) -> str:
-    """Show whoever feels the most; if nobody does, alternate so both characters appear."""
-    felt = [l for l in lines if l.emotion != "neutral"]
-    if felt:
-        return max(felt, key=lambda l: l.confidence).speaker
-    speakers = [l.speaker for l in lines]
-    others = [s for s in speakers if s != previous]
-    return others[-1] if others else speakers[-1]
 
 
 def choose_shot(emotion: str, index: int, previous: str | None) -> str:
@@ -130,28 +126,29 @@ def build_prompt(script: Script, panel: Panel) -> str:
 
 SYSTEM_STORY = """You turn text-message conversations into short in-person comics.
 Act the conversation out: the two people are TOGETHER in one place, talking face to face.
-Each panel centres ONE of them, doing something that shows what the messages are about
+Each panel shows the person speaking in that turn, doing something that shows what the messages are about
 (a kind message -> a hug or handing over a gift; bad news -> slumping while the other
 comforts; a joke -> doubling over laughing). No phones unless the messages are about one.
 Reply with JSON only, no prose, in exactly this shape:
 {"characters": {"me": "<fixed visual look: age, gender, hair, clothes, 6-12 words>", "them": "<same>"},
  "locations": {"me": "<the shared place, 3-8 words>", "them": "<the SAME place>"},
  "panels": [{"focus": "me" or "them", "action": "<what they visibly do, 4-10 words>"}, ...]}
-Rules: one entry in "panels" per panel given, in order. Pick as focus the person whose
-reaction matters most in that panel. The action must fit the emotion shown in brackets.
+Rules: one entry in "panels" per panel given, in order. Each panel is ONE person's turn
+in the conversation; its focus is the person speaking (given for each panel). The action must fit the emotion shown in brackets.
 Describe only what a camera sees: no dialogue, no text, no speech bubbles. Messages may
 be in Hinglish or slang; infer the meaning. Make the two characters look clearly different.
 Lines marked IRONIC have an emoji that contradicts the words (e.g. "I failed 😂"): make
 that panel funny, with the person reacting like the emoji while the situation matches the words."""
 
 SYSTEM_TEXTING = """You write scripts for short comics made from text-message conversations.
-The two people are texting, so they are in different places. Each panel shows ONE of them.
+The two people are texting, so they are in different places. Each panel shows the person
+speaking in that turn.
 Reply with JSON only, no prose, in exactly this shape:
 {"characters": {"me": "<fixed visual look: age, gender, hair, clothes, 6-12 words>", "them": "<same>"},
  "locations": {"me": "<where 'me' is while texting, 3-8 words>", "them": "<same>"},
  "panels": [{"focus": "me" or "them", "action": "<what they visibly do, 4-10 words>"}, ...]}
-Rules: one entry in "panels" per panel given, in order. Pick as focus the person whose
-reaction matters most in that panel. The action must fit the emotion shown in brackets
+Rules: one entry in "panels" per panel given, in order. Each panel is ONE person's turn
+in the conversation; its focus is the person speaking (given for each panel). The action must fit the emotion shown in brackets
 and the location, and should involve their phone or surroundings. Describe only what a
 camera sees: no dialogue, no text, no speech bubbles. Messages may be in Hinglish or
 slang; infer the meaning. Make the two characters look clearly different.
@@ -162,7 +159,7 @@ that panel funny, with the person reacting like the emoji while the situation ma
 def _user_prompt(groups: list[list[Line]]) -> str:
     out = []
     for i, group in enumerate(groups, 1):
-        out.append(f"Panel {i}:")
+        out.append(f"Panel {i} ({group[0].speaker} speaks, focus must be {group[0].speaker}):")
         for l in group:
             tag = f"IRONIC: acts {l.emotion}, really {l.situation}" if l.ironic else l.emotion
             out.append(f'  {l.speaker} ({tag}): "{l.display}"')
@@ -213,10 +210,8 @@ def write_script(lines: list[Line], llm: LLMClient | None = None, mode: str | No
 
     prev_focus = prev_shot = None
     for i, group in enumerate(groups):
-        speakers = {l.speaker for l in group}
-        focus, action = directions[i] if directions else (None, "")
-        if focus not in speakers:  # LLM picked someone silent in this panel, or no LLM
-            focus = choose_focus(group, prev_focus)
+        focus = group[0].speaker  # each panel is one person's turn
+        _, action = directions[i] if directions else (None, "")
         panel = Panel(group, focus)
         panel.action = action or poses[panel.emotion]
         panel.shot = choose_shot(panel.emotion, i, prev_shot)

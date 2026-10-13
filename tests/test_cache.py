@@ -70,8 +70,8 @@ def test_render_generates_once_then_hits_cache(cache):
     script = write_script(lines)
     first = render_panels(script, PlaceholderBackend(), cache, 256, 256)
     second = render_panels(script, PlaceholderBackend(), cache, 256, 256)
-    assert [r.source for r in first] == ["generated"]
-    assert [r.source for r in second] == ["exact"]
+    assert [r.source for r in first] == ["generated", "generated"]  # one panel per speaker's turn
+    assert [r.source for r in second] == ["exact", "exact"]
     assert first[0].image == second[0].image
 
 
