@@ -3,11 +3,9 @@ import json
 import httpx
 
 from pinch.llm import LLMClient, LLMError
-from pinch.scenes import (Line, choose_focus, choose_shot, group_panels, panel_emotion,
-                          write_script)
+from pinch.scenes import Line, choose_shot, group_panels, panel_emotion, write_script
 
-LINES = [
-    Line("them", "the deadline is today", "fear", 0.8),
+LINES = [  # two turns: "me" (two messages), then "them"
     Line("me", "WHAT", "surprise", 0.9),
     Line("me", "i'm so dead", "sadness", 0.6),
     Line("them", "lol good luck", "joy", 0.7),
@@ -28,13 +26,18 @@ def fake_llm(reply, status=200):
     return LLMClient("https://fake/v1", "key", "model", transport=httpx.MockTransport(handler))
 
 
-def test_group_panels_two_lines_each():
-    assert [len(g) for g in group_panels(LINES)] == [2, 2]
+def test_one_panel_per_turn_in_chat_order():
+    lines = [Line("them", "Love uuu"), Line("me", "Awww"), Line("me", "Me 2"),
+             Line("them", "Missing u"), Line("me", "Same")]
+    groups = group_panels(lines)
+    assert [[l.text for l in g] for g in groups] == [["Love uuu"], ["Awww", "Me 2"], ["Missing u"], ["Same"]]
+    assert all(len({l.speaker for l in g}) == 1 for g in groups)
 
 
-def test_group_panels_caps_panel_count():
-    lines = [Line("me", str(i)) for i in range(20)]
-    assert len(group_panels(lines, max_panels=6)) <= 6
+def test_long_chats_keep_most_recent_turns():
+    lines = [Line("me" if i % 2 else "them", str(i)) for i in range(20)]
+    groups = group_panels(lines, max_panels=6)
+    assert len(groups) == 6 and groups[-1][0].text == "19"
 
 
 def test_panel_emotion_picks_strongest_non_neutral():
@@ -44,14 +47,10 @@ def test_panel_emotion_picks_strongest_non_neutral():
     assert panel_emotion(lines, "them") == "neutral"
 
 
-def test_focus_is_the_most_emotional_speaker():
-    assert choose_focus(LINES[:2], None) == "me"  # surprise 0.9 beats fear 0.8
-
-
-def test_focus_alternates_when_nobody_feels_anything():
-    calm = [Line("me", "ok"), Line("them", "sure")]
-    assert choose_focus(calm, previous="them") == "me"
-    assert choose_focus(calm, previous="me") == "them"
+def test_every_panel_shows_whoever_is_speaking():
+    script = write_script(LINES)
+    for p in script.panels:
+        assert {l.speaker for l in p.lines} == {p.focus}
 
 
 def test_shot_follows_emotion_and_never_repeats():
@@ -73,8 +72,9 @@ def test_texting_mode_shows_one_character_in_their_own_place():
 
 def test_consecutive_template_panels_differ():
     lines = [Line("me", "ok"), Line("them", "sure"), Line("me", "fine"), Line("them", "cool")]
-    a, b = write_script(lines, mode="texting").panels
-    assert a.prompt != b.prompt
+    panels = write_script(lines, mode="texting").panels
+    assert len(panels) == 4
+    assert all(a.prompt != b.prompt for a, b in zip(panels, panels[1:]))
 
 
 def test_llm_script_uses_its_cast_locations_and_actions():
@@ -88,11 +88,11 @@ def test_llm_script_uses_its_cast_locations_and_actions():
     assert "shocked face" in p1.prompt and "extreme close-up" in p1.prompt
 
 
-def test_llm_focus_on_silent_character_is_overridden():
-    reply = dict(GOOD_REPLY, panels=[{"focus": "nobody", "action": "x"},
-                                     {"focus": "them", "action": "y"}])
+def test_focus_is_always_the_speaker_whatever_the_llm_says():
+    reply = dict(GOOD_REPLY, panels=[{"focus": "them", "action": "x"},
+                                     {"focus": "nobody", "action": "y"}])
     script = write_script(LINES, fake_llm(json.dumps(reply)))
-    assert script.panels[0].focus == "me"
+    assert [p.focus for p in script.panels] == ["me", "them"]
 
 
 def test_code_fenced_json_is_accepted():

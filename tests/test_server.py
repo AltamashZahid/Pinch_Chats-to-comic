@@ -50,7 +50,7 @@ def test_end_to_end_then_cached(client, tmp_path):
     first = client.post("/api/comic", files={"file": ("chat.png", data, "image/png")}).json()
     assert [l["speaker"] for p in first["panels"] for l in p["lines"]] == ["them", "me"]
     assert (tmp_path / first["comic_url"].split("/")[-1]).exists()
-    assert first["cache"]["miss"] == 1
+    assert first["cache"]["miss"] == 2  # one panel per turn
 
     again = client.post("/api/comic", files={"file": ("chat.png", data, "image/png")}).json()
     assert again["panels"][0]["source"] == "exact"
