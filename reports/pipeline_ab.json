@@ -1,0 +1,57 @@
+{
+  "variants": {
+    "A_turbo_best4": {
+      "correct": 38,
+      "n": 56,
+      "rate": 0.679,
+      "ci95": [
+        0.548,
+        0.786
+      ]
+    },
+    "B_sd15lora_best6": {
+      "correct": 34,
+      "n": 56,
+      "rate": 0.607,
+      "ci95": [
+        0.476,
+        0.724
+      ]
+    }
+  },
+  "per_emotion": {
+    "anger": {
+      "A_turbo_best4": "5/8",
+      "B_sd15lora_best6": "5/8"
+    },
+    "disgust": {
+      "A_turbo_best4": "4/8",
+      "B_sd15lora_best6": "4/8"
+    },
+    "fear": {
+      "A_turbo_best4": "5/8",
+      "B_sd15lora_best6": "1/8"
+    },
+    "joy": {
+      "A_turbo_best4": "8/8",
+      "B_sd15lora_best6": "8/8"
+    },
+    "neutral": {
+      "A_turbo_best4": "7/8",
+      "B_sd15lora_best6": "7/8"
+    },
+    "sadness": {
+      "A_turbo_best4": "7/8",
+      "B_sd15lora_best6": "6/8"
+    },
+    "surprise": {
+      "A_turbo_best4": "2/8",
+      "B_sd15lora_best6": "3/8"
+    }
+  },
+  "mcnemar": {
+    "only_A_turbo_best4": 11,
+    "only_B_sd15lora_best6": 7,
+    "p_value": 0.4807
+  }
+}
