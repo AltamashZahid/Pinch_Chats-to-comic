@@ -44,8 +44,11 @@ MAX_LEN = 64
 MAX_LEN_CTX = 96
 
 
+ENGLISH_ONLY = False  # --english: drop Hinglish from training and evaluation
+
+
 def test_sources() -> list[str]:
-    base = ["goemotions", "dailydialog", "meld", "hinglish", "dairai"]
+    base = ["goemotions", "dailydialog", "meld", "dairai"] + ([] if ENGLISH_ONLY else ["hinglish"])
     return base + (["user"] if load_ctx("user", "test") else [])
 
 
@@ -53,6 +56,8 @@ def build_train(neutral_cap: int, hinglish_repeat: int, user_repeat: int, seed: 
     rng = random.Random(seed)
     rows = []
     for s in SOURCES:
+        if ENGLISH_ONLY and s == "hinglish":
+            continue
         data = load_ctx(s, "train")
         neutral = [r for r in data if r[2] == "neutral"]
         other = [r for r in data if r[2] != "neutral"]
@@ -88,7 +93,10 @@ def probs(model, tok, texts, prevs, device, context: bool) -> np.ndarray:
         enc = encode(tok, texts[i:i + 128], prevs[i:i + 128], context).to(device)
         with torch.autocast(device.type, enabled=device.type == "cuda"):
             out.append(model(**enc).logits.float().softmax(-1).cpu().numpy())
-    return np.concatenate(out)
+    p = np.concatenate(out)
+    # Reorder columns into our LABELS order by name (other models may order labels differently).
+    id2label = {int(k): v.lower() for k, v in model.config.id2label.items()}
+    return p[:, [next(i for i, l in id2label.items() if l == lab) for lab in LABELS]]
 
 
 def score(y: list[int], p: np.ndarray) -> dict:
@@ -145,10 +153,13 @@ def main() -> None:
     ap.add_argument("--user-repeat", type=int, default=10)
     ap.add_argument("--context", action="store_true", help="also read the previous line of the conversation")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--english", action="store_true", help="English only: no Hinglish in training or evaluation")
     ap.add_argument("--freeze-embeddings", action="store_true",
                     help="don't train the word-embedding table (XLM-R style models have a 250k vocab; "
                          "its AdamW state alone overflows a 4 GB GPU)")
     args = ap.parse_args()
+    global ENGLISH_ONLY
+    ENGLISH_ONLY = args.english
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     if args.eval_only or args.eval_ensemble:
