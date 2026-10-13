@@ -23,7 +23,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-OUT = ROOT / "data" / "expr_pool"
+OUT = ROOT / "data" / "expr_pool"  # overridden by --out
 LOOKS = [
     "young man with short black hair and a blue hoodie", "young woman with curly red hair and a yellow sweater",
     "teenage boy with messy brown hair and a green t-shirt", "woman with a long black braid and a denim jacket",
@@ -45,7 +45,8 @@ def prompt_for(emotion: str, rng: random.Random) -> str:
                       STORY_POSE[emotion], rng.choice(PLACES)])
 
 
-def generate(per_emotion: int, seed: int) -> None:
+def generate(per_emotion: int, seed: int, backend_name: str | None = None, lora: str = "none",
+             lora_scale: float = 1.0) -> None:
     from pinch.pipeline import load_env
     load_env()
     from PIL import Image, ImageDraw, ImageFont
@@ -53,7 +54,13 @@ def generate(per_emotion: int, seed: int) -> None:
     from pinch.imagegen import ImageRequest, backend_from_env
 
     rng = random.Random(seed)
-    backend = backend_from_env()
+    if backend_name:
+        import inspect
+        from pinch.imagegen import BACKENDS
+        cls = BACKENDS[backend_name]
+        backend = cls(lora=lora, lora_scale=lora_scale) if "lora" in inspect.signature(cls).parameters else cls()
+    else:
+        backend = backend_from_env()
     jobs = [(e, prompt_for(e, rng), rng.randrange(2**31)) for e in LABELS for _ in range(per_emotion)]
     rng.shuffle(jobs)  # shuffled before numbering: the id says nothing about the emotion
     (OUT / "images").mkdir(parents=True, exist_ok=True)
@@ -99,14 +106,24 @@ def status() -> None:
 
 
 def main() -> None:
+    global OUT
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
     g = sub.add_parser("generate")
     g.add_argument("--per-emotion", type=int, default=100)
     g.add_argument("--seed", type=int, default=2026)
-    sub.add_parser("status")
+    g.add_argument("--backend", help="image backend (default: PINCH_IMAGE_BACKEND)")
+    g.add_argument("--lora", default="none")
+    g.add_argument("--lora-scale", type=float, default=1.0)
+    st = sub.add_parser("status")
+    for sp in (g, st):
+        sp.add_argument("--out", default=str(OUT))
     args = ap.parse_args()
-    generate(args.per_emotion, args.seed) if args.cmd == "generate" else status()
+    OUT = Path(args.out)
+    if args.cmd == "generate":
+        generate(args.per_emotion, args.seed, args.backend, args.lora, args.lora_scale)
+    else:
+        status()
 
 
 if __name__ == "__main__":

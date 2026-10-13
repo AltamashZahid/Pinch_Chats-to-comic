@@ -28,7 +28,7 @@ def _panel():
 def test_keeps_the_candidate_the_judge_likes_best(monkeypatch):
     b = CountingBackend()
     monkeypatch.setenv("PINCH_CANDIDATES", "4")
-    monkeypatch.setattr(render, "judge", lambda: FakeJudge({b"100": 0.1, str(100 + 7919).encode(): 0.4,
+    monkeypatch.setattr(render, "judge", lambda name="local": FakeJudge({b"100": 0.1, str(100 + 7919).encode(): 0.4,
                                                           str(100 + 2 * 7919).encode(): 0.3}))
     img, tried, prob = render.draw_best(b, _panel(), 100, 512, 512)
     assert tried == 4 and len(set(b.seeds)) == 4
@@ -38,6 +38,6 @@ def test_keeps_the_candidate_the_judge_likes_best(monkeypatch):
 def test_single_candidate_skips_judge(monkeypatch):
     b = CountingBackend()
     monkeypatch.setenv("PINCH_CANDIDATES", "1")
-    monkeypatch.setattr(render, "judge", lambda: (_ for _ in ()).throw(AssertionError("judge used")))
+    monkeypatch.setattr(render, "judge", lambda name="local": (_ for _ in ()).throw(AssertionError("judge used")))
     _, tried, prob = render.draw_best(b, _panel(), 100, 512, 512)
     assert tried == 1 and prob is None
