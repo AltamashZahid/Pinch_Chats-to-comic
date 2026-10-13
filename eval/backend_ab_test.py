@@ -41,7 +41,7 @@ def generate(a: str, b: str, seed: int, b_lora: str = "none") -> None:
     import inspect
     for variant, lora in ((a, "none"), (b, b_lora)):
         cls = BACKENDS[variant]
-        backend = cls(lora=lora) if "lora" in inspect.signature(cls).parameters else cls()
+        backend = (cls(lora=lora, lora_scale=1.0) if lora != "none" else cls(lora=lora))             if "lora" in inspect.signature(cls).parameters else cls()
         for p, (emotion, text, s) in enumerate(prompts):
             shot = next((x for x in ("extreme close-up", "medium close-up", "close-up", "medium shot") if x in text), "close-up")
             img = Image.open(io.BytesIO(backend.generate(ImageRequest(text, s, 512, 512, emotion=emotion, shot=shot)))).convert("RGB")
