@@ -1,0 +1,791 @@
+{
+ "lora": "D:\\Pinch\\models\\lora\\manga_expr",
+ "scale": 0.6,
+ "seed": 909,
+ "items": [
+  {
+   "id": "000",
+   "pair": 50,
+   "variant": "manga_lora",
+   "emotion": "neutral",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, tall man with a black beard and a beanie, calm relaxed face, talking, gesturing casually, football stadium"
+  },
+  {
+   "id": "001",
+   "pair": 1,
+   "variant": "manga_lora",
+   "emotion": "anger",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, middle-aged woman with a pixie cut and a business suit, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, camping tent"
+  },
+  {
+   "id": "002",
+   "pair": 32,
+   "variant": "base",
+   "emotion": "sadness",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, tall man with a black beard and a beanie, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, supermarket aisle"
+  },
+  {
+   "id": "003",
+   "pair": 10,
+   "variant": "base",
+   "emotion": "disgust",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, elderly woman with a white bun and round spectacles, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, hospital waiting room"
+  },
+  {
+   "id": "004",
+   "pair": 28,
+   "variant": "manga_lora",
+   "emotion": "joy",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, middle-aged woman with a pixie cut and a business suit, happy face, big smile, bright eyes, laughing, arms thrown open, library"
+  },
+  {
+   "id": "005",
+   "pair": 28,
+   "variant": "base",
+   "emotion": "joy",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, middle-aged woman with a pixie cut and a business suit, happy face, big smile, bright eyes, laughing, arms thrown open, library"
+  },
+  {
+   "id": "006",
+   "pair": 20,
+   "variant": "base",
+   "emotion": "fear",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, middle-aged woman with a pixie cut and a business suit, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, airport gate"
+  },
+  {
+   "id": "007",
+   "pair": 37,
+   "variant": "manga_lora",
+   "emotion": "sadness",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, freckled teenage girl with red pigtails and overalls, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, elevator"
+  },
+  {
+   "id": "008",
+   "pair": 44,
+   "variant": "manga_lora",
+   "emotion": "surprise",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, boy with a buzz cut and a soccer jersey, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, library"
+  },
+  {
+   "id": "009",
+   "pair": 31,
+   "variant": "manga_lora",
+   "emotion": "joy",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, boy with a buzz cut and a soccer jersey, happy face, big smile, bright eyes, laughing, arms thrown open, football stadium"
+  },
+  {
+   "id": "010",
+   "pair": 40,
+   "variant": "base",
+   "emotion": "surprise",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, middle-aged woman with a pixie cut and a business suit, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, elevator"
+  },
+  {
+   "id": "011",
+   "pair": 51,
+   "variant": "base",
+   "emotion": "neutral",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, boy with a buzz cut and a soccer jersey, calm relaxed face, talking, gesturing casually, camping tent"
+  },
+  {
+   "id": "012",
+   "pair": 24,
+   "variant": "base",
+   "emotion": "joy",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, bald man with tattoos and a tank top, happy face, big smile, bright eyes, laughing, arms thrown open, hospital waiting room"
+  },
+  {
+   "id": "013",
+   "pair": 47,
+   "variant": "base",
+   "emotion": "surprise",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, bald man with tattoos and a tank top, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, supermarket aisle"
+  },
+  {
+   "id": "014",
+   "pair": 48,
+   "variant": "manga_lora",
+   "emotion": "neutral",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, middle-aged woman with a pixie cut and a business suit, calm relaxed face, talking, gesturing casually, hospital waiting room"
+  },
+  {
+   "id": "015",
+   "pair": 49,
+   "variant": "base",
+   "emotion": "neutral",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, freckled teenage girl with red pigtails and overalls, calm relaxed face, talking, gesturing casually, football stadium"
+  },
+  {
+   "id": "016",
+   "pair": 3,
+   "variant": "base",
+   "emotion": "anger",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, woman with long silver hair and a green scarf, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, rainy rooftop"
+  },
+  {
+   "id": "017",
+   "pair": 55,
+   "variant": "base",
+   "emotion": "neutral",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, young man with dreadlocks and a yellow raincoat, calm relaxed face, talking, gesturing casually, library"
+  },
+  {
+   "id": "018",
+   "pair": 9,
+   "variant": "base",
+   "emotion": "disgust",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, young man with dreadlocks and a yellow raincoat, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, supermarket aisle"
+  },
+  {
+   "id": "019",
+   "pair": 47,
+   "variant": "manga_lora",
+   "emotion": "surprise",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, bald man with tattoos and a tank top, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, supermarket aisle"
+  },
+  {
+   "id": "020",
+   "pair": 34,
+   "variant": "manga_lora",
+   "emotion": "sadness",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, woman with long silver hair and a green scarf, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, hospital waiting room"
+  },
+  {
+   "id": "021",
+   "pair": 17,
+   "variant": "manga_lora",
+   "emotion": "fear",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, elderly woman with a white bun and round spectacles, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, rainy rooftop"
+  },
+  {
+   "id": "022",
+   "pair": 9,
+   "variant": "manga_lora",
+   "emotion": "disgust",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, young man with dreadlocks and a yellow raincoat, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, supermarket aisle"
+  },
+  {
+   "id": "023",
+   "pair": 8,
+   "variant": "manga_lora",
+   "emotion": "disgust",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, bald man with tattoos and a tank top, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, library"
+  },
+  {
+   "id": "024",
+   "pair": 44,
+   "variant": "base",
+   "emotion": "surprise",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, boy with a buzz cut and a soccer jersey, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, library"
+  },
+  {
+   "id": "025",
+   "pair": 30,
+   "variant": "base",
+   "emotion": "joy",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, middle-aged woman with a pixie cut and a business suit, happy face, big smile, bright eyes, laughing, arms thrown open, library"
+  },
+  {
+   "id": "026",
+   "pair": 38,
+   "variant": "manga_lora",
+   "emotion": "sadness",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, bald man with tattoos and a tank top, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, hospital waiting room"
+  },
+  {
+   "id": "027",
+   "pair": 51,
+   "variant": "manga_lora",
+   "emotion": "neutral",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, boy with a buzz cut and a soccer jersey, calm relaxed face, talking, gesturing casually, camping tent"
+  },
+  {
+   "id": "028",
+   "pair": 52,
+   "variant": "manga_lora",
+   "emotion": "neutral",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, freckled teenage girl with red pigtails and overalls, calm relaxed face, talking, gesturing casually, elevator"
+  },
+  {
+   "id": "029",
+   "pair": 2,
+   "variant": "manga_lora",
+   "emotion": "anger",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, bald man with tattoos and a tank top, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, supermarket aisle"
+  },
+  {
+   "id": "030",
+   "pair": 7,
+   "variant": "base",
+   "emotion": "anger",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, young man with dreadlocks and a yellow raincoat, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, hospital waiting room"
+  },
+  {
+   "id": "031",
+   "pair": 22,
+   "variant": "base",
+   "emotion": "fear",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, tall man with a black beard and a beanie, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, elevator"
+  },
+  {
+   "id": "032",
+   "pair": 33,
+   "variant": "base",
+   "emotion": "sadness",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, freckled teenage girl with red pigtails and overalls, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, rainy rooftop"
+  },
+  {
+   "id": "033",
+   "pair": 10,
+   "variant": "manga_lora",
+   "emotion": "disgust",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, elderly woman with a white bun and round spectacles, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, hospital waiting room"
+  },
+  {
+   "id": "034",
+   "pair": 36,
+   "variant": "base",
+   "emotion": "sadness",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, young man with dreadlocks and a yellow raincoat, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, camping tent"
+  },
+  {
+   "id": "035",
+   "pair": 0,
+   "variant": "base",
+   "emotion": "anger",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, woman with long silver hair and a green scarf, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, supermarket aisle"
+  },
+  {
+   "id": "036",
+   "pair": 45,
+   "variant": "base",
+   "emotion": "surprise",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, woman with long silver hair and a green scarf, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, hospital waiting room"
+  },
+  {
+   "id": "037",
+   "pair": 53,
+   "variant": "manga_lora",
+   "emotion": "neutral",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, boy with a buzz cut and a soccer jersey, calm relaxed face, talking, gesturing casually, hospital waiting room"
+  },
+  {
+   "id": "038",
+   "pair": 34,
+   "variant": "base",
+   "emotion": "sadness",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, woman with long silver hair and a green scarf, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, hospital waiting room"
+  },
+  {
+   "id": "039",
+   "pair": 25,
+   "variant": "base",
+   "emotion": "joy",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, tall man with a black beard and a beanie, happy face, big smile, bright eyes, laughing, arms thrown open, airport gate"
+  },
+  {
+   "id": "040",
+   "pair": 23,
+   "variant": "manga_lora",
+   "emotion": "fear",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, bald man with tattoos and a tank top, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, camping tent"
+  },
+  {
+   "id": "041",
+   "pair": 5,
+   "variant": "manga_lora",
+   "emotion": "anger",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, freckled teenage girl with red pigtails and overalls, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, football stadium"
+  },
+  {
+   "id": "042",
+   "pair": 1,
+   "variant": "base",
+   "emotion": "anger",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, middle-aged woman with a pixie cut and a business suit, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, camping tent"
+  },
+  {
+   "id": "043",
+   "pair": 41,
+   "variant": "base",
+   "emotion": "surprise",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, freckled teenage girl with red pigtails and overalls, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, elevator"
+  },
+  {
+   "id": "044",
+   "pair": 21,
+   "variant": "base",
+   "emotion": "fear",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, young man with dreadlocks and a yellow raincoat, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, hospital waiting room"
+  },
+  {
+   "id": "045",
+   "pair": 40,
+   "variant": "manga_lora",
+   "emotion": "surprise",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, middle-aged woman with a pixie cut and a business suit, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, elevator"
+  },
+  {
+   "id": "046",
+   "pair": 7,
+   "variant": "manga_lora",
+   "emotion": "anger",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, young man with dreadlocks and a yellow raincoat, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, hospital waiting room"
+  },
+  {
+   "id": "047",
+   "pair": 13,
+   "variant": "manga_lora",
+   "emotion": "disgust",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, middle-aged woman with a pixie cut and a business suit, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, camping tent"
+  },
+  {
+   "id": "048",
+   "pair": 27,
+   "variant": "base",
+   "emotion": "joy",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, boy with a buzz cut and a soccer jersey, happy face, big smile, bright eyes, laughing, arms thrown open, rainy rooftop"
+  },
+  {
+   "id": "049",
+   "pair": 37,
+   "variant": "base",
+   "emotion": "sadness",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, freckled teenage girl with red pigtails and overalls, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, elevator"
+  },
+  {
+   "id": "050",
+   "pair": 12,
+   "variant": "base",
+   "emotion": "disgust",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, woman with long silver hair and a green scarf, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, airport gate"
+  },
+  {
+   "id": "051",
+   "pair": 30,
+   "variant": "manga_lora",
+   "emotion": "joy",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, middle-aged woman with a pixie cut and a business suit, happy face, big smile, bright eyes, laughing, arms thrown open, library"
+  },
+  {
+   "id": "052",
+   "pair": 12,
+   "variant": "manga_lora",
+   "emotion": "disgust",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, woman with long silver hair and a green scarf, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, airport gate"
+  },
+  {
+   "id": "053",
+   "pair": 54,
+   "variant": "manga_lora",
+   "emotion": "neutral",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, middle-aged woman with a pixie cut and a business suit, calm relaxed face, talking, gesturing casually, rainy rooftop"
+  },
+  {
+   "id": "054",
+   "pair": 19,
+   "variant": "manga_lora",
+   "emotion": "fear",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, young man with dreadlocks and a yellow raincoat, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, football stadium"
+  },
+  {
+   "id": "055",
+   "pair": 18,
+   "variant": "manga_lora",
+   "emotion": "fear",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, woman with long silver hair and a green scarf, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, camping tent"
+  },
+  {
+   "id": "056",
+   "pair": 13,
+   "variant": "base",
+   "emotion": "disgust",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, middle-aged woman with a pixie cut and a business suit, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, camping tent"
+  },
+  {
+   "id": "057",
+   "pair": 46,
+   "variant": "base",
+   "emotion": "surprise",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, woman with long silver hair and a green scarf, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, supermarket aisle"
+  },
+  {
+   "id": "058",
+   "pair": 45,
+   "variant": "manga_lora",
+   "emotion": "surprise",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, woman with long silver hair and a green scarf, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, hospital waiting room"
+  },
+  {
+   "id": "059",
+   "pair": 46,
+   "variant": "manga_lora",
+   "emotion": "surprise",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, woman with long silver hair and a green scarf, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, supermarket aisle"
+  },
+  {
+   "id": "060",
+   "pair": 14,
+   "variant": "base",
+   "emotion": "disgust",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, middle-aged woman with a pixie cut and a business suit, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, library"
+  },
+  {
+   "id": "061",
+   "pair": 26,
+   "variant": "manga_lora",
+   "emotion": "joy",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, elderly woman with a white bun and round spectacles, happy face, big smile, bright eyes, laughing, arms thrown open, library"
+  },
+  {
+   "id": "062",
+   "pair": 18,
+   "variant": "base",
+   "emotion": "fear",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, woman with long silver hair and a green scarf, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, camping tent"
+  },
+  {
+   "id": "063",
+   "pair": 35,
+   "variant": "manga_lora",
+   "emotion": "sadness",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, bald man with tattoos and a tank top, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, football stadium"
+  },
+  {
+   "id": "064",
+   "pair": 0,
+   "variant": "manga_lora",
+   "emotion": "anger",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, woman with long silver hair and a green scarf, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, supermarket aisle"
+  },
+  {
+   "id": "065",
+   "pair": 24,
+   "variant": "manga_lora",
+   "emotion": "joy",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, bald man with tattoos and a tank top, happy face, big smile, bright eyes, laughing, arms thrown open, hospital waiting room"
+  },
+  {
+   "id": "066",
+   "pair": 32,
+   "variant": "manga_lora",
+   "emotion": "sadness",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, tall man with a black beard and a beanie, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, supermarket aisle"
+  },
+  {
+   "id": "067",
+   "pair": 42,
+   "variant": "manga_lora",
+   "emotion": "surprise",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, bald man with tattoos and a tank top, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, library"
+  },
+  {
+   "id": "068",
+   "pair": 39,
+   "variant": "base",
+   "emotion": "sadness",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, bald man with tattoos and a tank top, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, airport gate"
+  },
+  {
+   "id": "069",
+   "pair": 42,
+   "variant": "base",
+   "emotion": "surprise",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, bald man with tattoos and a tank top, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, library"
+  },
+  {
+   "id": "070",
+   "pair": 41,
+   "variant": "manga_lora",
+   "emotion": "surprise",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, freckled teenage girl with red pigtails and overalls, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, elevator"
+  },
+  {
+   "id": "071",
+   "pair": 4,
+   "variant": "base",
+   "emotion": "anger",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, elderly woman with a white bun and round spectacles, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, hospital waiting room"
+  },
+  {
+   "id": "072",
+   "pair": 8,
+   "variant": "base",
+   "emotion": "disgust",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, bald man with tattoos and a tank top, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, library"
+  },
+  {
+   "id": "073",
+   "pair": 19,
+   "variant": "base",
+   "emotion": "fear",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, young man with dreadlocks and a yellow raincoat, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, football stadium"
+  },
+  {
+   "id": "074",
+   "pair": 23,
+   "variant": "base",
+   "emotion": "fear",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, bald man with tattoos and a tank top, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, camping tent"
+  },
+  {
+   "id": "075",
+   "pair": 6,
+   "variant": "base",
+   "emotion": "anger",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, middle-aged woman with a pixie cut and a business suit, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, supermarket aisle"
+  },
+  {
+   "id": "076",
+   "pair": 2,
+   "variant": "base",
+   "emotion": "anger",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, bald man with tattoos and a tank top, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, supermarket aisle"
+  },
+  {
+   "id": "077",
+   "pair": 11,
+   "variant": "manga_lora",
+   "emotion": "disgust",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, boy with a buzz cut and a soccer jersey, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, supermarket aisle"
+  },
+  {
+   "id": "078",
+   "pair": 5,
+   "variant": "base",
+   "emotion": "anger",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, freckled teenage girl with red pigtails and overalls, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, football stadium"
+  },
+  {
+   "id": "079",
+   "pair": 27,
+   "variant": "manga_lora",
+   "emotion": "joy",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, boy with a buzz cut and a soccer jersey, happy face, big smile, bright eyes, laughing, arms thrown open, rainy rooftop"
+  },
+  {
+   "id": "080",
+   "pair": 14,
+   "variant": "manga_lora",
+   "emotion": "disgust",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, middle-aged woman with a pixie cut and a business suit, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, library"
+  },
+  {
+   "id": "081",
+   "pair": 16,
+   "variant": "manga_lora",
+   "emotion": "fear",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, bald man with tattoos and a tank top, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, football stadium"
+  },
+  {
+   "id": "082",
+   "pair": 21,
+   "variant": "manga_lora",
+   "emotion": "fear",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, young man with dreadlocks and a yellow raincoat, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, hospital waiting room"
+  },
+  {
+   "id": "083",
+   "pair": 15,
+   "variant": "base",
+   "emotion": "disgust",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, woman with long silver hair and a green scarf, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, airport gate"
+  },
+  {
+   "id": "084",
+   "pair": 15,
+   "variant": "manga_lora",
+   "emotion": "disgust",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, woman with long silver hair and a green scarf, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, airport gate"
+  },
+  {
+   "id": "085",
+   "pair": 43,
+   "variant": "manga_lora",
+   "emotion": "surprise",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, tall man with a black beard and a beanie, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, airport gate"
+  },
+  {
+   "id": "086",
+   "pair": 31,
+   "variant": "base",
+   "emotion": "joy",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, boy with a buzz cut and a soccer jersey, happy face, big smile, bright eyes, laughing, arms thrown open, football stadium"
+  },
+  {
+   "id": "087",
+   "pair": 53,
+   "variant": "base",
+   "emotion": "neutral",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, boy with a buzz cut and a soccer jersey, calm relaxed face, talking, gesturing casually, hospital waiting room"
+  },
+  {
+   "id": "088",
+   "pair": 17,
+   "variant": "base",
+   "emotion": "fear",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, elderly woman with a white bun and round spectacles, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, rainy rooftop"
+  },
+  {
+   "id": "089",
+   "pair": 36,
+   "variant": "manga_lora",
+   "emotion": "sadness",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, young man with dreadlocks and a yellow raincoat, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, camping tent"
+  },
+  {
+   "id": "090",
+   "pair": 4,
+   "variant": "manga_lora",
+   "emotion": "anger",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, elderly woman with a white bun and round spectacles, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, hospital waiting room"
+  },
+  {
+   "id": "091",
+   "pair": 22,
+   "variant": "manga_lora",
+   "emotion": "fear",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, tall man with a black beard and a beanie, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, elevator"
+  },
+  {
+   "id": "092",
+   "pair": 26,
+   "variant": "base",
+   "emotion": "joy",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, elderly woman with a white bun and round spectacles, happy face, big smile, bright eyes, laughing, arms thrown open, library"
+  },
+  {
+   "id": "093",
+   "pair": 20,
+   "variant": "manga_lora",
+   "emotion": "fear",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, middle-aged woman with a pixie cut and a business suit, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, airport gate"
+  },
+  {
+   "id": "094",
+   "pair": 38,
+   "variant": "base",
+   "emotion": "sadness",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, bald man with tattoos and a tank top, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, hospital waiting room"
+  },
+  {
+   "id": "095",
+   "pair": 49,
+   "variant": "manga_lora",
+   "emotion": "neutral",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, freckled teenage girl with red pigtails and overalls, calm relaxed face, talking, gesturing casually, football stadium"
+  },
+  {
+   "id": "096",
+   "pair": 35,
+   "variant": "base",
+   "emotion": "sadness",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, bald man with tattoos and a tank top, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, football stadium"
+  },
+  {
+   "id": "097",
+   "pair": 29,
+   "variant": "base",
+   "emotion": "joy",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, middle-aged woman with a pixie cut and a business suit, happy face, big smile, bright eyes, laughing, arms thrown open, rainy rooftop"
+  },
+  {
+   "id": "098",
+   "pair": 25,
+   "variant": "manga_lora",
+   "emotion": "joy",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, tall man with a black beard and a beanie, happy face, big smile, bright eyes, laughing, arms thrown open, airport gate"
+  },
+  {
+   "id": "099",
+   "pair": 55,
+   "variant": "manga_lora",
+   "emotion": "neutral",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, young man with dreadlocks and a yellow raincoat, calm relaxed face, talking, gesturing casually, library"
+  },
+  {
+   "id": "100",
+   "pair": 43,
+   "variant": "base",
+   "emotion": "surprise",
+   "prompt": "manga panel, black and white ink, screentone, medium close-up, tall man with a black beard and a beanie, shocked face, eyes popping wide, jaw dropped, jaw dropped, hands on cheeks, airport gate"
+  },
+  {
+   "id": "101",
+   "pair": 6,
+   "variant": "manga_lora",
+   "emotion": "anger",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, middle-aged woman with a pixie cut and a business suit, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, supermarket aisle"
+  },
+  {
+   "id": "102",
+   "pair": 11,
+   "variant": "base",
+   "emotion": "disgust",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, boy with a buzz cut and a soccer jersey, grossed out face, tongue sticking out, nose scrunched, eyes squinted, recoiling, covering nose with hand, supermarket aisle"
+  },
+  {
+   "id": "103",
+   "pair": 54,
+   "variant": "base",
+   "emotion": "neutral",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, middle-aged woman with a pixie cut and a business suit, calm relaxed face, talking, gesturing casually, rainy rooftop"
+  },
+  {
+   "id": "104",
+   "pair": 50,
+   "variant": "base",
+   "emotion": "neutral",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, tall man with a black beard and a beanie, calm relaxed face, talking, gesturing casually, football stadium"
+  },
+  {
+   "id": "105",
+   "pair": 29,
+   "variant": "manga_lora",
+   "emotion": "joy",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, middle-aged woman with a pixie cut and a business suit, happy face, big smile, bright eyes, laughing, arms thrown open, rainy rooftop"
+  },
+  {
+   "id": "106",
+   "pair": 16,
+   "variant": "base",
+   "emotion": "fear",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, bald man with tattoos and a tank top, terrified face, wide eyes with tiny pupils, screaming, sweat drops, cowering, hands raised defensively, football stadium"
+  },
+  {
+   "id": "107",
+   "pair": 39,
+   "variant": "manga_lora",
+   "emotion": "sadness",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, bald man with tattoos and a tank top, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, airport gate"
+  },
+  {
+   "id": "108",
+   "pair": 33,
+   "variant": "manga_lora",
+   "emotion": "sadness",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, freckled teenage girl with red pigtails and overalls, crying face, tears streaming down cheeks, trembling lip, head down, wiping away tears, rainy rooftop"
+  },
+  {
+   "id": "109",
+   "pair": 48,
+   "variant": "base",
+   "emotion": "neutral",
+   "prompt": "manga panel, black and white ink, screentone, close-up of a face, middle-aged woman with a pixie cut and a business suit, calm relaxed face, talking, gesturing casually, hospital waiting room"
+  },
+  {
+   "id": "110",
+   "pair": 52,
+   "variant": "base",
+   "emotion": "neutral",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, freckled teenage girl with red pigtails and overalls, calm relaxed face, talking, gesturing casually, elevator"
+  },
+  {
+   "id": "111",
+   "pair": 3,
+   "variant": "manga_lora",
+   "emotion": "anger",
+   "prompt": "manga panel, black and white ink, screentone, medium shot, woman with long silver hair and a green scarf, furious face, eyebrows slanted down hard, teeth bared, vein popping on forehead, pointing a finger, shouting, rainy rooftop"
+  }
+ ]
+}
