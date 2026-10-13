@@ -50,14 +50,39 @@
   .emo { color: var(--muted); font-size: .82rem; white-space: nowrap; }
   details { margin-top: 6px; color: var(--muted); font-size: .82rem; }
   .summary { color: var(--muted); font-size: .9rem; margin: 0 0 12px; }
+  .tabs { display: inline-flex; background: var(--chip); border-radius: 10px; padding: 3px; margin-bottom: 14px; }
+  .tabs button { background: transparent; color: var(--muted); padding: 7px 16px; font-weight: 600; }
+  .tabs button.on { background: var(--surface); color: var(--text); }
+  .chatbox { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+  .chatbox textarea { width: 100%; min-height: 150px; border: 1px solid var(--line); border-radius: 8px; padding: 10px;
+                      background: var(--bg); color: var(--text); font: 14px/1.4 ui-monospace, Consolas, monospace; }
+  .opts { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin-top: 10px; color: var(--muted); font-size: .92rem; }
+  .opts select, .opts input[type=number] { background: var(--bg); color: var(--text); border: 1px solid var(--line);
+                      border-radius: 6px; padding: 5px 8px; font: inherit; }
+  .opts input[type=number] { width: 64px; }
+  .filebtn { display: inline-block; background: var(--chip); border-radius: 8px; padding: 6px 12px; cursor: pointer; color: var(--text); }
+  .label-link { color: var(--muted); font-size: .9rem; }
 </style>
 </head>
 <body>
 <main>
   <header>
     <h1>Pinch</h1>
-    <p>Drop in a chat screenshot. Get it back as a comic.</p>
+    <p>Drop in a chat screenshot or paste a chat. Get it back as a comic.
+      <a class="label-link" href="/label">Label your chats →</a></p>
   </header>
+
+  <div class="tabs"><button id="tab-shot" class="on">Screenshot</button><button id="tab-chat">Chat text</button></div>
+
+  <div class="chatbox" id="chatbox" hidden>
+    <textarea id="chat" placeholder="Paste a WhatsApp export or lines like:&#10;Rahul: bhai result aaya?&#10;Me: fail ho gaya yaar 😂"></textarea>
+    <div class="opts">
+      <label class="filebtn">Upload WhatsApp export (.txt)<input type="file" id="chatfile" accept=".txt"></label>
+      <span id="chatinfo"></span>
+      <label>You are <select id="me"></select></label>
+      <label>Last <input type="number" id="last" min="2" max="24" value="12"> messages</label>
+    </div>
+  </div>
 
   <label class="drop" id="drop">
     <img id="preview" alt="" hidden>
@@ -84,7 +109,34 @@
 
 <script>
 const $ = id => document.getElementById(id);
-let chosen = null;
+let chosen = null, mode = "shot", chatFile = null;
+
+function setMode(m) {
+  mode = m;
+  $("tab-shot").classList.toggle("on", m === "shot");
+  $("tab-chat").classList.toggle("on", m === "chat");
+  $("drop").hidden = m !== "shot";
+  $("chatbox").hidden = m !== "chat";
+  $("go").disabled = m === "shot" ? !chosen : !($("chat").value.trim() || chatFile);
+}
+$("tab-shot").addEventListener("click", () => setMode("shot"));
+$("tab-chat").addEventListener("click", () => setMode("chat"));
+
+let speakerTimer = null;
+async function refreshSpeakers() {
+  const body = new FormData();
+  if (chatFile) body.append("file", chatFile); else body.append("text", $("chat").value);
+  const data = await (await fetch("/api/chat/speakers", { method: "POST", body })).json();
+  const names = Object.keys(data.speakers);
+  const prev = $("me").value;
+  $("me").innerHTML = names.map(n => `<option>${esc(n)}</option>`).join("");
+  if (names.includes(prev)) $("me").value = prev;
+  else if (names.length > 1) $("me").value = names[1];
+  $("chatinfo").textContent = data.messages ? `${data.messages} messages, ${names.length} people` : "";
+  setMode("chat");
+}
+$("chat").addEventListener("input", () => { chatFile = null; clearTimeout(speakerTimer); speakerTimer = setTimeout(refreshSpeakers, 400); });
+$("chatfile").addEventListener("change", e => { chatFile = e.target.files[0] || null; refreshSpeakers(); });
 
 function choose(file) {
   if (!file || !file.type.startsWith("image/")) return;
@@ -110,12 +162,18 @@ function esc(s) {
 }
 
 $("go").addEventListener("click", async () => {
-  if (!chosen) return;
+  const body = new FormData();
+  if (mode === "shot") {
+    if (!chosen) return;
+    body.append("file", chosen);
+  } else {
+    if (chatFile) body.append("file", chatFile); else body.append("text", $("chat").value);
+    body.append("me", $("me").value);
+    body.append("last", $("last").value);
+  }
   $("go").disabled = true;
   $("status").className = "status";
-  $("status").textContent = "Reading bubbles, feeling feelings, drawing panels…";
-  const body = new FormData();
-  body.append("file", chosen);
+  $("status").textContent = "Reading messages, feeling feelings, drawing panels…";
   try {
     const t0 = performance.now();
     const res = await fetch("/api/comic", { method: "POST", body });

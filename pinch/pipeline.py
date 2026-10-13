@@ -1,4 +1,4 @@
-"""Screenshot -> dialogue -> emotions -> comic script."""
+"""Screenshot or chat text -> dialogue -> emotions -> comic script."""
 import os
 from pathlib import Path
 
@@ -39,6 +39,23 @@ def classify(texts: list[str], prevs: list[str] | None = None) -> list[tuple[str
 def screenshot_to_script(img: np.ndarray) -> Script:
     load_env()
     messages = extract_dialogue(img)
+    return write_script(lines_from_messages(messages), LLMClient.from_env())
+
+
+MAX_CHAT_MESSAGES = 12  # 6 panels of 2 lines; longer chats use their most recent messages
+
+
+def chat_to_script(msgs: list[dict], me: str | None, last: int = MAX_CHAT_MESSAGES) -> Script:
+    """Typed chat (WhatsApp export / pasted "Name: text" lines) -> comic script.
+    `me` is the user's own name in the chat; everyone else becomes "them"."""
+    from .models import Box, Message
+    load_env()
+    msgs = [m for m in msgs if m["text"]][-last:]
+    if me is None:  # assume a two-person chat where the user is whoever didn't speak first
+        names = list(dict.fromkeys(m["speaker"] for m in msgs))
+        me = names[1] if len(names) > 1 else names[0]
+    messages = [Message("me" if m["speaker"] == me else "them", m["text"], Box(0, i, 1, 1))
+                for i, m in enumerate(msgs)]
     return write_script(lines_from_messages(messages), LLMClient.from_env())
 
 
