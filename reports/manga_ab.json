@@ -1,0 +1,59 @@
+{
+  "lora": "D:\\Pinch\\models\\lora\\manga_expr",
+  "scale": 0.6,
+  "variants": {
+    "base": {
+      "correct": 26,
+      "n": 56,
+      "rate": 0.464,
+      "ci95": [
+        0.34,
+        0.593
+      ]
+    },
+    "manga_lora": {
+      "correct": 21,
+      "n": 56,
+      "rate": 0.375,
+      "ci95": [
+        0.26,
+        0.506
+      ]
+    }
+  },
+  "per_emotion": {
+    "anger": {
+      "base": "5/8",
+      "manga_lora": "3/8"
+    },
+    "disgust": {
+      "base": "1/8",
+      "manga_lora": "0/8"
+    },
+    "fear": {
+      "base": "1/8",
+      "manga_lora": "2/8"
+    },
+    "joy": {
+      "base": "7/8",
+      "manga_lora": "8/8"
+    },
+    "neutral": {
+      "base": "5/8",
+      "manga_lora": "5/8"
+    },
+    "sadness": {
+      "base": "5/8",
+      "manga_lora": "2/8"
+    },
+    "surprise": {
+      "base": "2/8",
+      "manga_lora": "1/8"
+    }
+  },
+  "mcnemar": {
+    "only_base_right": 9,
+    "only_lora_right": 4,
+    "p_value": 0.2668
+  }
+}
