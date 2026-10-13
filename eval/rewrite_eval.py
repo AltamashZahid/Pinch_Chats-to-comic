@@ -52,6 +52,7 @@ def rewrite(dialogue, style: str) -> list[str] | None:
     if path.exists():
         return json.loads(path.read_text())
     body = {"model": MODEL, "temperature": 0, "max_tokens": 4000, "reasoning_effort": "low",
+            "response_format": {"type": "json_object"},
             "messages": [{"role": "system", "content": STYLES[style] +
                           ' Reply with JSON only: {"lines": ["<line 1>", ...]}, one entry per input line.'},
                          {"role": "user", "content": f"{lines}\n\nReturn exactly {len(dialogue)} lines."}]}
@@ -108,7 +109,7 @@ def main() -> None:
     for name in preds:
         print(f"{name:6} macro-F1 {rep[name]['macro_f1']:.3f}  accuracy {rep[name]['accuracy']:.3f}  "
               + " ".join(f"{k[:4]} {v:.2f}" for k, v in rep[name]["per_class_f1"].items()))
-    (ROOT / "reports" / f"rewrite_{args.source}.json").write_text(json.dumps(rep, indent=2, ensure_ascii=False))
+    (ROOT / "reports" / f"rewrite_{args.source}.json").write_text(json.dumps(rep, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
 if __name__ == "__main__":

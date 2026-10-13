@@ -1,59 +1,59 @@
 {
   "a": "local",
-  "b": "sdxl",
+  "b": "faceshape",
   "variants": {
     "local": {
-      "correct": 32,
+      "correct": 28,
       "n": 56,
-      "rate": 0.571,
+      "rate": 0.5,
       "ci95": [
-        0.441,
-        0.692
+        0.373,
+        0.627
       ]
     },
-    "sdxl": {
-      "correct": 32,
+    "faceshape": {
+      "correct": 16,
       "n": 56,
-      "rate": 0.571,
+      "rate": 0.286,
       "ci95": [
-        0.441,
-        0.692
+        0.184,
+        0.415
       ]
     }
   },
   "per_emotion": {
     "anger": {
-      "local": "4/8",
-      "sdxl": "8/8"
+      "local": "3/8",
+      "faceshape": "2/8"
     },
     "disgust": {
-      "local": "2/8",
-      "sdxl": "0/8"
+      "local": "0/8",
+      "faceshape": "0/8"
     },
     "fear": {
       "local": "4/8",
-      "sdxl": "2/8"
+      "faceshape": "0/8"
     },
     "joy": {
       "local": "8/8",
-      "sdxl": "8/8"
+      "faceshape": "5/8"
     },
     "neutral": {
-      "local": "5/8",
-      "sdxl": "8/8"
+      "local": "6/8",
+      "faceshape": "6/8"
     },
     "sadness": {
-      "local": "7/8",
-      "sdxl": "2/8"
+      "local": "6/8",
+      "faceshape": "0/8"
     },
     "surprise": {
-      "local": "2/8",
-      "sdxl": "4/8"
+      "local": "1/8",
+      "faceshape": "3/8"
     }
   },
   "mcnemar": {
-    "only_local_right": 12,
-    "only_sdxl_right": 12,
-    "p_value": 1.0
+    "only_local_right": 18,
+    "only_faceshape_right": 6,
+    "p_value": 0.0227
   }
 }

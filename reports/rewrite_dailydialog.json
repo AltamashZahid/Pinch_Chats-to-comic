@@ -1,0 +1,91 @@
+{
+  "source": "dailydialog",
+  "lines": 447,
+  "rewrite_model": "openai/gpt-oss-20b",
+  "raw": {
+    "macro_f1": 0.356,
+    "accuracy": 0.671,
+    "per_class_f1": {
+      "anger": 0.0,
+      "disgust": 0.364,
+      "joy": 0.508,
+      "sadness": 0.133,
+      "surprise": 0.357,
+      "neutral": 0.776
+    }
+  },
+  "clean": {
+    "macro_f1": 0.326,
+    "accuracy": 0.617,
+    "per_class_f1": {
+      "anger": 0.0,
+      "disgust": 0.4,
+      "joy": 0.511,
+      "sadness": 0.174,
+      "surprise": 0.135,
+      "neutral": 0.739
+    }
+  },
+  "tweet": {
+    "macro_f1": 0.307,
+    "accuracy": 0.562,
+    "per_class_f1": {
+      "anger": 0.0,
+      "disgust": 0.4,
+      "joy": 0.468,
+      "sadness": 0.154,
+      "surprise": 0.132,
+      "neutral": 0.686
+    }
+  },
+  "examples": [
+    {
+      "raw": "Sybil . Is that spelt with an I or a Y ?",
+      "clean": "A asks whether the name Sybil is spelled with an I or a Y.",
+      "tweet": "Just asked: Is Sybil spelled with an I or a Y?",
+      "label": "neutral"
+    },
+    {
+      "raw": "Both actually . S , Y , B , I , L .",
+      "clean": "B replies that both spellings are correct, listing the letters S, Y, B, I, L.",
+      "tweet": "Actually both! It's spelled S Y B I L.",
+      "label": "neutral"
+    },
+    {
+      "raw": "You don't look too well . Maybe you should take the day off from work .",
+      "clean": "You don't look too well; perhaps you should take the day off from work.",
+      "tweet": "I don't look too well. Maybe I should take the day off from work.",
+      "label": "neutral"
+    },
+    {
+      "raw": "I couldn't do that . I have an important meeting to go to today .",
+      "clean": "I couldn't do that because I have an important meeting to attend today.",
+      "tweet": "I couldn't do that. I have an important meeting to go to today.",
+      "label": "neutral"
+    },
+    {
+      "raw": "Unfortunately , according to our regulations I have to confiscate these counterfeit notes .",
+      "clean": "A: Unfortunately, according to our regulations I must confiscate these counterfeit notes.",
+      "tweet": "I’m sorry, but per our regulations I have to confiscate these counterfeit notes.",
+      "label": "neutral"
+    },
+    {
+      "raw": "So , this 500 RIB is worthless ?",
+      "clean": "B: So this 500 RIB is worthless?",
+      "tweet": "So this 500 RIB is worthless?",
+      "label": "neutral"
+    },
+    {
+      "raw": "How about going to the cinema tonight ?",
+      "clean": "A asks if they should go to the cinema tonight.",
+      "tweet": "Thinking about catching a movie tonight—any thoughts?",
+      "label": "neutral"
+    },
+    {
+      "raw": "That's great . What's on tonight ?",
+      "clean": "B responds that it sounds great and asks what is playing.",
+      "tweet": "Sounds good! What movies are playing tonight?",
+      "label": "neutral"
+    }
+  ]
+}
