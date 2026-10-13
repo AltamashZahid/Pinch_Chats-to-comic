@@ -1,0 +1,94 @@
+{
+  "source": "meld",
+  "lines": 486,
+  "rewrite_model": "openai/gpt-oss-20b",
+  "raw": {
+    "macro_f1": 0.406,
+    "accuracy": 0.547,
+    "per_class_f1": {
+      "anger": 0.382,
+      "disgust": 0.222,
+      "fear": 0.296,
+      "joy": 0.517,
+      "sadness": 0.237,
+      "surprise": 0.486,
+      "neutral": 0.699
+    }
+  },
+  "clean": {
+    "macro_f1": 0.413,
+    "accuracy": 0.597,
+    "per_class_f1": {
+      "anger": 0.443,
+      "disgust": 0.222,
+      "fear": 0.348,
+      "joy": 0.463,
+      "sadness": 0.12,
+      "surprise": 0.54,
+      "neutral": 0.755
+    }
+  },
+  "tweet": {
+    "macro_f1": 0.418,
+    "accuracy": 0.56,
+    "per_class_f1": {
+      "anger": 0.403,
+      "disgust": 0.235,
+      "fear": 0.296,
+      "joy": 0.545,
+      "sadness": 0.237,
+      "surprise": 0.514,
+      "neutral": 0.698
+    }
+  },
+  "examples": [
+    {
+      "raw": "Yes, yes it is. It’s uh…  Every time on the lips! Why?! Why on lips?!",
+      "clean": "Ross: Yes, yes it is; it’s uh… every time on the lips! Why?! Why on lips?!",
+      "tweet": "Yes, yes it is. It’s uh… Every time on the lips! Why?! Why on lips?!",
+      "label": "anger"
+    },
+    {
+      "raw": "Here’s Frannie. Hmm, won’t she be happy to see me?",
+      "clean": "Monica: Here’s Frannie. Hmm, won’t she be happy to see me?",
+      "tweet": "Here’s Frannie. Hmm, won’t she be happy to see me?",
+      "label": "joy"
+    },
+    {
+      "raw": "I think I brought back half of the beach in my hair. It was so much easier when I used to shave my head.",
+      "clean": "Bonnie says she feels like she has half a beach in her hair, and that it would have been easier when she used to shave her head.",
+      "tweet": "I think I brought back half of the beach in my hair. It was so much easier when I used to shave my head.",
+      "label": "anger"
+    },
+    {
+      "raw": "Y'know, I gotta tell ya, I just",
+      "clean": "Rachel says she has something to tell Bonnie but stops herself.",
+      "tweet": "Y'know, I gotta tell ya, I just",
+      "label": "neutral"
+    },
+    {
+      "raw": "Where there is no fear of commitment.",
+      "clean": "Ross: There is no fear of commitment here.",
+      "tweet": "I’m all about avoiding commitment. #NoFear",
+      "label": "neutral"
+    },
+    {
+      "raw": "Do we have any... Do we have any thoughts here?",
+      "clean": "Chandler: Do we have any thoughts on this?",
+      "tweet": "Do we have any thoughts on this? #OpenDiscussion",
+      "label": "neutral"
+    },
+    {
+      "raw": "Y’know I don’t understand why they didn’t cry. It was a beautiful speech.",
+      "clean": "Ross: I don't understand why they didn't cry; it was a beautiful speech.",
+      "tweet": "Y’know I don’t understand why they didn’t cry. It was a beautiful speech.",
+      "label": "sadness"
+    },
+    {
+      "raw": "Oh, come on.",
+      "clean": "Monica: Oh, come on.",
+      "tweet": "Oh, come on.",
+      "label": "disgust"
+    }
+  ]
+}
