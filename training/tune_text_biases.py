@@ -35,8 +35,8 @@ SOURCES = ["goemotions", "dailydialog", "meld", "dairai"]  # English only
 def logits(model, tok, texts) -> np.ndarray:
     out = []
     for i in range(0, len(texts), 64):
-        enc = tok(texts[i:i + 64], truncation=True, max_length=64, padding=True, return_tensors="pt")
-        out.append(model(**enc).logits.float().numpy())
+        enc = tok(texts[i:i + 64], truncation=True, max_length=64, padding=True, return_tensors="pt").to(model.device)
+        out.append(model(**enc).logits.float().cpu().numpy())
     return np.concatenate(out)
 
 
@@ -71,6 +71,8 @@ def main() -> None:
     model_dir = Path(DEFAULT_MODEL_DIR)
     tok = AutoTokenizer.from_pretrained(model_dir)
     model = AutoModelForSequenceClassification.from_pretrained(model_dir).eval()
+    if torch.cuda.is_available():
+        model = model.half().cuda()
     assert [model.config.id2label[i] for i in range(len(LABELS))] == LABELS
     cache = ROOT / "data" / "text"
     torch.set_num_threads(4)
