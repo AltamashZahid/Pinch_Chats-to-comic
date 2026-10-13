@@ -15,3 +15,4 @@ eval/lora_ab/*.png
 data/
 eval/backend_ab/*.png
 data/text/llm_cache/
+eval/manga_ab/*.png
