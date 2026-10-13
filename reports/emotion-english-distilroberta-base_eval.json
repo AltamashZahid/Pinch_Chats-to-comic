@@ -1,0 +1,53 @@
+{
+  "goemotions": {
+    "n": 4968,
+    "macro_f1": 0.414,
+    "per_class_f1": {
+      "anger": 0.35,
+      "disgust": 0.205,
+      "fear": 0.482,
+      "joy": 0.528,
+      "sadness": 0.462,
+      "surprise": 0.362,
+      "neutral": 0.506
+    }
+  },
+  "dailydialog": {
+    "n": 7740,
+    "macro_f1": 0.282,
+    "per_class_f1": {
+      "anger": 0.193,
+      "disgust": 0.153,
+      "fear": 0.052,
+      "joy": 0.474,
+      "sadness": 0.155,
+      "surprise": 0.18,
+      "neutral": 0.768
+    }
+  },
+  "meld": {
+    "n": 2610,
+    "macro_f1": 0.356,
+    "per_class_f1": {
+      "anger": 0.35,
+      "disgust": 0.169,
+      "fear": 0.132,
+      "joy": 0.476,
+      "sadness": 0.253,
+      "surprise": 0.444,
+      "neutral": 0.668
+    }
+  },
+  "dairai": {
+    "n": 2000,
+    "macro_f1": 0.85,
+    "per_class_f1": {
+      "anger": 0.867,
+      "fear": 0.861,
+      "joy": 0.937,
+      "sadness": 0.907,
+      "surprise": 0.679
+    }
+  },
+  "mean_macro_f1": 0.476
+}
