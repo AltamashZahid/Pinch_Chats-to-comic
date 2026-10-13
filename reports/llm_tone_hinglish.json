@@ -1,0 +1,33 @@
+{
+  "source": "hinglish",
+  "dialogues": 46,
+  "lines": 1313,
+  "llm_model": "openai/gpt-oss-120b",
+  "classifier": "emotion_v2_hing",
+  "llm": {
+    "macro_f1": 0.372,
+    "accuracy": 0.526,
+    "per_class_f1": {
+      "anger": 0.382,
+      "disgust": 0.224,
+      "fear": 0.263,
+      "joy": 0.446,
+      "sadness": 0.286,
+      "surprise": 0.329,
+      "neutral": 0.671
+    }
+  },
+  "classifier_scores": {
+    "macro_f1": 0.403,
+    "accuracy": 0.503,
+    "per_class_f1": {
+      "anger": 0.349,
+      "disgust": 0.333,
+      "fear": 0.24,
+      "joy": 0.43,
+      "sadness": 0.404,
+      "surprise": 0.435,
+      "neutral": 0.633
+    }
+  }
+}
