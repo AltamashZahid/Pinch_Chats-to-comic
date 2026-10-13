@@ -71,6 +71,9 @@ def main() -> None:
     ap.add_argument("--accum", type=int, default=2, help="gradient accumulation (effective batch)")
     ap.add_argument("--save-every", type=int, default=500)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--turbo-timesteps", action="store_true",
+                    help="train only at the 4 noise levels SD-Turbo samples at (999/749/499/249), so the "
+                         "LoRA doesn't erode its few-step distillation (full-range training blurred 4-step output)")
     args = ap.parse_args()
 
     from diffusers import DDPMScheduler, StableDiffusionPipeline, UNet2DConditionModel
@@ -85,7 +88,14 @@ def main() -> None:
     out.mkdir(parents=True, exist_ok=True)
 
     t0 = time.time()
-    latents, embeds, rows = encode_dataset(Path(args.data), device)
+    import hashlib
+    meta = (Path(args.data) / "metadata.jsonl").read_bytes()
+    cache = Path(args.data) / f"encoded_{hashlib.sha256(meta).hexdigest()[:12]}.pt"
+    if cache.exists():  # VAE + text encoding of thousands of images takes ~30 min; reuse it
+        latents, embeds, rows = torch.load(cache)
+    else:
+        latents, embeds, rows = encode_dataset(Path(args.data), device)
+        torch.save((latents, embeds, rows), cache)
     print(f"cached {len(rows)} images ({len(rows) * 2} with mirrors) in {time.time() - t0:.0f}s")
 
     noise_sched = DDPMScheduler.from_pretrained(BASE, subfolder="scheduler")
@@ -114,7 +124,10 @@ def main() -> None:
             x0 = latents[i, flip:flip + 1].to(device, torch.float32)
             cond = embeds[i:i + 1].to(device)
             noise = torch.randn_like(x0)
-            t = torch.randint(0, noise_sched.config.num_train_timesteps, (1,), device=device)
+            if args.turbo_timesteps:
+                t = torch.tensor([random.choice([999, 749, 499, 249])], device=device)
+            else:
+                t = torch.randint(0, noise_sched.config.num_train_timesteps, (1,), device=device)
             noisy = noise_sched.add_noise(x0, noise, t)
             with torch.autocast("cuda", dtype=torch.float16):
                 pred = unet(noisy.half(), t, encoder_hidden_states=cond).sample
@@ -142,7 +155,7 @@ def main() -> None:
 
     (out / "train_log.json").write_text(json.dumps({
         "base": BASE, "images": len(rows), "steps": args.steps, "rank": args.rank, "lr": args.lr,
-        "accum": args.accum, "minutes": round((time.time() - start) / 60, 1),
+        "accum": args.accum, "turbo_timesteps": args.turbo_timesteps, "minutes": round((time.time() - start) / 60, 1),
         "peak_vram_gb": round(torch.cuda.max_memory_allocated() / 2**30, 2), "log": log}, indent=1))
     print(f"saved LoRA to {out}")
 
