@@ -102,7 +102,8 @@ def report(y, p) -> dict:
     yi, pi = [LABELS.index(l) for l in y], [LABELS.index(l) for l in p]
     r = classification_report(yi, pi, labels=present, target_names=[LABELS[i] for i in present],
                               output_dict=True, zero_division=0)
-    return {"macro_f1": round(r["macro avg"]["f1-score"], 3), "accuracy": round(r["accuracy"], 3),
+    acc = sum(a == b for a, b in zip(yi, pi)) / len(yi)  # sklearn drops "accuracy" when a label is absent
+    return {"macro_f1": round(r["macro avg"]["f1-score"], 3), "accuracy": round(acc, 3),
             "per_class_f1": {LABELS[i]: round(r[LABELS[i]]["f1-score"], 3) for i in present}}
 
 
