@@ -143,3 +143,40 @@ if __name__ == "__main__":
             with_ctx = sum(1 for p, _, _ in rows if p)
             print(f"{s:12} {split:10} {len(rows):6} (context {with_ctx:6})  " + " ".join(
                 f"{k}={c[k]}" for k in ("anger", "disgust", "fear", "joy", "sadness", "surprise", "neutral")))
+
+
+# --- whole dialogues with speakers (for EmoBERTa-style context models) --------------------
+
+Turn = tuple[str, str, str]  # (speaker, text, label)
+
+
+def dialogues(source: str, split: str) -> list[list[Turn]]:
+    """Conversations as lists of (speaker, text, label). Single-post sources are 1-turn dialogues."""
+    if source == "dailydialog":
+        df = pd.read_parquet(TEXT / "dailydialog" / f"{split}.parquet")
+        return [[("A" if i % 2 == 0 else "B", u.strip(), DD[int(e)]) for i, (u, e) in enumerate(zip(us, es)) if u.strip()]
+                for us, es in zip(df["utterances"], df["emotions"])]
+    if source == "meld":
+        name = {"train": "train", "validation": "dev", "test": "test"}[split]
+        with open(TEXT / "meld" / f"{name}_sent_emo.csv", encoding="utf-8", errors="replace") as f:
+            rows = list(csv.DictReader(f))
+        rows.sort(key=lambda r: (int(r["Dialogue_ID"]), int(r["Utterance_ID"])))
+        out: dict[str, list] = {}
+        for r in rows:
+            u = r["Utterance"].replace(chr(0x92), "'").strip()
+            if u:
+                out.setdefault(r["Dialogue_ID"], []).append((r["Speaker"].strip().title(), u, MELD[r["Emotion"]]))
+        return list(out.values())
+    if source == "hinglish":
+        if split == "test":
+            df = pd.read_csv(TEXT / "semeval_hinglish" / "val.csv")
+        else:
+            df = pd.read_csv(TEXT / "semeval_hinglish" / "train.csv")
+            val_ids = set(sorted(df["id"].unique())[::10])
+            df = df[df["id"].isin(val_ids)] if split == "validation" else df[~df["id"].isin(val_ids)]
+        out = {}
+        for d, s, u, e in zip(df["id"], df["speaker"], df["utterance"], df["emotion"]):
+            if isinstance(u, str) and u.strip() and e in HINGLISH:
+                out.setdefault(d, []).append((str(s).strip().title(), u.strip(), HINGLISH[e]))
+        return list(out.values())
+    return [[("", t, l)] for _, t, l in load_ctx(source, split)]

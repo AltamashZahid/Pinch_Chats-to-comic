@@ -75,12 +75,37 @@ class LocalTurboBackend:
         pipe.set_progress_bar_config(disable=True)
         self._torch, self._pipe = torch, pipe
 
+    def boost_for(self, emotion: str | None) -> float:
+        """Per-emotion steering strength: PINCH_EMOTION_BOOSTS='{"fear": 0.3, ...}' (JSON),
+        else the single PINCH_EMOTION_BOOST, else 0 (off)."""
+        import json
+        if not emotion or emotion == "neutral":
+            return 0.0
+        per = json.loads(os.environ.get("PINCH_EMOTION_BOOSTS", "{}") or "{}")
+        return float(per.get(emotion, os.environ.get("PINCH_EMOTION_BOOST", "0")))
+
+    def direction(self, emotion: str):
+        """Emotion direction in text-embedding space ("terrified face" - "calm face"), cached."""
+        if not hasattr(self, "_dirs"):
+            self._dirs = {}
+        if emotion not in self._dirs:
+            from .style import ART_STYLE, EXPRESSION
+            emb = lambda t: self._pipe.encode_prompt(t, "cuda", 1, False)[0]  # noqa: E731
+            self._dirs[emotion] = emb(f"{ART_STYLE}, close-up, a person, {EXPRESSION[emotion]}") -                 emb(f"{ART_STYLE}, close-up, a person, {EXPRESSION['neutral']}")
+        return self._dirs[emotion]
+
     def generate(self, req: ImageRequest) -> bytes:
         if self._pipe is None:
             self._load()
         g = self._torch.Generator("cuda").manual_seed(req.seed)
-        img = self._pipe(req.prompt, num_inference_steps=self.steps, guidance_scale=0.0,
-                         generator=g, width=req.width, height=req.height).images[0]
+        boost = self.boost_for(req.emotion)
+        if boost:
+            emb = self._pipe.encode_prompt(req.prompt, "cuda", 1, False)[0] + boost * self.direction(req.emotion)
+            img = self._pipe(prompt_embeds=emb, num_inference_steps=self.steps, guidance_scale=0.0,
+                             generator=g, width=req.width, height=req.height).images[0]
+        else:
+            img = self._pipe(req.prompt, num_inference_steps=self.steps, guidance_scale=0.0,
+                             generator=g, width=req.width, height=req.height).images[0]
         return _png(img)
 
 
