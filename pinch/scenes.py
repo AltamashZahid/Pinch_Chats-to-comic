@@ -33,6 +33,15 @@ def scene_mode(mode: str | None = None) -> str:
     return mode
 
 
+SHOUT = "shouting, mouth wide open"
+
+
+def is_shouting(text: str) -> bool:
+    """ALL CAPS (at least 3 letters, none lowercase) reads as shouting: "WHAT", "I HATE YOU"."""
+    letters = [c for c in text if c.isalpha()]
+    return len(letters) >= 3 and all(c.isupper() for c in letters)
+
+
 @dataclass
 class Line:
     speaker: str      # "me" / "them"
@@ -44,7 +53,13 @@ class Line:
     situation: str = ""          # for ironic lines: the words' emotion (what's really going on)
 
     @property
+    def shouting(self) -> bool:
+        return is_shouting(self.text)
+
+    @property
     def bubble(self) -> str:
+        if self.shouting:
+            return "jagged"          # comic convention for yelling
         return "wavy" if self.ironic else BUBBLE[self.emotion]
 
     @property
@@ -119,6 +134,8 @@ def build_prompt(script: Script, panel: Panel) -> str:
     look = script.characters.get(panel.focus, "a young person")
     who = f"single character, {look}" if script.mode == "texting" else look
     parts = [ART_STYLE, panel.shot, who, EXPRESSION[panel.emotion]]
+    if any(l.shouting for l in panel.lines):
+        parts.append(SHOUT)
     if panel.irony:  # the joke goes before the action so it survives the 77-token cut
         parts.append(panel.irony)
     return ", ".join(parts + [panel.action, script.location(panel)])
@@ -218,6 +235,8 @@ def write_script(lines: list[Line], llm: LLMClient | None = None, mode: str | No
         panel = Panel(group, focus)
         panel.action = action or poses[panel.emotion]
         panel.shot = choose_shot(panel.emotion, i, prev_shot)
+        if any(l.shouting for l in group) and panel.shot in ("wide shot", "medium shot"):
+            panel.shot = "close-up"  # yelling reads best up close
         panel.prompt = build_prompt(script, panel)
         script.panels.append(panel)
         prev_focus, prev_shot = focus, panel.shot
