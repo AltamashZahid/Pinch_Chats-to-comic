@@ -14,3 +14,4 @@ eval/judge_set/*.png
 eval/lora_ab/*.png
 data/
 eval/backend_ab/*.png
+data/text/llm_cache/
