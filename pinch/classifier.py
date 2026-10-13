@@ -24,6 +24,11 @@ class EmotionClassifier:
         self.labels = [self.model.config.id2label[i] for i in range(self.model.config.num_labels)]
         # Models trained with --context read "message </s> previous message".
         self.context = bool(getattr(self.model.config, "pinch_context", False))
+        # Per-emotion logit biases tuned with the Grey Wolf Optimizer (training/tune_text_biases.py).
+        import json
+        bias_file = Path(model_dir) / "pinch_biases.json"
+        b = json.loads(bias_file.read_text()) if bias_file.exists() and os.environ.get("PINCH_TEXT_BIASES", "on") != "off" else {}
+        self.bias = torch.tensor([b.get(l, 0.0) for l in self.labels])
 
     def predict(self, texts: list[str], prevs: list[str] | None = None) -> list[tuple[str, float]]:
         """Returns (emotion, probability) for each text. `prevs` are the previous messages in
@@ -38,7 +43,7 @@ class EmotionClassifier:
             enc = self.tokenizer(texts, truncation=True, max_length=64, padding=True,
                                  return_tensors="pt").to(self.device)
         with self._torch.no_grad():
-            probs = self.model(**enc).logits.softmax(-1).cpu()
+            probs = (self.model(**enc).logits.float().cpu() + self.bias).softmax(-1)
         best = probs.max(-1)
         return [(self.labels[i], round(float(p), 3)) for p, i in zip(best.values, best.indices)]
 
