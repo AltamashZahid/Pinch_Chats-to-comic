@@ -95,13 +95,18 @@ class LocalLCMBackend:
     base = "stable-diffusion-v1-5/stable-diffusion-v1-5"
     lcm = "latent-consistency/lcm-lora-sdv1-5"
 
-    def __init__(self, steps: int = 6, lora: str | None = None, lora_scale: float | None = None):
+    def __init__(self, steps: int = 6, lora: str | None = None, lora_scale: float | None = None,
+                 boost: float | None = None):
         self.steps = steps
         self._pipe = None
         choice = lora if lora is not None else os.environ.get("PINCH_LORA", "none")
         self.lora = None if choice.lower() == "none" or not Path(choice).exists() else Path(choice)
         self.lora_scale = lora_scale if lora_scale is not None else float(os.environ.get("PINCH_LORA_SCALE", "1.0"))
-        self.model = f"sd15+lcm" + ("" if self.lora is None else f"+{self.lora.name}@{self.lora_scale}")
+        # Emotion steering: add boost * (embedding of the emotion's face cues - embedding of a calm
+        # face) to the prompt embedding, the "king - man + woman" trick applied to expressions.
+        self.boost = boost if boost is not None else float(os.environ.get("PINCH_EMOTION_BOOST", "0"))
+        self._dirs: dict[str, object] = {}
+        self.model = f"sd15+lcm" + ("" if self.lora is None else f"+{self.lora.name}@{self.lora_scale}")             + (f"+boost{self.boost}" if self.boost else "")
 
     def _load(self):
         import torch
@@ -123,12 +128,30 @@ class LocalLCMBackend:
         pipe.set_progress_bar_config(disable=True)
         self._torch, self._pipe = torch, pipe
 
+    def _embed(self, text: str):
+        emb, _ = self._pipe.encode_prompt(text, "cuda", 1, False)
+        return emb
+
+    def direction(self, emotion: str):
+        """Emotion direction in text-embedding space (cached per emotion)."""
+        if emotion not in self._dirs:
+            from .style import ART_STYLE, EXPRESSION
+            calm = self._embed(f"{ART_STYLE}, close-up, a person, {EXPRESSION['neutral']}")
+            felt = self._embed(f"{ART_STYLE}, close-up, a person, {EXPRESSION[emotion]}")
+            self._dirs[emotion] = felt - calm
+        return self._dirs[emotion]
+
     def generate(self, req: ImageRequest) -> bytes:
         if self._pipe is None:
             self._load()
         g = self._torch.Generator("cuda").manual_seed(req.seed)
-        img = self._pipe(req.prompt, num_inference_steps=self.steps, guidance_scale=1.0,
-                         generator=g, width=req.width, height=req.height).images[0]
+        if self.boost and req.emotion and req.emotion != "neutral":
+            emb = self._embed(req.prompt) + self.boost * self.direction(req.emotion)
+            img = self._pipe(prompt_embeds=emb, num_inference_steps=self.steps, guidance_scale=1.0,
+                             generator=g, width=req.width, height=req.height).images[0]
+        else:
+            img = self._pipe(req.prompt, num_inference_steps=self.steps, guidance_scale=1.0,
+                             generator=g, width=req.width, height=req.height).images[0]
         return _png(img)
 
 

@@ -38,6 +38,14 @@ OUT = ROOT / "models" / "pool_judge"
 
 
 def main() -> None:
+    import argparse
+    global POOL, OUT
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--pool", default=str(POOL))
+    ap.add_argument("--out", default=str(OUT))
+    ap.add_argument("--report", default="pool_judge")
+    args = ap.parse_args()
+    POOL, OUT = Path(args.pool), Path(args.out)
     items = {it["id"]: it for it in json.loads((POOL / "items.json").read_text())}
     labels = json.loads((POOL / "labels.json").read_text())["labels"]
     ids = sorted(i for i in labels if labels[i] in LABELS)
@@ -92,7 +100,7 @@ def main() -> None:
     head = LogisticRegression(max_iter=5000, C=1.0, class_weight="balanced").fit(X, y)
     np.savez(OUT / "head.npz", coef=head.coef_, intercept=head.intercept_,
              classes=np.array([LABELS[c] for c in head.classes_]))
-    (ROOT / "reports" / "pool_judge.json").write_text(json.dumps(report, indent=2))
+    (ROOT / "reports" / f"{args.report}.json").write_text(json.dumps(report, indent=2))
 
 
 if __name__ == "__main__":

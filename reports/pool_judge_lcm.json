@@ -1,0 +1,97 @@
+{
+  "images": 420,
+  "trained_judge_cv": {
+    "accuracy": 0.593,
+    "ci95": [
+      0.545,
+      0.639
+    ],
+    "per_class_recall": {
+      "anger": 0.781,
+      "disgust": 0.389,
+      "fear": 0.372,
+      "joy": 0.885,
+      "sadness": 0.688,
+      "surprise": 0.375,
+      "neutral": 0.625
+    }
+  },
+  "zero_shot_clip": {
+    "accuracy": 0.567,
+    "ci95": [
+      0.519,
+      0.613
+    ],
+    "per_class_recall": {
+      "anger": 0.609,
+      "disgust": 0.139,
+      "fear": 0.372,
+      "joy": 0.934,
+      "sadness": 0.031,
+      "surprise": 0.636,
+      "neutral": 0.667
+    }
+  },
+  "best_of_n": {
+    "1": {
+      "mean": 0.532,
+      "per_emotion": {
+        "anger": 0.506,
+        "disgust": 0.304,
+        "fear": 0.234,
+        "joy": 0.961,
+        "sadness": 0.372,
+        "surprise": 0.428,
+        "neutral": 0.922
+      }
+    },
+    "2": {
+      "mean": 0.645,
+      "per_emotion": {
+        "anger": 0.664,
+        "disgust": 0.419,
+        "fear": 0.308,
+        "joy": 0.982,
+        "sadness": 0.574,
+        "surprise": 0.604,
+        "neutral": 0.967
+      }
+    },
+    "3": {
+      "mean": 0.716,
+      "per_emotion": {
+        "anger": 0.75,
+        "disgust": 0.538,
+        "fear": 0.376,
+        "joy": 0.981,
+        "sadness": 0.696,
+        "surprise": 0.686,
+        "neutral": 0.982
+      }
+    },
+    "4": {
+      "mean": 0.762,
+      "per_emotion": {
+        "anger": 0.802,
+        "disgust": 0.558,
+        "fear": 0.438,
+        "joy": 0.99,
+        "sadness": 0.778,
+        "surprise": 0.774,
+        "neutral": 0.992
+      }
+    },
+    "6": {
+      "mean": 0.814,
+      "per_emotion": {
+        "anger": 0.852,
+        "disgust": 0.622,
+        "fear": 0.504,
+        "joy": 0.996,
+        "sadness": 0.877,
+        "surprise": 0.846,
+        "neutral": 0.998
+      }
+    }
+  }
+}

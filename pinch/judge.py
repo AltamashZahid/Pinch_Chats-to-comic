@@ -12,7 +12,12 @@ from pathlib import Path
 
 import numpy as np
 
-HEAD = Path(__file__).resolve().parent.parent / "models" / "pool_judge" / "head.npz"
+import os
+
+_MODELS = Path(__file__).resolve().parent.parent / "models"
+# A judge must be trained on the same image model it judges (PINCH_JUDGE_HEAD overrides).
+HEADS = {"local": _MODELS / "pool_judge" / "head.npz", "lcm": _MODELS / "pool_judge_lcm" / "head.npz"}
+HEAD = HEADS["local"]
 CLIP = "openai/clip-vit-large-patch14"
 
 
@@ -50,12 +55,14 @@ class ExpressionJudge:
         return i, scores[i]
 
 
-_judge: ExpressionJudge | None = None
+_judges: dict[str, ExpressionJudge] = {}
 
 
-def judge() -> ExpressionJudge | None:
-    """Shared judge, or None if it hasn't been trained yet."""
-    global _judge
-    if _judge is None and HEAD.exists():
-        _judge = ExpressionJudge()
-    return _judge
+def judge(backend_name: str = "local") -> ExpressionJudge | None:
+    """Shared judge for an image backend, or None if none has been trained for it."""
+    head = Path(os.environ.get("PINCH_JUDGE_HEAD") or HEADS.get(backend_name, HEAD))
+    if not head.exists():
+        return None
+    if str(head) not in _judges:
+        _judges[str(head)] = ExpressionJudge(head)
+    return _judges[str(head)]
