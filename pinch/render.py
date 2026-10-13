@@ -55,12 +55,12 @@ def _candidates() -> int:
 def draw_best(backend, panel: Panel, seed: int, width: int, height: int) -> tuple[bytes, int, float | None]:
     """Draw up to N candidates and keep the one the judge rates best for the panel's emotion."""
     n = _candidates()
-    first = backend.generate(ImageRequest(panel.prompt, seed, width, height))
+    req = lambda s: ImageRequest(panel.prompt, s, width, height, emotion=panel.emotion, shot=panel.shot)  # noqa: E731
+    first = backend.generate(req(seed))
     j = judge() if n > 1 else None  # don't load CLIP when there's nothing to choose between
     if j is None:
         return first, 1, None
-    images = [first] + [backend.generate(ImageRequest(panel.prompt, seed + 7919 * k, width, height))
-                        for k in range(1, n)]
+    images = [first] + [backend.generate(req(seed + 7919 * k)) for k in range(1, n)]
     scores = [p.get(panel.emotion, 0.0) for p in j.probs(images)]
     i = max(range(len(images)), key=scores.__getitem__)
     return images[i], len(images), scores[i]

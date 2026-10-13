@@ -29,6 +29,8 @@ class ImageRequest:
     width: int = 512
     height: int = 512
     negative: str = "text, letters, words, speech bubbles, watermark, signature, blurry"
+    emotion: str | None = None   # used by backends that control the face directly (faceshape)
+    shot: str | None = None
 
 
 def _png(img: Image.Image) -> bytes:
@@ -127,6 +129,58 @@ class LocalLCMBackend:
         g = self._torch.Generator("cuda").manual_seed(req.seed)
         img = self._pipe(req.prompt, num_inference_steps=self.steps, guidance_scale=1.0,
                          generator=g, width=req.width, height=req.height).images[0]
+        return _png(img)
+
+
+class LocalFaceControlBackend(LocalLCMBackend):
+    """SD 1.5 + LCM-LoRA + a face-landmark ControlNet: the wanted expression is drawn as a
+    landmark sketch (pinch/face_control.py, templates from our labelled panels) and the
+    ControlNet makes the face follow it. Falls back to plain prompting without an emotion."""
+    name = "faceshape"
+    controlnet = "CrucibleAI/ControlNetMediaPipeFace"
+
+    def __init__(self, steps: int = 6, lora: str | None = None, lora_scale: float | None = None,
+                 control_scale: float | None = None):
+        super().__init__(steps, lora, lora_scale)
+        self.control_scale = control_scale if control_scale is not None else             float(os.environ.get("PINCH_FACE_CONTROL", "0.9"))
+        self.model = self.model.replace("sd15+lcm", f"sd15+lcm+faceshape@{self.control_scale}")
+
+    def _load(self):
+        import torch
+        from diffusers import ControlNetModel, LCMScheduler, StableDiffusionControlNetPipeline
+        if not torch.cuda.is_available():
+            raise ImageGenError("faceshape backend needs a CUDA GPU")
+        cn = ControlNetModel.from_pretrained(self.controlnet, subfolder="diffusion_sd15", torch_dtype=torch.float16,
+                                             variant="fp16")
+        pipe = StableDiffusionControlNetPipeline.from_pretrained(
+            self.base, controlnet=cn, torch_dtype=torch.float16, variant="fp16",
+            safety_checker=None, requires_safety_checker=False)
+        pipe.scheduler = LCMScheduler.from_config(pipe.scheduler.config)
+        pipe.load_lora_weights(self.lcm, adapter_name="lcm")
+        names, weights = ["lcm"], [1.0]
+        if self.lora is not None:
+            pipe.load_lora_weights(str(self.lora), adapter_name="expr")
+            names.append("expr")
+            weights.append(self.lora_scale)
+        pipe.set_adapters(names, adapter_weights=weights)
+        pipe.fuse_lora()
+        pipe.to("cuda")
+        pipe.set_progress_bar_config(disable=True)
+        self._torch, self._pipe = torch, pipe
+
+    def generate(self, req: ImageRequest) -> bytes:
+        import random
+        from PIL import Image
+        from .face_control import load_template, sketch
+        if self._pipe is None:
+            self._load()
+        tmpl = load_template(req.emotion, random.Random(req.seed)) if req.emotion else None
+        cond = sketch(tmpl, req.width, req.shot or "close-up") if tmpl is not None else             Image.new("RGB", (req.width, req.height))
+        scale = self.control_scale if tmpl is not None else 0.0
+        g = self._torch.Generator("cuda").manual_seed(req.seed)
+        img = self._pipe(req.prompt, image=cond, controlnet_conditioning_scale=scale,
+                         num_inference_steps=self.steps, guidance_scale=1.0, generator=g,
+                         width=req.width, height=req.height).images[0]
         return _png(img)
 
 
@@ -248,7 +302,8 @@ class PlaceholderBackend:
         return _png(img)
 
 
-BACKENDS = {"local": LocalTurboBackend, "sdxl": LocalSDXLTurboBackend, "lcm": LocalLCMBackend, "huggingface": HuggingFaceBackend,
+BACKENDS = {"local": LocalTurboBackend, "sdxl": LocalSDXLTurboBackend, "lcm": LocalLCMBackend,
+            "faceshape": LocalFaceControlBackend, "huggingface": HuggingFaceBackend,
             "pollinations": PollinationsBackend, "placeholder": PlaceholderBackend}
 
 
