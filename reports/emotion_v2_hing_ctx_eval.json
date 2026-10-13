@@ -1,0 +1,74 @@
+{
+  "goemotions": {
+    "n": 4968,
+    "macro_f1": 0.602,
+    "per_class_f1": {
+      "anger": 0.535,
+      "disgust": 0.524,
+      "fear": 0.636,
+      "joy": 0.816,
+      "sadness": 0.58,
+      "surprise": 0.589,
+      "neutral": 0.532
+    }
+  },
+  "dailydialog": {
+    "n": 7740,
+    "macro_f1": 0.422,
+    "per_class_f1": {
+      "anger": 0.373,
+      "disgust": 0.309,
+      "fear": 0.346,
+      "joy": 0.521,
+      "sadness": 0.263,
+      "surprise": 0.372,
+      "neutral": 0.773
+    }
+  },
+  "meld": {
+    "n": 2610,
+    "macro_f1": 0.437,
+    "per_class_f1": {
+      "anger": 0.477,
+      "disgust": 0.241,
+      "fear": 0.148,
+      "joy": 0.578,
+      "sadness": 0.303,
+      "surprise": 0.552,
+      "neutral": 0.762
+    }
+  },
+  "hinglish": {
+    "n": 1354,
+    "macro_f1": 0.375,
+    "per_class_f1": {
+      "anger": 0.301,
+      "disgust": 0.232,
+      "fear": 0.251,
+      "joy": 0.422,
+      "sadness": 0.349,
+      "surprise": 0.456,
+      "neutral": 0.614
+    }
+  },
+  "dairai": {
+    "n": 2000,
+    "macro_f1": 0.903,
+    "per_class_f1": {
+      "anger": 0.918,
+      "fear": 0.892,
+      "joy": 0.982,
+      "sadness": 0.959,
+      "surprise": 0.764
+    }
+  },
+  "mean_macro_f1": 0.548,
+  "train": {
+    "base": "l3cube-pune/hing-roberta",
+    "examples": 102629,
+    "epochs": 3,
+    "context": true,
+    "minutes": 88.2,
+    "best_val_mean_macro_f1": 0.545
+  }
+}
