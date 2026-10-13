@@ -6,9 +6,13 @@ Inputs (data/, git-ignored; Manga109-s is licensed for research and must not be 
 - data/manga109/Manga109s_released_2026_05_21/  pages + annotations/<book>.xml (face boxes)
 - data/visemocomic/visemocomic_csvs/manga109_short_{train,test}.csv  3 annotators per face
 
-Keeps faces where >= 2 of 3 annotators agree on one of our 7 emotions, crops a square around
-each face (with margin), and writes data/manga_faces/{train,test}/<emotion>/<book>_<face>.png
-plus data/manga_faces/{train,test}.csv. Train/test follow VisEmoComic's own split.
+Keeps faces where >= 2 of 3 annotators agree on one of our 7 emotions and writes
+data/manga_scenes/{train,test}/<emotion>/<book>_<face>.png plus data/manga_scenes/{train,test}.csv.
+Train/test follow VisEmoComic's own split.
+
+Crops are 512x512 at the page's native resolution, centred on the face (bigger faces get a
+larger window, downscaled). The median Manga109 face is only 104 px, so tight face crops had to
+be upscaled ~3x, and a LoRA trained on them learned blur.
 """
 import csv
 import sys
@@ -26,8 +30,8 @@ from training.train_expression_judge import majority  # noqa: E402
 
 M109 = ROOT / "data" / "manga109" / "Manga109s_released_2026_05_21"
 LABELS_CSV = ROOT / "data" / "visemocomic" / "visemocomic_csvs"
-OUT = ROOT / "data" / "manga_faces"
-MIN_SIDE = 48  # smaller faces are too low-resolution to teach expressions
+OUT = ROOT / "data" / "manga_scenes"
+MIN_SIDE = 64  # smaller faces are too low-resolution to teach expressions
 
 
 def face_boxes(book: str) -> dict[str, tuple[int, int, int, int, int]]:
@@ -43,11 +47,15 @@ def face_boxes(book: str) -> dict[str, tuple[int, int, int, int, int]]:
     return out
 
 
-def crop(img: Image.Image, x0, y0, x1, y1, margin=0.3, size=256) -> Image.Image:
-    side = max(x1 - x0, y1 - y0) * (1 + 2 * margin)
+def crop(img: Image.Image, x0, y0, x1, y1, size=512) -> Image.Image:
+    """Square window centred on the face, never smaller than `size` (so no upscaling), shifted
+    to stay inside the page."""
+    side = max(size, int(max(x1 - x0, y1 - y0) * 2.2))
+    side = min(side, img.width, img.height)
     cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
-    box = (cx - side / 2, cy - side / 2, cx + side / 2, cy + side / 2)
-    return img.crop(tuple(int(v) for v in box)).convert("L").convert("RGB").resize((size, size), Image.LANCZOS)
+    left = int(min(max(cx - side / 2, 0), img.width - side))
+    top = int(min(max(cy - side / 2, 0), img.height - side))
+    return img.crop((left, top, left + side, top + side)).convert("L").convert("RGB").resize((size, size), Image.LANCZOS)
 
 
 def main() -> None:
