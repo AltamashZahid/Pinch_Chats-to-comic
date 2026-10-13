@@ -17,3 +17,4 @@ eval/backend_ab/*.png
 data/text/llm_cache/
 eval/manga_ab/*.png
 data/face_templates/
+data/text/rewrite_cache/

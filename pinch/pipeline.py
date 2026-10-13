@@ -8,7 +8,7 @@ from .classifier import DEFAULT_MODEL_DIR
 from .emoji import combine
 from .llm import LLMClient
 from .ocr import extract_dialogue
-from .scenes import Line, Script, write_script
+from .scenes import Line, Script, is_shouting, write_script
 
 _classifier = None
 
@@ -66,7 +66,9 @@ def lines_from_messages(messages) -> list[Line]:
     texts, prevs, prev = [], [], ""
     for m in messages:  # previous message in the chat = context for context-aware models
         if m.text:
-            texts.append(m.text)
+            # ALL CAPS confuses the classifier; it reads a lowercased copy. The bubble keeps the
+            # original, and the shouting itself is drawn (see scenes.is_shouting).
+            texts.append(m.text.lower() if is_shouting(m.text) else m.text)
             prevs.append(prev)
             prev = m.text
     tones = iter(classify(texts, prevs)) if texts else iter(())

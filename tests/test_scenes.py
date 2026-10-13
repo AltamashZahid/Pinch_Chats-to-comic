@@ -189,3 +189,27 @@ def test_names_are_passed_to_the_llm():
     llm = LLMClient("https://fake/v1", "key", "model", transport=httpx.MockTransport(handler))
     write_script(LINES, llm, names={"me": "Altamash", "them": "Rahul"})
     assert '"Rahul"' in seen[0]["messages"][1]["content"]
+
+
+def test_all_caps_is_shouting():
+    from pinch.scenes import is_shouting
+    assert is_shouting("WHAT") and is_shouting("I HATE YOU!!") and is_shouting("OMG 2 HOURS LATE")
+    assert not is_shouting("OK") and not is_shouting("lol WHAT") and not is_shouting("Hello there")
+
+
+def test_shouting_changes_bubble_prompt_and_shot():
+    lines = [Line("me", "WHY WOULD YOU DO THAT", "anger", 0.9), Line("them", "sorry", "sadness", 0.6)]
+    p = write_script(lines).panels[0]
+    assert p.lines[0].bubble == "jagged"
+    assert "shouting, mouth wide open" in p.prompt
+    assert "close" in p.shot
+    assert p.lines[0].text == "WHY WOULD YOU DO THAT"  # original text kept for the bubble
+
+
+def test_classifier_sees_lowercase_for_shouting(monkeypatch):
+    from pinch import pipeline
+    from pinch.models import Box, Message
+    seen = []
+    monkeypatch.setattr(pipeline, "classify", lambda texts, prevs=None: seen.extend(texts) or [("anger", .9)] * len(texts))
+    lines = pipeline.lines_from_messages([Message("me", "I HATE THIS", Box(0, 0, 1, 1))])
+    assert seen == ["i hate this"] and lines[0].text == "I HATE THIS"
