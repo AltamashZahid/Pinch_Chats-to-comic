@@ -23,7 +23,7 @@ from eval.lora_ab_test import PER_EMOTION, TEST_LOOKS, TEST_PLACES, TEST_SHOTS, 
 OUT = ROOT / "eval" / "backend_ab"
 
 
-def generate(a: str, b: str, seed: int) -> None:
+def generate(a: str, b: str, seed: int, b_lora: str = "none") -> None:
     import io
     from pinch.pipeline import load_env
     load_env()
@@ -38,8 +38,10 @@ def generate(a: str, b: str, seed: int) -> None:
                 rng.randrange(2**31)) for e in LABELS for _ in range(PER_EMOTION)]
     OUT.mkdir(parents=True, exist_ok=True)
     images = []
-    for variant in (a, b):
-        backend = BACKENDS[variant]()
+    import inspect
+    for variant, lora in ((a, "none"), (b, b_lora)):
+        cls = BACKENDS[variant]
+        backend = cls(lora=lora) if "lora" in inspect.signature(cls).parameters else cls()
         for p, (emotion, text, s) in enumerate(prompts):
             img = Image.open(io.BytesIO(backend.generate(ImageRequest(text, s, 512, 512)))).convert("RGB")
             images.append({"pair": p, "variant": variant, "emotion": emotion, "prompt": text, "img": img})
@@ -103,11 +105,12 @@ def main() -> None:
     g.add_argument("--a", default="local")
     g.add_argument("--b", default="sdxl")
     g.add_argument("--seed", type=int, default=5151)
+    g.add_argument("--b-lora", default="none", help="LoRA for backend b (a always runs without one)")
     s = sub.add_parser("score")
     s.add_argument("labels")
     args = ap.parse_args()
     if args.cmd == "generate":
-        generate(args.a, args.b, args.seed)
+        generate(args.a, args.b, args.seed, args.b_lora)
     else:
         score(Path(args.labels))
 
