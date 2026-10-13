@@ -43,7 +43,8 @@ def generate(a: str, b: str, seed: int, b_lora: str = "none") -> None:
         cls = BACKENDS[variant]
         backend = cls(lora=lora) if "lora" in inspect.signature(cls).parameters else cls()
         for p, (emotion, text, s) in enumerate(prompts):
-            img = Image.open(io.BytesIO(backend.generate(ImageRequest(text, s, 512, 512)))).convert("RGB")
+            shot = next((x for x in ("extreme close-up", "medium close-up", "close-up", "medium shot") if x in text), "close-up")
+            img = Image.open(io.BytesIO(backend.generate(ImageRequest(text, s, 512, 512, emotion=emotion, shot=shot)))).convert("RGB")
             images.append({"pair": p, "variant": variant, "emotion": emotion, "prompt": text, "img": img})
         del backend
         torch.cuda.empty_cache()
