@@ -20,13 +20,21 @@ class EmotionClassifier:
         self.tokenizer = AutoTokenizer.from_pretrained(model_dir)
         self.model = AutoModelForSequenceClassification.from_pretrained(model_dir).to(self.device).eval()
         self.labels = [self.model.config.id2label[i] for i in range(self.model.config.num_labels)]
+        # Models trained with --context read "message </s> previous message".
+        self.context = bool(getattr(self.model.config, "pinch_context", False))
 
-    def predict(self, texts: list[str]) -> list[tuple[str, float]]:
-        """Returns (emotion, probability) for each text."""
+    def predict(self, texts: list[str], prevs: list[str] | None = None) -> list[tuple[str, float]]:
+        """Returns (emotion, probability) for each text. `prevs` are the previous messages in
+        the conversation (used only by context models)."""
         if not texts:
             return []
-        enc = self.tokenizer(texts, truncation=True, max_length=64, padding=True,
-                             return_tensors="pt").to(self.device)
+        if self.context:
+            prevs = prevs or [""] * len(texts)
+            enc = self.tokenizer(texts, [p or "" for p in prevs], truncation="longest_first", max_length=96,
+                                 padding=True, return_tensors="pt").to(self.device)
+        else:
+            enc = self.tokenizer(texts, truncation=True, max_length=64, padding=True,
+                                 return_tensors="pt").to(self.device)
         with self._torch.no_grad():
             probs = self.model(**enc).logits.softmax(-1).cpu()
         best = probs.max(-1)

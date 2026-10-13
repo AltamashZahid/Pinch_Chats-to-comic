@@ -24,7 +24,7 @@ def load_env(path: Path = Path(__file__).resolve().parent.parent / ".env") -> No
             os.environ.setdefault(key.strip(), value.strip().strip("\"'"))
 
 
-def classify(texts: list[str]) -> list[tuple[str, float]]:
+def classify(texts: list[str], prevs: list[str] | None = None) -> list[tuple[str, float]]:
     global _classifier
     if not (DEFAULT_MODEL_DIR / "config.json").exists():
         print("[pinch] no trained emotion model in models/emotion, everything is neutral "
@@ -33,7 +33,7 @@ def classify(texts: list[str]) -> list[tuple[str, float]]:
     if _classifier is None:
         from .classifier import EmotionClassifier
         _classifier = EmotionClassifier()
-    return _classifier.predict(texts)
+    return _classifier.predict(texts, prevs)
 
 
 def screenshot_to_script(img: np.ndarray) -> Script:
@@ -44,8 +44,13 @@ def screenshot_to_script(img: np.ndarray) -> Script:
 
 def lines_from_messages(messages) -> list[Line]:
     """Text tone from the classifier, merged with the tone of any emoji (see emoji.combine)."""
-    texts = [m.text for m in messages if m.text]
-    tones = iter(classify(texts)) if texts else iter(())
+    texts, prevs, prev = [], [], ""
+    for m in messages:  # previous message in the chat = context for context-aware models
+        if m.text:
+            texts.append(m.text)
+            prevs.append(prev)
+            prev = m.text
+    tones = iter(classify(texts, prevs)) if texts else iter(())
     lines = []
     for m in messages:
         text_emotion, conf = next(tones) if m.text else ("neutral", 0.0)
