@@ -17,7 +17,7 @@ from .cache import ImageCache
 from .imagegen import ImageGenError, backend_from_env
 from . import labeling
 from .layout import compose_page
-from .pipeline import load_env, screenshot_to_script
+from .pipeline import MAX_CHAT_MESSAGES, chat_to_script, load_env, screenshot_to_script
 from .render import render_panels
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -48,12 +48,24 @@ def make_comic(data: bytes) -> dict:
     script = screenshot_to_script(img)
     if not script.panels:
         raise HTTPException(422, "No chat bubbles with readable text were found in that screenshot.")
+    return render_comic(script, data)
 
+
+def make_comic_from_chat(raw: str, me: str | None, last: int) -> dict:
+    msgs = labeling.parse_chat_text(raw)
+    if not msgs:
+        raise HTTPException(422, "No messages found. Paste lines like 'Name: message' or a WhatsApp export.")
+    script = chat_to_script(msgs, me or None, last)
+    return render_comic(script, f"{me}|{last}|{raw}".encode())
+
+
+def render_comic(script, key: bytes) -> dict:
+    """Draw the panels (cached) and lay out the page. `key` names the output file."""
     backend, cache = _resources()
     before = dict(cache.stats)
     with _gpu_lock:
         rendered = render_panels(script, backend, cache)
-    name = hashlib.sha256(data).hexdigest()[:16] + "_comic.png"
+    name = hashlib.sha256(key).hexdigest()[:16] + "_comic.png"
     compose_page(rendered, OUTPUTS / name)
     run = {k: round(cache.stats[k] - before[k], 1) for k in before}
     return {
@@ -126,12 +138,29 @@ def label_stats():
     return labeling.stats()
 
 
+@app.post("/api/chat/speakers")
+async def chat_speakers(file: UploadFile | None = File(None), text: str = Form("")):
+    """Who's in a typed chat, so the page can ask which one is the user."""
+    raw = (await file.read(MAX_UPLOAD)).decode("utf-8", errors="replace") if file else text
+    msgs = labeling.parse_chat_text(raw)
+    counts: dict[str, int] = {}
+    for m in msgs:
+        counts[m["speaker"]] = counts.get(m["speaker"], 0) + 1
+    return {"messages": len(msgs), "speakers": counts}
+
+
 @app.post("/api/comic")
-async def comic(file: UploadFile = File(...)):
-    data = await file.read(MAX_UPLOAD + 1)
-    if len(data) > MAX_UPLOAD:
-        raise HTTPException(413, "Screenshot is larger than 10 MB.")
+async def comic(file: UploadFile | None = File(None), text: str = Form(""), me: str = Form(""),
+                last: int = Form(MAX_CHAT_MESSAGES)):
+    """A screenshot (image file), or a typed chat: a WhatsApp export (.txt) or pasted lines."""
+    data = await file.read(MAX_UPLOAD + 1) if file else None
+    if data and len(data) > MAX_UPLOAD:
+        raise HTTPException(413, "File is larger than 10 MB.")
+    is_text = file is None or (file.filename or "").lower().endswith(".txt")
     try:
+        if is_text:
+            raw = data.decode("utf-8", errors="replace") if data else text
+            return await run_in_threadpool(make_comic_from_chat, raw, me, max(2, min(last, 24)))
         return await run_in_threadpool(make_comic, data)
     except ImageGenError as e:
         raise HTTPException(502, f"Image generation failed: {e}") from e

@@ -54,3 +54,33 @@ def test_end_to_end_then_cached(client, tmp_path):
 
     again = client.post("/api/comic", files={"file": ("chat.png", data, "image/png")}).json()
     assert again["panels"][0]["source"] == "exact"
+
+
+CHAT = "Rahul: bhai result aaya?\nAltamash: fail ho gaya yaar\nRahul: kya bakwas\nAltamash: haan yaar"
+
+
+def test_chat_speakers(client):
+    r = client.post("/api/chat/speakers", data={"text": CHAT}).json()
+    assert r["messages"] == 4 and r["speakers"] == {"Rahul": 2, "Altamash": 2}
+
+
+def test_comic_from_pasted_chat(client, tmp_path):
+    r = client.post("/api/comic", data={"text": CHAT, "me": "Altamash", "last": "12"})
+    assert r.status_code == 200, r.text
+    data = r.json()
+    speakers = [l["speaker"] for p in data["panels"] for l in p["lines"]]
+    assert speakers == ["them", "me", "them", "me"]
+    assert (tmp_path / data["comic_url"].split("/")[-1]).exists()
+
+
+def test_comic_from_whatsapp_export_file_uses_last_n(client):
+    export = "\n".join(f"12/10/26, 9:{i:02d} pm - {'A' if i % 2 else 'B'}: message {i}" for i in range(30))
+    r = client.post("/api/comic", files={"file": ("chat.txt", export.encode(), "text/plain")},
+                    data={"me": "A", "last": "4"})
+    assert r.status_code == 200, r.text
+    texts = [l["text"] for p in r.json()["panels"] for l in p["lines"]]
+    assert texts == ["message 26", "message 27", "message 28", "message 29"]
+
+
+def test_empty_chat_is_422(client):
+    assert client.post("/api/comic", data={"text": "no colon lines here"}).status_code == 422
