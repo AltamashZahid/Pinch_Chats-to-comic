@@ -1,0 +1,66 @@
+{
+  "goemotions": {
+    "n": 4968,
+    "macro_f1": 0.606,
+    "per_class_f1": {
+      "anger": 0.552,
+      "disgust": 0.517,
+      "fear": 0.656,
+      "joy": 0.816,
+      "sadness": 0.583,
+      "surprise": 0.577,
+      "neutral": 0.538
+    }
+  },
+  "dailydialog": {
+    "n": 7740,
+    "macro_f1": 0.419,
+    "per_class_f1": {
+      "anger": 0.357,
+      "disgust": 0.314,
+      "fear": 0.339,
+      "joy": 0.517,
+      "sadness": 0.266,
+      "surprise": 0.366,
+      "neutral": 0.772
+    }
+  },
+  "meld": {
+    "n": 2610,
+    "macro_f1": 0.446,
+    "per_class_f1": {
+      "anger": 0.426,
+      "disgust": 0.248,
+      "fear": 0.239,
+      "joy": 0.589,
+      "sadness": 0.323,
+      "surprise": 0.546,
+      "neutral": 0.749
+    }
+  },
+  "hinglish": {
+    "n": 1354,
+    "macro_f1": 0.381,
+    "per_class_f1": {
+      "anger": 0.296,
+      "disgust": 0.296,
+      "fear": 0.244,
+      "joy": 0.434,
+      "sadness": 0.333,
+      "surprise": 0.428,
+      "neutral": 0.638
+    }
+  },
+  "dairai": {
+    "n": 2000,
+    "macro_f1": 0.908,
+    "per_class_f1": {
+      "anger": 0.922,
+      "fear": 0.899,
+      "joy": 0.986,
+      "sadness": 0.966,
+      "surprise": 0.768
+    }
+  },
+  "mean_macro_f1": 0.552
+}

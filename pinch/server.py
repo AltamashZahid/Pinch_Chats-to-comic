@@ -8,13 +8,14 @@ from pathlib import Path
 
 import cv2
 import numpy as np
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import Body, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from .cache import ImageCache
 from .imagegen import ImageGenError, backend_from_env
+from . import labeling
 from .layout import compose_page
 from .pipeline import load_env, screenshot_to_script
 from .render import render_panels
@@ -76,6 +77,53 @@ def make_comic(data: bytes) -> dict:
 @app.get("/")
 def index():
     return FileResponse(STATIC / "index.html")
+
+
+@app.get("/label")
+def label_page():
+    return FileResponse(STATIC / "label.html")
+
+
+def _parse_for_labelling(data: bytes | None, filename: str, text: str) -> dict:
+    from .ocr import extract_dialogue
+    from .pipeline import classify
+    if data and not filename.lower().endswith(".txt"):
+        img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+        if img is None:
+            raise HTTPException(400, "Upload a WhatsApp export (.txt) or a screenshot.")
+        msgs = [{"speaker": m.speaker, "text": m.text} for m in extract_dialogue(img) if m.text]
+    else:
+        raw = data.decode("utf-8", errors="replace") if data else text
+        msgs = labeling.parse_chat_text(raw)
+    if not msgs:
+        raise HTTPException(422, "No messages found. Paste lines like 'Name: message' or a WhatsApp export.")
+    msgs = labeling.with_context(msgs)
+    preds = classify([m["text"] for m in msgs], [m["prev"] for m in msgs])
+    for m, (label, p) in zip(msgs, preds):
+        m["model_pred"], m["confidence"] = label, p
+    return {"conversation": labeling.conversation_id(msgs), "messages": msgs}
+
+
+@app.post("/api/label/parse")
+async def label_parse(file: UploadFile | None = File(None), text: str = Form("")):
+    data = await file.read(MAX_UPLOAD + 1) if file else None
+    if data and len(data) > MAX_UPLOAD:
+        raise HTTPException(413, "File is larger than 10 MB.")
+    return await run_in_threadpool(_parse_for_labelling, data, file.filename if file else "", text)
+
+
+@app.post("/api/label/save")
+def label_save(payload: dict = Body(...)):
+    try:
+        n = labeling.save_conversation(payload["conversation"], payload["items"])
+    except (KeyError, ValueError) as e:
+        raise HTTPException(400, f"Bad labels: {e}") from e
+    return {"saved": n, **labeling.stats()}
+
+
+@app.get("/api/label/stats")
+def label_stats():
+    return labeling.stats()
 
 
 @app.post("/api/comic")
