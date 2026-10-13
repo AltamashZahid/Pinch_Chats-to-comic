@@ -82,6 +82,54 @@ class LocalTurboBackend:
         return _png(img)
 
 
+class LocalLCMBackend:
+    """Stable Diffusion 1.5 + LCM-LoRA (latent consistency distillation as a LoRA), fp16 on CUDA.
+
+    Unlike SD-Turbo, SD 1.5 fine-tunes cleanly with ordinary LoRA training, and LCM-LoRA (stacked
+    on top) still makes it draw in 4-6 steps. An expression LoRA trained on SD 1.5
+    (training/train_lora.py --base sd15) is loaded from PINCH_LORA when set.
+    """
+    name = "lcm"
+    base = "stable-diffusion-v1-5/stable-diffusion-v1-5"
+    lcm = "latent-consistency/lcm-lora-sdv1-5"
+
+    def __init__(self, steps: int = 6, lora: str | None = None, lora_scale: float | None = None):
+        self.steps = steps
+        self._pipe = None
+        choice = lora if lora is not None else os.environ.get("PINCH_LORA", "none")
+        self.lora = None if choice.lower() == "none" or not Path(choice).exists() else Path(choice)
+        self.lora_scale = lora_scale if lora_scale is not None else float(os.environ.get("PINCH_LORA_SCALE", "1.0"))
+        self.model = f"sd15+lcm" + ("" if self.lora is None else f"+{self.lora.name}@{self.lora_scale}")
+
+    def _load(self):
+        import torch
+        from diffusers import LCMScheduler, StableDiffusionPipeline
+        if not torch.cuda.is_available():
+            raise ImageGenError("lcm backend needs a CUDA GPU")
+        pipe = StableDiffusionPipeline.from_pretrained(self.base, torch_dtype=torch.float16, variant="fp16",
+                                                       safety_checker=None, requires_safety_checker=False)
+        pipe.scheduler = LCMScheduler.from_config(pipe.scheduler.config)
+        pipe.load_lora_weights(self.lcm, adapter_name="lcm")
+        names, weights = ["lcm"], [1.0]
+        if self.lora is not None:
+            pipe.load_lora_weights(str(self.lora), adapter_name="expr")
+            names.append("expr")
+            weights.append(self.lora_scale)
+        pipe.set_adapters(names, adapter_weights=weights)
+        pipe.fuse_lora()
+        pipe.to("cuda")
+        pipe.set_progress_bar_config(disable=True)
+        self._torch, self._pipe = torch, pipe
+
+    def generate(self, req: ImageRequest) -> bytes:
+        if self._pipe is None:
+            self._load()
+        g = self._torch.Generator("cuda").manual_seed(req.seed)
+        img = self._pipe(req.prompt, num_inference_steps=self.steps, guidance_scale=1.0,
+                         generator=g, width=req.width, height=req.height).images[0]
+        return _png(img)
+
+
 class LocalSDXLTurboBackend:
     """SDXL-Turbo on a 4 GB GPU: UNet quantised to 4-bit NF4 (bitsandbytes, ~1.5 GB) and
     each component moved to the GPU only while it runs (model CPU offload).
@@ -200,7 +248,7 @@ class PlaceholderBackend:
         return _png(img)
 
 
-BACKENDS = {"local": LocalTurboBackend, "sdxl": LocalSDXLTurboBackend, "huggingface": HuggingFaceBackend,
+BACKENDS = {"local": LocalTurboBackend, "sdxl": LocalSDXLTurboBackend, "lcm": LocalLCMBackend, "huggingface": HuggingFaceBackend,
             "pollinations": PollinationsBackend, "placeholder": PlaceholderBackend}
 
 

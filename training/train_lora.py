@@ -32,7 +32,8 @@ import torch  # noqa: E402
 import torch.nn.functional as F  # noqa: E402
 from PIL import Image  # noqa: E402
 
-BASE = "stabilityai/sd-turbo"
+BASES = {"sd-turbo": "stabilityai/sd-turbo", "sd15": "stable-diffusion-v1-5/stable-diffusion-v1-5"}
+BASE = BASES["sd-turbo"]  # set from --base in main()
 
 
 @torch.no_grad()
@@ -71,6 +72,9 @@ def main() -> None:
     ap.add_argument("--accum", type=int, default=2, help="gradient accumulation (effective batch)")
     ap.add_argument("--save-every", type=int, default=500)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--base", choices=sorted(BASES), default="sd-turbo",
+                    help="sd15 fine-tunes cleanly; use it with the lcm backend (SD 1.5 + LCM-LoRA) for 4-6 step drawing. "
+                         "SD-Turbo LoRAs blur at full strength because MSE fine-tuning undoes its adversarial distillation")
     ap.add_argument("--turbo-timesteps", action="store_true",
                     help="train only at the 4 noise levels SD-Turbo samples at (999/749/499/249), so the "
                          "LoRA doesn't erode its few-step distillation (full-range training blurred 4-step output)")
@@ -81,6 +85,8 @@ def main() -> None:
     from peft import LoraConfig
     from peft.utils import get_peft_model_state_dict
 
+    global BASE
+    BASE = BASES[args.base]
     torch.manual_seed(args.seed)
     random.seed(args.seed)
     device = torch.device("cuda")
@@ -90,7 +96,7 @@ def main() -> None:
     t0 = time.time()
     import hashlib
     meta = (Path(args.data) / "metadata.jsonl").read_bytes()
-    cache = Path(args.data) / f"encoded_{hashlib.sha256(meta).hexdigest()[:12]}.pt"
+    cache = Path(args.data) / f"encoded_{args.base}_{hashlib.sha256(meta).hexdigest()[:12]}.pt"
     if cache.exists():  # VAE + text encoding of thousands of images takes ~30 min; reuse it
         latents, embeds, rows = torch.load(cache)
     else:
@@ -155,7 +161,7 @@ def main() -> None:
 
     (out / "train_log.json").write_text(json.dumps({
         "base": BASE, "images": len(rows), "steps": args.steps, "rank": args.rank, "lr": args.lr,
-        "accum": args.accum, "turbo_timesteps": args.turbo_timesteps, "minutes": round((time.time() - start) / 60, 1),
+        "accum": args.accum, "turbo_timesteps": args.turbo_timesteps, "base_model": BASE, "minutes": round((time.time() - start) / 60, 1),
         "peak_vram_gb": round(torch.cuda.max_memory_allocated() / 2**30, 2), "log": log}, indent=1))
     print(f"saved LoRA to {out}")
 
