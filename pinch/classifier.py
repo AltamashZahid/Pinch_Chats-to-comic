@@ -16,7 +16,9 @@ class EmotionClassifier:
         from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
         self._torch = torch
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # CPU by default: a chat is a few dozen lines (<1 s), and the 4 GB GPU is needed for
+        # image generation + the expression judge. PINCH_CLASSIFIER_DEVICE=cuda to override.
+        self.device = torch.device(os.environ.get("PINCH_CLASSIFIER_DEVICE", "cpu"))
         self.tokenizer = AutoTokenizer.from_pretrained(model_dir)
         self.model = AutoModelForSequenceClassification.from_pretrained(model_dir).to(self.device).eval()
         self.labels = [self.model.config.id2label[i] for i in range(self.model.config.num_labels)]

@@ -156,8 +156,10 @@ Lines marked IRONIC have an emoji that contradicts the words (e.g. "I failed ðŸ˜
 that panel funny, with the person reacting like the emoji while the situation matches the words."""
 
 
-def _user_prompt(groups: list[list[Line]]) -> str:
+def _user_prompt(groups: list[list[Line]], names: dict[str, str] | None = None) -> str:
     out = []
+    if names:  # real names hint at gender/age, so the cast looks like the actual people
+        out.append("The two people: " + ", ".join(f'{k} is called "{v}"' for k, v in names.items()) + ".")
     for i, group in enumerate(groups, 1):
         out.append(f"Panel {i} ({group[0].speaker} speaks, focus must be {group[0].speaker}):")
         for l in group:
@@ -177,7 +179,8 @@ def _parse(raw: str, n_panels: int) -> tuple[dict, dict, list[tuple[str, str]]]:
             {"me": str(locs["me"]), "them": str(locs["them"])}, panels)
 
 
-def write_script(lines: list[Line], llm: LLMClient | None = None, mode: str | None = None) -> Script:
+def write_script(lines: list[Line], llm: LLMClient | None = None, mode: str | None = None,
+                 names: dict[str, str] | None = None) -> Script:
     mode = scene_mode(mode)
     groups = group_panels(lines)
     locations = dict(TEXTING_LOCATIONS) if mode == "texting" else         {"me": STORY_LOCATION, "them": STORY_LOCATION}
@@ -187,7 +190,7 @@ def write_script(lines: list[Line], llm: LLMClient | None = None, mode: str | No
     directions: list[tuple[str, str]] = []
     if llm is not None and groups:
         messages = [{"role": "system", "content": system},
-                    {"role": "user", "content": _user_prompt(groups) +
+                    {"role": "user", "content": _user_prompt(groups, names) +
                      f'\n\nReturn exactly {len(groups)} entries in "panels".'}]
         for attempt in (1, 2):
             try:

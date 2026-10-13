@@ -189,7 +189,7 @@ $("go").addEventListener("click", async () => {
       `cache: ${c.exact} exact, ${c.semantic} similar, ${c.miss} new`;
     $("panels").innerHTML = data.panels.map((p, i) => `
       <div class="panel">
-        <h3>Panel ${i + 1} · ${esc(p.focus)} · ${esc(p.shot)} <span class="tag ${p.source}">${p.source === "generated" ? `generated ${p.seconds}s` : `cache: ${p.source}`}</span></h3>
+        <h3>Panel ${i + 1} · ${esc(p.focus)} · ${esc(p.shot)} <span class="tag ${p.source}">${p.source === "generated" ? `best of ${p.candidates} · ${p.seconds}s` : `cache: ${p.source}`}</span></h3>
         ${p.lines.map(l => `
           <div class="line">
             <span class="who">${esc(l.speaker)}</span>

@@ -177,3 +177,15 @@ def test_story_mode_uses_story_system_prompt():
 def test_scene_mode_from_env(monkeypatch):
     monkeypatch.setenv("PINCH_SCENE_MODE", "texting")
     assert write_script(LINES).mode == "texting"
+
+
+def test_names_are_passed_to_the_llm():
+    seen = []
+
+    def handler(request):
+        seen.append(json.loads(request.content))
+        return httpx.Response(200, json={"choices": [{"message": {"content": json.dumps(GOOD_REPLY)}}]})
+
+    llm = LLMClient("https://fake/v1", "key", "model", transport=httpx.MockTransport(handler))
+    write_script(LINES, llm, names={"me": "Altamash", "them": "Rahul"})
+    assert '"Rahul"' in seen[0]["messages"][1]["content"]

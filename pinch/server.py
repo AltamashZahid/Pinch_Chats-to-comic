@@ -77,6 +77,8 @@ def render_comic(script, key: bytes) -> dict:
             "focus": r.panel.focus,
             "shot": r.panel.shot,
             "seconds": round(r.seconds, 2),
+            "candidates": r.candidates,
+            "judge_prob": None if r.judge_prob is None else round(r.judge_prob, 2),
             "prompt": r.panel.prompt,
             "lines": [{"speaker": l.speaker, "text": l.text, "emoji": l.emoji, "emotion": l.emotion,
                        "confidence": l.confidence, "bubble": l.bubble, "ironic": l.ironic,

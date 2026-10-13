@@ -56,7 +56,9 @@ def chat_to_script(msgs: list[dict], me: str | None, last: int = MAX_CHAT_MESSAG
         me = names[1] if len(names) > 1 else names[0]
     messages = [Message("me" if m["speaker"] == me else "them", m["text"], Box(0, i, 1, 1))
                 for i, m in enumerate(msgs)]
-    return write_script(lines_from_messages(messages), LLMClient.from_env())
+    others = [n for n in dict.fromkeys(m["speaker"] for m in msgs) if n != me]
+    names = {"me": me, "them": others[0] if len(others) == 1 else "a friend"}
+    return write_script(lines_from_messages(messages), LLMClient.from_env(), names=names)
 
 
 def lines_from_messages(messages) -> list[Line]:
