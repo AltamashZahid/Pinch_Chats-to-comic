@@ -36,6 +36,19 @@ def classify(texts: list[str], prevs: list[str] | None = None) -> list[tuple[str
     return _classifier.predict(texts, prevs)
 
 
+SPEAKER_NAME = {"me": "A", "them": "B"}
+
+
+def classify_dialogue(turns: list[tuple[str, str]]) -> list[tuple[str, float]]:
+    global _classifier
+    if not (DEFAULT_MODEL_DIR / "config.json").exists():
+        return [("neutral", 1.0)] * len(turns)
+    if _classifier is None:
+        from .classifier import EmotionClassifier
+        _classifier = EmotionClassifier()
+    return _classifier.predict_dialogue(turns)
+
+
 def screenshot_to_script(img: np.ndarray) -> Script:
     load_env()
     messages = extract_dialogue(img)
@@ -63,15 +76,12 @@ def chat_to_script(msgs: list[dict], me: str | None, last: int = MAX_CHAT_MESSAG
 
 def lines_from_messages(messages) -> list[Line]:
     """Text tone from the classifier, merged with the tone of any emoji (see emoji.combine)."""
-    texts, prevs, prev = [], [], ""
-    for m in messages:  # previous message in the chat = context for context-aware models
-        if m.text:
-            # ALL CAPS confuses the classifier; it reads a lowercased copy. The bubble keeps the
-            # original, and the shouting itself is drawn (see scenes.is_shouting).
-            texts.append(m.text.lower() if is_shouting(m.text) else m.text)
-            prevs.append(prev)
-            prev = m.text
-    tones = iter(classify(texts, prevs)) if texts else iter(())
+    # The whole chat goes to the classifier at once: conversation models read each message
+    # with the ones before and after it. ALL CAPS confuses the classifier, so it reads a
+    # lowercased copy; the bubble keeps the original and the shouting itself is drawn.
+    turns = [(SPEAKER_NAME.get(m.speaker, m.speaker), m.text.lower() if is_shouting(m.text) else m.text)
+             for m in messages if m.text]
+    tones = iter(classify_dialogue(turns)) if turns else iter(())
     lines = []
     for m in messages:
         text_emotion, conf = next(tones) if m.text else ("neutral", 0.0)
