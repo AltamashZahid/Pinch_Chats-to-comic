@@ -199,7 +199,7 @@ def main() -> None:
     sched = get_linear_schedule_with_warmup(opt, int(0.2 * steps_per_epoch * args.epochs), steps_per_epoch * args.epochs)
     scaler = torch.amp.GradScaler()
 
-    best, best_state, start = -1.0, None, time.time()
+    best, start = -1.0, time.time()
     for epoch in range(1, args.epochs + 1):
         model.train()
         running, n = 0.0, 0
@@ -224,14 +224,15 @@ def main() -> None:
                 running, n = 0.0, 0
         rep = evaluate(model, tok, val, device)
         print(f"epoch {epoch}: validation mean macro-F1 {rep['mean_macro_f1']} | meld wF1 {rep['meld']['weighted_f1']}", flush=True)
-        if rep["mean_macro_f1"] > best:
+        if rep["mean_macro_f1"] > best:  # save to disk right away: a killed run keeps its best epoch
             best = rep["mean_macro_f1"]
-            best_state = {k: v.detach().cpu().clone() for k, v in model.state_dict().items()}
+            Path(args.out).mkdir(parents=True, exist_ok=True)
+            model.save_pretrained(args.out)
+            tok.save_pretrained(args.out)
+            (Path(args.out) / "best_epoch.json").write_text(json.dumps({"epoch": epoch, "val": rep}, indent=1))
+            print(f"  saved best (epoch {epoch}) to {args.out}", flush=True)
 
-    model.load_state_dict(best_state)
-    Path(args.out).mkdir(parents=True, exist_ok=True)
-    model.save_pretrained(args.out)
-    tok.save_pretrained(args.out)
+    model = AutoModelForSequenceClassification.from_pretrained(args.out).to(device)
     rep = evaluate(model, tok, test, device)
     rep["train"] = {"base": args.base, "examples": len(train), "epochs": args.epochs, "max_len": args.max_len,
                     "minutes": round((time.time() - start) / 60, 1), "best_val_mean_macro_f1": best}
