@@ -82,13 +82,42 @@ def test_finds_big_loose_emoji_and_their_side():
 
 # --- scenes -------------------------------------------------------------------------------
 
-def test_ironic_panel_prompt_shows_the_contrast():
-    lines = [Line("me", "I failed physics", "joy", 0.9, emoji=["😂"], ironic=True, situation="sadness"),
+def test_ironic_panel_prompt_shows_the_contrast(monkeypatch):
+    monkeypatch.setenv("PINCH_REVEAL", "off")  # single-panel version of the gag
+    lines =[Line("me", "I failed physics", "joy", 0.9, emoji=["😂"], ironic=True, situation="sadness"),
              Line("them", "oh no", "sadness", 0.6)]
     p = write_script(lines, mode="story").panels[0]
     assert p.focus == "me"
     assert "happy face" in p.prompt and "falls apart" in p.prompt
     assert lines[0].bubble == "wavy"
+
+
+def test_laugh_over_bad_news_is_two_beats():
+    p = write_script([Line("me", "I failed physics", "joy", 0.9, emoji=["😂"], ironic=True,
+                           situation="sadness")], mode="story").panels[0]
+    assert p.reveal == "sadness"
+    assert "happy face" in p.prompt and "falls apart" not in p.prompt
+    assert "crying face" in p.reveal_prompt and "close-up" in p.reveal_prompt
+
+
+def test_happy_tears_stay_one_panel():
+    p = write_script([Line("me", "I got the job", "sadness", 0.9, emoji=["😭"], ironic=True,
+                           situation="joy")], mode="story").panels[0]
+    assert p.reveal == "" and p.reveal_prompt == ""
+
+
+def test_reveal_can_be_switched_off(monkeypatch):
+    monkeypatch.setenv("PINCH_REVEAL", "off")
+    p = write_script([Line("me", "I failed physics", "joy", 0.9, emoji=["😂"], ironic=True,
+                           situation="sadness")], mode="story").panels[0]
+    assert p.reveal == "" and "falls apart" in p.prompt
+
+
+def test_two_beats_splits_the_frame():
+    from PIL import Image
+    from pinch.layout import two_beats
+    out = np.asarray(two_beats(Image.new("RGB", (512, 512), "red"), Image.new("RGB", (512, 512), "blue")))
+    assert tuple(out[256, 100]) == (255, 0, 0) and tuple(out[256, 400]) == (0, 0, 255)
 
 
 def test_lines_from_messages_merges_emoji(monkeypatch):

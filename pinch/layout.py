@@ -119,6 +119,21 @@ def draw_bubble(img: Image.Image, text: str, style: str, side: str, top: int, sc
     return int(cy + b * reach + 34 * scale)
 
 
+def two_beats(first: Image.Image, second: Image.Image, scale: int = 1) -> Image.Image:
+    """One frame split down the middle: the centre half of each image (characters are drawn
+    centred), first beat left, the reveal right, with a gutter between."""
+    w, h = first.size
+    q, gap = w // 4, 5 * scale
+    out = Image.new("RGB", (w, h), "white")
+    out.paste(first.crop((q, 0, q + w // 2, h)), (0, 0))
+    out.paste(second.crop((q, 0, q + w // 2, h)), (w // 2, 0))
+    d = ImageDraw.Draw(out)
+    d.rectangle([w // 2 - gap, 0, w // 2 + gap, h], fill="white")
+    for x in (w // 2 - gap, w // 2 + gap):
+        d.line([(x, 0), (x, h)], fill="black", width=2 * scale)
+    return out
+
+
 def compose_page(panels: list[RenderedPanel], out_path: Path) -> Path:
     rows = math.ceil(len(panels) / COLUMNS)
     cols = min(COLUMNS, len(panels))
@@ -128,9 +143,12 @@ def compose_page(panels: list[RenderedPanel], out_path: Path) -> Path:
     for i, rp in enumerate(panels):
         ss = 2  # supersample for smooth bubble outlines
         art = Image.open(rp.image).convert("RGB").resize((PANEL * ss, PANEL * ss), Image.LANCZOS)
+        if rp.reveal_image is not None:
+            art = two_beats(art, Image.open(rp.reveal_image).convert("RGB").resize(art.size, Image.LANCZOS), ss)
         top = 10 * ss
         for line in rp.panel.lines:
-            side = "right" if line.speaker == "me" else "left"
+            # A two-beat panel shows only the speaker: the words go over beat one.
+            side = "left" if rp.reveal_image is not None else "right" if line.speaker == "me" else "left"
             top = draw_bubble(art, line.text, line.bubble, side, top, scale=ss, emoji=line.emoji)
         art = art.resize((PANEL, PANEL), Image.LANCZOS)
         r, c = divmod(i, COLUMNS)
