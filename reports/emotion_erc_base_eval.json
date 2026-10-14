@@ -1,0 +1,73 @@
+{
+  "meld": {
+    "n": 2610,
+    "accuracy": 0.654,
+    "weighted_f1": 0.653,
+    "macro_f1": 0.5,
+    "micro_f1_no_neutral": 0.528,
+    "per_class_f1": {
+      "anger": 0.546,
+      "disgust": 0.323,
+      "fear": 0.236,
+      "joy": 0.6,
+      "sadness": 0.439,
+      "surprise": 0.566,
+      "neutral": 0.788
+    }
+  },
+  "dailydialog": {
+    "n": 7740,
+    "accuracy": 0.717,
+    "weighted_f1": 0.755,
+    "macro_f1": 0.471,
+    "micro_f1_no_neutral": 0.512,
+    "per_class_f1": {
+      "anger": 0.441,
+      "disgust": 0.327,
+      "fear": 0.455,
+      "joy": 0.589,
+      "sadness": 0.28,
+      "surprise": 0.398,
+      "neutral": 0.806
+    }
+  },
+  "goemotions": {
+    "n": 4968,
+    "accuracy": 0.697,
+    "weighted_f1": 0.695,
+    "macro_f1": 0.642,
+    "micro_f1_no_neutral": 0.726,
+    "per_class_f1": {
+      "anger": 0.585,
+      "disgust": 0.508,
+      "fear": 0.716,
+      "joy": 0.834,
+      "sadness": 0.616,
+      "surprise": 0.612,
+      "neutral": 0.621
+    }
+  },
+  "dairai": {
+    "n": 2000,
+    "accuracy": 0.951,
+    "weighted_f1": 0.952,
+    "macro_f1": 0.896,
+    "micro_f1_no_neutral": 0.951,
+    "per_class_f1": {
+      "anger": 0.926,
+      "fear": 0.88,
+      "joy": 0.988,
+      "sadness": 0.964,
+      "surprise": 0.722
+    }
+  },
+  "mean_macro_f1": 0.627,
+  "train": {
+    "base": "roberta-base",
+    "examples": 88571,
+    "epochs": 4,
+    "max_len": 256,
+    "minutes": 305.3,
+    "best_val_mean_macro_f1": 0.609
+  }
+}
