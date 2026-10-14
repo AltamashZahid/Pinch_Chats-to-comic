@@ -75,6 +75,8 @@ class Panel:
     action: str = ""       # what they are doing
     shot: str = "medium shot"
     prompt: str = ""
+    reveal: str = ""         # two-beat panel: the true emotion the second half cuts to
+    reveal_prompt: str = ""
 
     @property
     def emotion(self) -> str:
@@ -128,17 +130,40 @@ def choose_shot(emotion: str, index: int, previous: str | None) -> str:
     return shot
 
 
-def build_prompt(script: Script, panel: Panel) -> str:
+def build_prompt(script: Script, panel: Panel, *, emotion: str | None = None, shot: str | None = None,
+                 action: str | None = None, irony: bool = True) -> str:
     """Most important first: SD's CLIP text encoder ignores everything past 77 tokens,
     so shot, character and expression come before the action and the background."""
     look = script.characters.get(panel.focus, "a young person")
     who = f"single character, {look}" if script.mode == "texting" else look
-    parts = [ART_STYLE, panel.shot, who, EXPRESSION[panel.emotion]]
+    parts = [ART_STYLE, shot or panel.shot, who, EXPRESSION[emotion or panel.emotion]]
     if any(l.shouting for l in panel.lines):
         parts.append(SHOUT)
-    if panel.irony:  # the joke goes before the action so it survives the 77-token cut
+    if irony and panel.irony:  # the joke goes before the action so it survives the 77-token cut
         parts.append(panel.irony)
-    return ", ".join(parts + [panel.action, script.location(panel)])
+    return ", ".join(parts + [panel.action if action is None else action, script.location(panel)])
+
+
+MASKED = {"sadness", "fear", "anger", "disgust"}  # bad news a laughing emoji can hide
+REVEAL_ACTION = {
+    "sadness": "suddenly bursting into tears",
+    "fear": "suddenly panicking",
+    "anger": "suddenly snapping in rage",
+    "disgust": "suddenly grimacing in disgust",
+}
+
+
+def reveal_emotion(panel: Panel) -> str:
+    """Two-beat gag for "I failed physics 😂": beat one laughs it off, beat two the smile
+    cracks and the real feeling shows. Only when a cheerful/sarcastic emoji masks bad news;
+    happy tears ("got the job 😭") stay one panel. PINCH_REVEAL=off disables it."""
+    if os.environ.get("PINCH_REVEAL", "on").lower() in ("0", "off", "false", "no"):
+        return ""
+    masks = [l for l in panel.lines if l.speaker == panel.focus and l.ironic]
+    if not masks:
+        return ""
+    line = max(masks, key=lambda l: l.confidence)
+    return line.situation if line.situation in MASKED and line.emotion in ("joy", "neutral") else ""
 
 
 SYSTEM_STORY = """You turn text-message conversations into short in-person comics.
@@ -237,7 +262,13 @@ def write_script(lines: list[Line], llm: LLMClient | None = None, mode: str | No
         panel.shot = choose_shot(panel.emotion, i, prev_shot)
         if any(l.shouting for l in group) and panel.shot in ("wide shot", "medium shot"):
             panel.shot = "close-up"  # yelling reads best up close
-        panel.prompt = build_prompt(script, panel)
+        panel.reveal = reveal_emotion(panel)
+        if panel.reveal:  # beat one: just the laugh; beat two: the smile cracks, up close
+            panel.prompt = build_prompt(script, panel, irony=False)
+            panel.reveal_prompt = build_prompt(script, panel, emotion=panel.reveal, shot="close-up",
+                                               action=REVEAL_ACTION[panel.reveal], irony=False)
+        else:
+            panel.prompt = build_prompt(script, panel)
         script.panels.append(panel)
         prev_focus, prev_shot = focus, panel.shot
     return script
