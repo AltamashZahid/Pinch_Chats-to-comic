@@ -83,7 +83,8 @@ def examples(tok, source: str, split: str, max_len: int, neutral_cap: int | None
     out = []
     for d in dialogues(source, split):
         for i, (_, _, label) in enumerate(d):
-            out.append((build_input(tok, d, i, max_len), LABELS.index(label)))
+            if label is not None:  # unlabelled turns are context only
+                out.append((build_input(tok, d, i, max_len), LABELS.index(label)))
     if neutral_cap is not None:
         neu = [e for e in out if e[1] == NEUTRAL]
         rng.shuffle(neu)
@@ -155,6 +156,7 @@ def main() -> None:
     ap.add_argument("--neutral-cap", type=int, default=8000, help="cap DailyDialog neutral turns (83%% of it)")
     ap.add_argument("--adam8bit", action="store_true", help="8-bit AdamW (bitsandbytes) to fit roberta-large in 4 GB")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--augment", action="store_true", help="add LLM-written fear/disgust chats (training only)")
     args = ap.parse_args()
 
     rng = random.Random(args.seed)
@@ -163,7 +165,7 @@ def main() -> None:
     tok = AutoTokenizer.from_pretrained(args.base)
     t0 = time.time()
     train = []
-    for s in TRAIN_SOURCES:
+    for s in TRAIN_SOURCES + (["augment"] if args.augment else []):
         ex = examples(tok, s, "train", args.max_len, args.neutral_cap if s == "dailydialog" else None, rng)
         print(f"  train {s:12} {len(ex)}", flush=True)
         train += ex

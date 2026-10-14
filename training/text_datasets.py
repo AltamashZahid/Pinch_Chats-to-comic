@@ -179,4 +179,13 @@ def dialogues(source: str, split: str) -> list[list[Turn]]:
             if isinstance(u, str) and u.strip() and e in HINGLISH:
                 out.setdefault(d, []).append((str(s).strip().title(), u.strip(), HINGLISH[e]))
         return list(out.values())
+    if source == "augment":  # LLM-written chats for rare emotions: train only, label only the target turn
+        if split != "train":
+            return []
+        out = []
+        for path in sorted((TEXT / "augment").glob("*.jsonl")):
+            for line in path.read_text(encoding="utf-8").splitlines():
+                d = json.loads(line)
+                out.append([(s.title(), t, l if l == d["target"] else None) for s, t, l in d["turns"]])
+        return out
     return [[("", t, l)] for _, t, l in load_ctx(source, split)]
