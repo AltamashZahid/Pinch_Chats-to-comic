@@ -1,0 +1,39 @@
+{
+  "lines": 618,
+  "per_emotion_lines": {
+    "anger": 100,
+    "disgust": 68,
+    "fear": 50,
+    "joy": 100,
+    "sadness": 100,
+    "surprise": 100,
+    "neutral": 100
+  },
+  "sapling": {
+    "macro_f1": 0.291,
+    "accuracy": 0.354,
+    "per_class_f1": {
+      "anger": 0.247,
+      "disgust": 0.158,
+      "fear": 0.0,
+      "joy": 0.498,
+      "sadness": 0.336,
+      "surprise": 0.467,
+      "neutral": 0.33
+    }
+  },
+  "ours": {
+    "macro_f1": 0.377,
+    "accuracy": 0.422,
+    "per_class_f1": {
+      "anger": 0.406,
+      "disgust": 0.085,
+      "fear": 0.25,
+      "joy": 0.533,
+      "sadness": 0.368,
+      "surprise": 0.565,
+      "neutral": 0.436
+    }
+  },
+  "agreement": 0.482
+}
