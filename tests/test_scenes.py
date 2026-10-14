@@ -210,6 +210,6 @@ def test_classifier_sees_lowercase_for_shouting(monkeypatch):
     from pinch import pipeline
     from pinch.models import Box, Message
     seen = []
-    monkeypatch.setattr(pipeline, "classify", lambda texts, prevs=None: seen.extend(texts) or [("anger", .9)] * len(texts))
+    monkeypatch.setattr(pipeline, "classify_dialogue", lambda turns: seen.extend(t for _, t in turns) or [("anger", .9)] * len(turns))
     lines = pipeline.lines_from_messages([Message("me", "I HATE THIS", Box(0, 0, 1, 1))])
     assert seen == ["i hate this"] and lines[0].text == "I HATE THIS"

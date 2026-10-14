@@ -92,7 +92,7 @@ def test_ironic_panel_prompt_shows_the_contrast():
 
 
 def test_lines_from_messages_merges_emoji(monkeypatch):
-    monkeypatch.setattr("pinch.pipeline.classify", lambda texts, prevs=None: [("sadness", 0.8)] * len(texts))
+    monkeypatch.setattr("pinch.pipeline.classify_dialogue", lambda turns: [("sadness", 0.8)] * len(turns))
     msgs = [Message("me", "I failed physics", Box(0, 0, 1, 1), ["😂"]),
             Message("them", "", Box(0, 0, 1, 1), ["😭"])]
     a, b = lines_from_messages(msgs)
