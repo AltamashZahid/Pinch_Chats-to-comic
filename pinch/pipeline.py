@@ -67,11 +67,15 @@ def script_with_memory(lines: list[Line], names: dict[str, str] | None = None,
     return script
 
 
-def screenshot_to_script(img: np.ndarray) -> Script:
+def screenshot_to_script(img: np.ndarray, them: str | None = None) -> Script:
+    """`them`: the other person's name (typed by the user, or from a chat export), so memory
+    can recognise them across comics. Without it only the user is remembered."""
     from .memory import SELF
     load_env()
     messages = extract_dialogue(img)
-    return script_with_memory(lines_from_messages(messages), people={"me": SELF})
+    people = {"me": SELF, **({"them": them} if them else {})}
+    names = {"them": them} if them else None
+    return script_with_memory(lines_from_messages(messages), names, people)
 
 
 MAX_CHAT_MESSAGES = 12  # 6 panels of 2 lines; longer chats use their most recent messages

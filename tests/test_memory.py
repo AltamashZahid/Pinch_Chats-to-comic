@@ -133,6 +133,19 @@ def test_chat_to_script_remembers_people_across_comics(monkeypatch):
     assert M._store.stories("Rahul") == ["Rahul is stressed about exams.", "Rahul passed."]
 
 
+def test_screenshot_name_is_remembered(monkeypatch):
+    from pinch import pipeline
+    from pinch.models import Box, Message
+    monkeypatch.setenv("PINCH_MEMORY", "on")
+    monkeypatch.setattr(M, "_store", M.CastStore(M.MemoryKV()))
+    monkeypatch.setattr(pipeline, "classify_dialogue", lambda turns: [("neutral", 0.9)] * len(turns))
+    monkeypatch.setattr(pipeline, "extract_dialogue", lambda img: [
+        Message("me", "exam tomorrow", Box(0, 0, 1, 1)), Message("them", "lol good luck", Box(0, 1, 1, 1))])
+    monkeypatch.setattr(pipeline.LLMClient, "from_env", classmethod(lambda cls: fake_llm(json.dumps(GOOD_REPLY))))
+    pipeline.screenshot_to_script(None, them="Aadi Singhal")
+    assert M._store.card("aadi singhal").look == GOOD_REPLY["characters"]["them"]
+
+
 def test_template_scripts_are_not_remembered(monkeypatch):
     from pinch import pipeline
     monkeypatch.setenv("PINCH_MEMORY", "on")

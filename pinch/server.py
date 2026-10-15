@@ -41,14 +41,14 @@ def _resources():
     return _state["backend"], _state["cache"]
 
 
-def make_comic(data: bytes) -> dict:
+def make_comic(data: bytes, them: str = "") -> dict:
     img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
     if img is None:
         raise HTTPException(400, "That file isn't an image we can read.")
-    script = screenshot_to_script(img)
+    script = screenshot_to_script(img, them or None)
     if not script.panels:
         raise HTTPException(422, "No chat bubbles with readable text were found in that screenshot.")
-    return render_comic(script, data)
+    return render_comic(script, data + them.encode())
 
 
 def make_comic_from_chat(raw: str, me: str | None, last: int) -> dict:
@@ -153,7 +153,7 @@ async def chat_speakers(file: UploadFile | None = File(None), text: str = Form("
 
 @app.post("/api/comic")
 async def comic(file: UploadFile | None = File(None), text: str = Form(""), me: str = Form(""),
-                last: int = Form(MAX_CHAT_MESSAGES)):
+                last: int = Form(MAX_CHAT_MESSAGES), them: str = Form("")):
     """A screenshot (image file), or a typed chat: a WhatsApp export (.txt) or pasted lines."""
     data = await file.read(MAX_UPLOAD + 1) if file else None
     if data and len(data) > MAX_UPLOAD:
@@ -163,6 +163,6 @@ async def comic(file: UploadFile | None = File(None), text: str = Form(""), me: 
         if is_text:
             raw = data.decode("utf-8", errors="replace") if data else text
             return await run_in_threadpool(make_comic_from_chat, raw, me, max(2, min(last, 24)))
-        return await run_in_threadpool(make_comic, data)
+        return await run_in_threadpool(make_comic, data, them.strip()[:60])
     except ImageGenError as e:
         raise HTTPException(502, f"Image generation failed: {e}") from e
