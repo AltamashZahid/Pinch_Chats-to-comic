@@ -58,10 +58,18 @@ class ExpressionJudge:
 _judges: dict[str, ExpressionJudge] = {}
 
 
+def head_for(backend_name: str) -> Path | None:
+    """The judge head trained on this backend's images, if any. No fallback to another
+    backend's head: a judge trained on one model's images scored 41% vs 57% zero-shot on
+    another's (reports/expression_judge.json), so picking "best" images with it hurts."""
+    head = os.environ.get("PINCH_JUDGE_HEAD") or HEADS.get(backend_name)
+    return Path(head) if head and Path(head).exists() else None
+
+
 def judge(backend_name: str = "local") -> ExpressionJudge | None:
     """Shared judge for an image backend, or None if none has been trained for it."""
-    head = Path(os.environ.get("PINCH_JUDGE_HEAD") or HEADS.get(backend_name, HEAD))
-    if not head.exists():
+    head = head_for(backend_name)
+    if head is None:
         return None
     if str(head) not in _judges:
         _judges[str(head)] = ExpressionJudge(head)

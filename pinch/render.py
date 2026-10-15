@@ -1,10 +1,14 @@
 """Generate (or fetch from cache) one image per comic panel.
 
-Best-of-N: each panel is drawn PINCH_CANDIDATES times (default 4) with different seeds and the
-expression judge keeps the one that most clearly shows the panel's emotion. Measured on 700
-blind-labelled panels: 55% correct expressions with 1 image, 74% with best of 4. All N are
-drawn first, then scored in one batch.
+Best-of-N: for backends with a trained expression judge, each panel is drawn several times
+with different seeds and the judge keeps the one that most clearly shows the panel's emotion.
+Simulated on 700 blind-labelled panels it went 55% -> 74% (best of 4); end to end, blind, the
+SD-Turbo pipeline reached 68%. Backends without their own judge draw one image.
+
+Same face across panels: backends that take a reference image (anime + IP-Adapter) get each
+character's portrait, drawn once per look and cached.
 """
+import hashlib
 import json
 import os
 import time
@@ -13,9 +17,13 @@ from pathlib import Path
 
 from .cache import ImageCache, sha
 from .imagegen import ImageRequest
-from .judge import judge
+from .judge import head_for, judge
 from .scenes import REVEAL_ACTION, Panel, Script
-from .style import ART_STYLE
+from .style import ART_STYLE, EXPRESSION
+
+
+def sha_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
 
 
 @dataclass
@@ -42,14 +50,38 @@ def _beat(panel: Panel, reveal: bool) -> tuple[str, str, str]:
 
 
 def panel_key(cache: ImageCache, backend, script: Script, panel: Panel,
-              seed: int, width: int, height: int, reveal: bool = False) -> str:
+              seed: int, width: int, height: int, reveal: bool = False, reference: bytes | None = None) -> str:
     """Everything that must match exactly for a cached image to be reused."""
     _, emotion, shot = _beat(panel, reveal)
     return cache.exact_key(
         backend=backend.name, model=backend.model, width=width, height=height, seed=seed,
-        style=ART_STYLE, shot=shot, candidates=_candidates(emotion),
+        style=ART_STYLE, shot=shot, candidates=_tries(backend, emotion),
         character=script.characters.get(panel.focus, ""), expression=emotion,
+        reference=sha_bytes(reference) if reference else "",
     )
+
+
+def portrait_prompt(look: str) -> str:
+    """A neutral, front-facing portrait on a plain background: the character's reference image."""
+    return f"{ART_STYLE}, close-up, portrait, {look}, {EXPRESSION['neutral']}, looking at viewer, plain white background"
+
+
+def uses_reference(backend) -> bool:
+    return bool(getattr(backend, "ip_scale", 0))
+
+
+def portrait(backend, cache: ImageCache, look: str, seed: int) -> bytes:
+    """The character's reference portrait: drawn once per look, then reused from the cache.
+    Memory keeps a person's look fixed across comics, so their portrait is fixed too."""
+    key = cache.exact_key(kind="portrait", backend=backend.name, model=backend.model, style=ART_STYLE,
+                          character=look, seed=seed)
+    hit = cache.get("portrait", key)
+    if hit:
+        return hit.path.read_bytes()
+    start = time.perf_counter()
+    image = backend.generate(ImageRequest(portrait_prompt(look), seed, emotion="neutral", shot="close-up"))
+    cache.put("portrait", key, image, gen_seconds=time.perf_counter() - start)
+    return image
 
 
 def scene_text(script: Script, panel: Panel, reveal: bool = False) -> str:
@@ -71,12 +103,17 @@ def _candidates(emotion: str | None = None) -> int:
     return max(1, n)
 
 
+def _tries(backend, emotion: str | None) -> int:
+    """Candidates actually drawn: best-of-N needs a judge trained on this backend's images."""
+    return _candidates(emotion) if head_for(getattr(backend, "name", "local")) else 1
+
+
 def draw_best(backend, panel: Panel, seed: int, width: int, height: int,
-              reveal: bool = False) -> tuple[bytes, int, float | None]:
+              reveal: bool = False, reference: bytes | None = None) -> tuple[bytes, int, float | None]:
     """Draw up to N candidates and keep the one the judge rates best for the panel's emotion."""
     prompt, emotion, shot = _beat(panel, reveal)
-    n = _candidates(emotion)
-    req = lambda s: ImageRequest(prompt, s, width, height, emotion=emotion, shot=shot)  # noqa: E731
+    n = _tries(backend, emotion)
+    req = lambda s: ImageRequest(prompt, s, width, height, emotion=emotion, shot=shot, reference=reference)  # noqa: E731
     first = backend.generate(req(seed))
     j = judge(getattr(backend, "name", "local")) if n > 1 else None  # don't load CLIP when there's nothing to choose between
     if j is None:
@@ -90,15 +127,19 @@ def draw_best(backend, panel: Panel, seed: int, width: int, height: int,
 def render_panels(script: Script, backend, cache: ImageCache,
                   width: int = 512, height: int = 512) -> list[RenderedPanel]:
     seed = cast_seed(script)
+    # Same face in every panel: each character's portrait steers their panels (IP-Adapter).
+    refs = {role: portrait(backend, cache, script.characters[role], seed)
+            for role in dict.fromkeys(p.focus for p in script.panels)} if uses_reference(backend) else {}
 
     def one(panel: Panel, reveal: bool) -> RenderedPanel:
         text = scene_text(script, panel, reveal)
-        key = panel_key(cache, backend, script, panel, seed, width, height, reveal)
+        ref = refs.get(panel.focus)
+        key = panel_key(cache, backend, script, panel, seed, width, height, reveal, ref)
         start = time.perf_counter()
         hit = cache.get(text, key)
         if hit:
             return RenderedPanel(panel, hit.path, hit.kind, time.perf_counter() - start)
-        image, tried, prob = draw_best(backend, panel, seed, width, height, reveal)
+        image, tried, prob = draw_best(backend, panel, seed, width, height, reveal, ref)
         took = time.perf_counter() - start
         return RenderedPanel(panel, cache.put(text, key, image, gen_seconds=took), "generated", took, tried, prob)
 

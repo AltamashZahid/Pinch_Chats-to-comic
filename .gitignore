@@ -21,3 +21,5 @@ data/text/rewrite_cache/
 eval/pipeline_ab/*.png
 data/text/sapling_cache.jsonl
 eval/anime_ab/*.png
+eval/consistency_ab/*.png
+eval/*_smoke.png

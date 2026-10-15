@@ -1,0 +1,376 @@
+{
+ "ip_scale": 0.5,
+ "seed": 7,
+ "rows": [
+  [
+   3,
+   "A_text"
+  ],
+  [
+   3,
+   "B_reference"
+  ],
+  [
+   1,
+   "A_text"
+  ],
+  [
+   2,
+   "A_text"
+  ],
+  [
+   0,
+   "A_text"
+  ],
+  [
+   1,
+   "B_reference"
+  ],
+  [
+   0,
+   "B_reference"
+  ],
+  [
+   2,
+   "B_reference"
+  ]
+ ],
+ "items": [
+  {
+   "id": "0a",
+   "character": 3,
+   "emotion": "joy",
+   "config": "A_text"
+  },
+  {
+   "id": "0b",
+   "character": 3,
+   "emotion": "neutral",
+   "config": "A_text"
+  },
+  {
+   "id": "0c",
+   "character": 3,
+   "emotion": "surprise",
+   "config": "A_text"
+  },
+  {
+   "id": "0d",
+   "character": 3,
+   "emotion": "disgust",
+   "config": "A_text"
+  },
+  {
+   "id": "0e",
+   "character": 3,
+   "emotion": "anger",
+   "config": "A_text"
+  },
+  {
+   "id": "0f",
+   "character": 3,
+   "emotion": "sadness",
+   "config": "A_text"
+  },
+  {
+   "id": "0g",
+   "character": 3,
+   "emotion": "fear",
+   "config": "A_text"
+  },
+  {
+   "id": "1a",
+   "character": 3,
+   "emotion": "fear",
+   "config": "B_reference"
+  },
+  {
+   "id": "1b",
+   "character": 3,
+   "emotion": "surprise",
+   "config": "B_reference"
+  },
+  {
+   "id": "1c",
+   "character": 3,
+   "emotion": "sadness",
+   "config": "B_reference"
+  },
+  {
+   "id": "1d",
+   "character": 3,
+   "emotion": "disgust",
+   "config": "B_reference"
+  },
+  {
+   "id": "1e",
+   "character": 3,
+   "emotion": "anger",
+   "config": "B_reference"
+  },
+  {
+   "id": "1f",
+   "character": 3,
+   "emotion": "neutral",
+   "config": "B_reference"
+  },
+  {
+   "id": "1g",
+   "character": 3,
+   "emotion": "joy",
+   "config": "B_reference"
+  },
+  {
+   "id": "2a",
+   "character": 1,
+   "emotion": "joy",
+   "config": "A_text"
+  },
+  {
+   "id": "2b",
+   "character": 1,
+   "emotion": "surprise",
+   "config": "A_text"
+  },
+  {
+   "id": "2c",
+   "character": 1,
+   "emotion": "fear",
+   "config": "A_text"
+  },
+  {
+   "id": "2d",
+   "character": 1,
+   "emotion": "disgust",
+   "config": "A_text"
+  },
+  {
+   "id": "2e",
+   "character": 1,
+   "emotion": "neutral",
+   "config": "A_text"
+  },
+  {
+   "id": "2f",
+   "character": 1,
+   "emotion": "sadness",
+   "config": "A_text"
+  },
+  {
+   "id": "2g",
+   "character": 1,
+   "emotion": "anger",
+   "config": "A_text"
+  },
+  {
+   "id": "3a",
+   "character": 2,
+   "emotion": "disgust",
+   "config": "A_text"
+  },
+  {
+   "id": "3b",
+   "character": 2,
+   "emotion": "fear",
+   "config": "A_text"
+  },
+  {
+   "id": "3c",
+   "character": 2,
+   "emotion": "surprise",
+   "config": "A_text"
+  },
+  {
+   "id": "3d",
+   "character": 2,
+   "emotion": "anger",
+   "config": "A_text"
+  },
+  {
+   "id": "3e",
+   "character": 2,
+   "emotion": "joy",
+   "config": "A_text"
+  },
+  {
+   "id": "3f",
+   "character": 2,
+   "emotion": "neutral",
+   "config": "A_text"
+  },
+  {
+   "id": "3g",
+   "character": 2,
+   "emotion": "sadness",
+   "config": "A_text"
+  },
+  {
+   "id": "4a",
+   "character": 0,
+   "emotion": "surprise",
+   "config": "A_text"
+  },
+  {
+   "id": "4b",
+   "character": 0,
+   "emotion": "neutral",
+   "config": "A_text"
+  },
+  {
+   "id": "4c",
+   "character": 0,
+   "emotion": "anger",
+   "config": "A_text"
+  },
+  {
+   "id": "4d",
+   "character": 0,
+   "emotion": "joy",
+   "config": "A_text"
+  },
+  {
+   "id": "4e",
+   "character": 0,
+   "emotion": "fear",
+   "config": "A_text"
+  },
+  {
+   "id": "4f",
+   "character": 0,
+   "emotion": "disgust",
+   "config": "A_text"
+  },
+  {
+   "id": "4g",
+   "character": 0,
+   "emotion": "sadness",
+   "config": "A_text"
+  },
+  {
+   "id": "5a",
+   "character": 1,
+   "emotion": "joy",
+   "config": "B_reference"
+  },
+  {
+   "id": "5b",
+   "character": 1,
+   "emotion": "surprise",
+   "config": "B_reference"
+  },
+  {
+   "id": "5c",
+   "character": 1,
+   "emotion": "anger",
+   "config": "B_reference"
+  },
+  {
+   "id": "5d",
+   "character": 1,
+   "emotion": "disgust",
+   "config": "B_reference"
+  },
+  {
+   "id": "5e",
+   "character": 1,
+   "emotion": "neutral",
+   "config": "B_reference"
+  },
+  {
+   "id": "5f",
+   "character": 1,
+   "emotion": "fear",
+   "config": "B_reference"
+  },
+  {
+   "id": "5g",
+   "character": 1,
+   "emotion": "sadness",
+   "config": "B_reference"
+  },
+  {
+   "id": "6a",
+   "character": 0,
+   "emotion": "disgust",
+   "config": "B_reference"
+  },
+  {
+   "id": "6b",
+   "character": 0,
+   "emotion": "joy",
+   "config": "B_reference"
+  },
+  {
+   "id": "6c",
+   "character": 0,
+   "emotion": "neutral",
+   "config": "B_reference"
+  },
+  {
+   "id": "6d",
+   "character": 0,
+   "emotion": "surprise",
+   "config": "B_reference"
+  },
+  {
+   "id": "6e",
+   "character": 0,
+   "emotion": "sadness",
+   "config": "B_reference"
+  },
+  {
+   "id": "6f",
+   "character": 0,
+   "emotion": "anger",
+   "config": "B_reference"
+  },
+  {
+   "id": "6g",
+   "character": 0,
+   "emotion": "fear",
+   "config": "B_reference"
+  },
+  {
+   "id": "7a",
+   "character": 2,
+   "emotion": "anger",
+   "config": "B_reference"
+  },
+  {
+   "id": "7b",
+   "character": 2,
+   "emotion": "fear",
+   "config": "B_reference"
+  },
+  {
+   "id": "7c",
+   "character": 2,
+   "emotion": "surprise",
+   "config": "B_reference"
+  },
+  {
+   "id": "7d",
+   "character": 2,
+   "emotion": "neutral",
+   "config": "B_reference"
+  },
+  {
+   "id": "7e",
+   "character": 2,
+   "emotion": "joy",
+   "config": "B_reference"
+  },
+  {
+   "id": "7f",
+   "character": 2,
+   "emotion": "disgust",
+   "config": "B_reference"
+  },
+  {
+   "id": "7g",
+   "character": 2,
+   "emotion": "sadness",
+   "config": "B_reference"
+  }
+ ]
+}

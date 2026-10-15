@@ -1,0 +1,45 @@
+{
+  "ip_scale": 0.5,
+  "configs": {
+    "A_text": {
+      "n": 28,
+      "same_person": 27,
+      "same_rate": 0.964,
+      "same_ci95": [
+        0.823,
+        0.994
+      ],
+      "emotion_correct": 28,
+      "emotion_rate": 1.0,
+      "emotion_ci95": [
+        0.879,
+        1.0
+      ]
+    },
+    "B_reference": {
+      "n": 28,
+      "same_person": 28,
+      "same_rate": 1.0,
+      "same_ci95": [
+        0.879,
+        1.0
+      ],
+      "emotion_correct": 27,
+      "emotion_rate": 0.964,
+      "emotion_ci95": [
+        0.823,
+        0.994
+      ]
+    }
+  },
+  "mcnemar_same": {
+    "only_A": 0,
+    "only_B": 1,
+    "p_value": 1.0
+  },
+  "mcnemar_emotion": {
+    "only_A": 1,
+    "only_B": 0,
+    "p_value": 1.0
+  }
+}

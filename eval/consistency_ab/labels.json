@@ -1,0 +1,229 @@
+{
+ "labeller": "Claude, blind to config and requested emotion (rows and panels shuffled)",
+ "labels": {
+  "0a": {
+   "same": true,
+   "emotion": "joy"
+  },
+  "0b": {
+   "same": true,
+   "emotion": "neutral"
+  },
+  "0c": {
+   "same": true,
+   "emotion": "surprise"
+  },
+  "0d": {
+   "same": true,
+   "emotion": "disgust"
+  },
+  "0e": {
+   "same": true,
+   "emotion": "anger"
+  },
+  "0f": {
+   "same": true,
+   "emotion": "sadness"
+  },
+  "0g": {
+   "same": true,
+   "emotion": "fear"
+  },
+  "1a": {
+   "same": true,
+   "emotion": "fear"
+  },
+  "1b": {
+   "same": true,
+   "emotion": "surprise"
+  },
+  "1c": {
+   "same": true,
+   "emotion": "sadness"
+  },
+  "1d": {
+   "same": true,
+   "emotion": "disgust"
+  },
+  "1e": {
+   "same": true,
+   "emotion": "anger"
+  },
+  "1f": {
+   "same": true,
+   "emotion": "neutral"
+  },
+  "1g": {
+   "same": true,
+   "emotion": "joy"
+  },
+  "2a": {
+   "same": true,
+   "emotion": "joy"
+  },
+  "2b": {
+   "same": true,
+   "emotion": "surprise"
+  },
+  "2c": {
+   "same": true,
+   "emotion": "fear"
+  },
+  "2d": {
+   "same": true,
+   "emotion": "disgust"
+  },
+  "2e": {
+   "same": true,
+   "emotion": "neutral"
+  },
+  "2f": {
+   "same": true,
+   "emotion": "sadness"
+  },
+  "2g": {
+   "same": true,
+   "emotion": "anger"
+  },
+  "3a": {
+   "same": true,
+   "emotion": "disgust"
+  },
+  "3b": {
+   "same": true,
+   "emotion": "fear"
+  },
+  "3c": {
+   "same": true,
+   "emotion": "surprise"
+  },
+  "3d": {
+   "same": true,
+   "emotion": "anger"
+  },
+  "3e": {
+   "same": true,
+   "emotion": "joy"
+  },
+  "3f": {
+   "same": true,
+   "emotion": "neutral"
+  },
+  "3g": {
+   "same": true,
+   "emotion": "sadness"
+  },
+  "4a": {
+   "same": true,
+   "emotion": "surprise"
+  },
+  "4b": {
+   "same": true,
+   "emotion": "neutral"
+  },
+  "4c": {
+   "same": true,
+   "emotion": "anger"
+  },
+  "4d": {
+   "same": true,
+   "emotion": "joy"
+  },
+  "4e": {
+   "same": false,
+   "emotion": "fear"
+  },
+  "4f": {
+   "same": true,
+   "emotion": "disgust"
+  },
+  "4g": {
+   "same": true,
+   "emotion": "sadness"
+  },
+  "5a": {
+   "same": true,
+   "emotion": "joy"
+  },
+  "5b": {
+   "same": true,
+   "emotion": "surprise"
+  },
+  "5c": {
+   "same": true,
+   "emotion": "joy"
+  },
+  "5d": {
+   "same": true,
+   "emotion": "disgust"
+  },
+  "5e": {
+   "same": true,
+   "emotion": "neutral"
+  },
+  "5f": {
+   "same": true,
+   "emotion": "fear"
+  },
+  "5g": {
+   "same": true,
+   "emotion": "sadness"
+  },
+  "6a": {
+   "same": true,
+   "emotion": "disgust"
+  },
+  "6b": {
+   "same": true,
+   "emotion": "joy"
+  },
+  "6c": {
+   "same": true,
+   "emotion": "neutral"
+  },
+  "6d": {
+   "same": true,
+   "emotion": "surprise"
+  },
+  "6e": {
+   "same": true,
+   "emotion": "sadness"
+  },
+  "6f": {
+   "same": true,
+   "emotion": "anger"
+  },
+  "6g": {
+   "same": true,
+   "emotion": "fear"
+  },
+  "7a": {
+   "same": true,
+   "emotion": "anger"
+  },
+  "7b": {
+   "same": true,
+   "emotion": "fear"
+  },
+  "7c": {
+   "same": true,
+   "emotion": "surprise"
+  },
+  "7d": {
+   "same": true,
+   "emotion": "neutral"
+  },
+  "7e": {
+   "same": true,
+   "emotion": "joy"
+  },
+  "7f": {
+   "same": true,
+   "emotion": "disgust"
+  },
+  "7g": {
+   "same": true,
+   "emotion": "sadness"
+  }
+ }
+}
