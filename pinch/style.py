@@ -13,6 +13,17 @@ EXPRESSION = {
     "neutral": "calm relaxed face",
 }
 
+# Same faces as Danbooru tags, for the anime backend (Animagine was trained on these tags).
+ANIME_EXPRESSION = {
+    "anger": "angry, v-shaped eyebrows, clenched teeth, anger vein, glaring",
+    "disgust": "disgust, frown, wrinkled nose, tongue out, shaded face",
+    "fear": "scared, wide-eyed, constricted pupils, sweat, trembling, open mouth",
+    "joy": "smile, open mouth, happy, laughing",
+    "sadness": "crying, streaming tears, sad, frown",
+    "surprise": "surprised, wide-eyed, open mouth, :o, raised eyebrows",
+    "neutral": "expressionless, closed mouth",
+}
+
 # Texting mode: what the character does with the phone.
 POSE = {
     "anger": "glaring at phone, gripping it tightly",

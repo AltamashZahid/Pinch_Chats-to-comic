@@ -2,6 +2,7 @@
 
     python eval/pipeline_ab_test.py generate
     python eval/pipeline_ab_test.py score eval/pipeline_ab/labels.json
+    python eval/pipeline_ab_test.py --name anime_ab --configs A_turbo_best1,C_anime_best1 generate
 
 Config A: SD-Turbo + its judge, best of 4 (the previous default).
 Config B: SD 1.5 + LCM + expression LoRA + its own judge, best of 6 (hard emotions) / 2 (joy, neutral).
@@ -23,11 +24,15 @@ sys.path.insert(0, str(ROOT))
 from eval.lora_ab_test import PER_EMOTION, TEST_LOOKS, TEST_PLACES, TEST_SHOTS, mcnemar_exact  # noqa: E402
 
 OUT = ROOT / "eval" / "pipeline_ab"
-CONFIGS = {
+ALL_CONFIGS = {
     "A_turbo_best4": {"backend": "local", "lora": "none", "candidates": "4", "easy": "4"},
     "B_sd15lora_best6": {"backend": "lcm", "lora": str(ROOT / "models" / "lora" / "expr_sd15"),
                          "candidates": "6", "easy": "2"},
+    # Single image each: raw model ability, no judge (the judge was trained on SD-Turbo images).
+    "A_turbo_best1": {"backend": "local", "lora": "none", "candidates": "1", "easy": "1"},
+    "C_anime_best1": {"backend": "anime", "lora": "none", "candidates": "1", "easy": "1"},
 }
+CONFIGS = {k: ALL_CONFIGS[k] for k in ("A_turbo_best4", "B_sd15lora_best6")}
 
 
 def generate(seed: int) -> None:
@@ -88,7 +93,7 @@ def score(labels_file: Path) -> None:
     items = {it["id"]: it for it in run["items"]}
     labels = json.loads(Path(labels_file).read_text())["labels"]
     hit = {i: labels[i] == items[i]["emotion"] for i in labels}
-    names = list(CONFIGS)
+    names = list(run["configs"])
     report = {"variants": {}, "per_emotion": {}}
     for v in names:
         ids = [i for i in hit if items[i]["variant"] == v]
@@ -110,17 +115,22 @@ def score(labels_file: Path) -> None:
     for e, r in report["per_emotion"].items():
         print(f"  {e:9} " + "  ".join(f"{v} {r[v]}" for v in names))
     print(f"paired: only A {only_a}, only B {only_b}, McNemar p = {report['mcnemar']['p_value']}")
-    (ROOT / "reports" / "pipeline_ab.json").write_text(json.dumps(report, indent=2))
+    (ROOT / "reports" / f"{OUT.name}.json").write_text(json.dumps(report, indent=2))
 
 
 def main() -> None:
+    global OUT, CONFIGS
     ap = argparse.ArgumentParser()
+    ap.add_argument("--name", default="pipeline_ab", help="output folder eval/<name> and reports/<name>.json")
+    ap.add_argument("--configs", default=",".join(CONFIGS), help=f"two of {list(ALL_CONFIGS)}")
     sub = ap.add_subparsers(dest="cmd", required=True)
     g = sub.add_parser("generate")
     g.add_argument("--seed", type=int, default=31337)
     s = sub.add_parser("score")
     s.add_argument("labels")
     args = ap.parse_args()
+    OUT = ROOT / "eval" / args.name
+    CONFIGS = {k: ALL_CONFIGS[k] for k in args.configs.split(",")}
     generate(args.seed) if args.cmd == "generate" else score(Path(args.labels))
 
 
