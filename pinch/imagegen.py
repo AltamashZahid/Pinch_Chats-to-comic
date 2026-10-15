@@ -2,6 +2,7 @@
 
     PINCH_IMAGE_BACKEND = local        SD-Turbo on your GPU (default; free, ~1 s/panel on 4 GB)
                         | sdxl         SDXL-Turbo, 4-bit, on your GPU (free, ~8.5 s/panel, better art)
+                        | anime        Animagine XL 4.0, 4-bit, on your GPU (Danbooru expression tags; slow)
                         | huggingface  FLUX.1-schnell via HF Inference (needs HF_TOKEN, free tier)
                         | pollinations hosted (needs POLLINATIONS_TOKEN since anonymous use returns 402)
                         | placeholder  offline coloured cards, for tests and UI work
@@ -274,6 +275,78 @@ class LocalSDXLTurboBackend:
         return _png(img)
 
 
+class LocalAnimeBackend:
+    """Animagine XL 4.0 (anime SDXL fine-tune, trained on Danbooru-tagged images), 4-bit NF4
+    UNet + model CPU offload, like the sdxl backend. Licence: openrail++ (commercial use ok).
+
+    Why: SD-Turbo draws mild faces for surprise/disgust/fear (2/8, 4/8, 5/8 in the blind test).
+    Danbooru taggers label expressions precisely ("disgust", "constricted pupils", "anger vein"),
+    so a model trained on those tags has seen thousands of examples of each. The emotion's tags
+    go first so they survive CLIP's 77-token cut; quality tags follow the model card.
+    Not distilled: needs ~20 steps with guidance, so it is much slower than SD-Turbo.
+    PINCH_ANIME_STEPS (default 20), PINCH_ANIME_SIZE (default 768; SDXL breaks down at 512).
+    """
+    name = "anime"
+    base = "cagliostrolab/animagine-xl-4.0"
+    quality = "anime coloring, masterpiece, high score, great score, absurdres"
+    negative = ("lowres, bad anatomy, bad hands, text, error, missing finger, extra digits, fewer digits, "
+                "cropped, worst quality, low quality, low score, bad score, average score, signature, "
+                "watermark, username, blurry, speech bubble, multiple views")
+
+    def __init__(self, steps: int | None = None, size: int | None = None, **_):
+        self.steps = steps or int(os.environ.get("PINCH_ANIME_STEPS", "20"))
+        self.size = size or int(os.environ.get("PINCH_ANIME_SIZE", "768"))
+        self.model = f"{self.base}@nf4/{self.steps}steps/{self.size}"
+        self._pipe = None
+
+    def _load(self):
+        import torch
+        from diffusers import (BitsAndBytesConfig, EulerAncestralDiscreteScheduler,
+                               StableDiffusionXLPipeline, UNet2DConditionModel)
+        if not torch.cuda.is_available():
+            raise ImageGenError("anime backend needs a CUDA GPU; set PINCH_IMAGE_BACKEND to another backend")
+        q = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.float16)
+        # The hub's single 5.1 GB UNet file can't be memory-mapped with a small pagefile on
+        # Windows; training/shard_unet.py re-saves it as 1 GB shards, used when present.
+        local = Path(__file__).resolve().parent.parent / "models" / "animagine_unet"
+        src = {"pretrained_model_name_or_path": str(local)} if (local / "config.json").exists() else             {"pretrained_model_name_or_path": self.base, "subfolder": "unet"}
+        unet = UNet2DConditionModel.from_pretrained(**src, torch_dtype=torch.float16, quantization_config=q)
+        pipe = StableDiffusionXLPipeline.from_pretrained(self.base, unet=unet, torch_dtype=torch.float16)
+        pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(pipe.scheduler.config)
+        pipe.enable_model_cpu_offload()
+        pipe.vae.enable_tiling()
+        pipe.set_progress_bar_config(disable=True)
+        self._torch, self._pipe = torch, pipe
+
+    def prompt(self, req: ImageRequest) -> str:
+        from .style import ANIME_EXPRESSION, ART_STYLE
+        rest = req.prompt.removeprefix(ART_STYLE).lstrip(", ")
+        tags = ANIME_EXPRESSION.get(req.emotion or "", "")
+        return ", ".join(p for p in (self.gender_tag(rest), "solo", tags, rest, self.quality) if p)
+
+    @staticmethod
+    def gender_tag(text: str) -> str:
+        """Danbooru models need "1boy"/"1girl": without it a "young man" was drawn as a girl
+        in 3 of 7 test images."""
+        import re
+        words = set(re.findall(r"[a-z]+", text.lower()))
+        if words & {"woman", "girl", "she", "her", "lady", "female"}:
+            return "1girl"
+        if words & {"man", "boy", "he", "his", "guy", "male"}:
+            return "1boy"
+        return ""
+
+    def generate(self, req: ImageRequest) -> bytes:
+        if self._pipe is None:
+            self._load()
+        g = self._torch.Generator("cpu").manual_seed(req.seed)
+        img = self._pipe(self.prompt(req), negative_prompt=self.negative, num_inference_steps=self.steps,
+                         guidance_scale=5.0, generator=g, width=self.size, height=self.size).images[0]
+        if img.size != (req.width, req.height):
+            img = img.resize((req.width, req.height), Image.LANCZOS)
+        return _png(img)
+
+
 class HuggingFaceBackend:
     """FLUX.1-schnell through Hugging Face's serverless inference (free monthly credits)."""
     name = "huggingface"
@@ -351,6 +424,7 @@ class PlaceholderBackend:
 
 
 BACKENDS = {"local": LocalTurboBackend, "sdxl": LocalSDXLTurboBackend, "lcm": LocalLCMBackend,
+            "anime": LocalAnimeBackend,
             "faceshape": LocalFaceControlBackend, "huggingface": HuggingFaceBackend,
             "pollinations": PollinationsBackend, "placeholder": PlaceholderBackend}
 

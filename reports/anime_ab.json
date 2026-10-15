@@ -1,0 +1,57 @@
+{
+  "variants": {
+    "A_turbo_best1": {
+      "correct": 33,
+      "n": 56,
+      "rate": 0.589,
+      "ci95": [
+        0.459,
+        0.708
+      ]
+    },
+    "C_anime_best1": {
+      "correct": 55,
+      "n": 56,
+      "rate": 0.982,
+      "ci95": [
+        0.906,
+        0.997
+      ]
+    }
+  },
+  "per_emotion": {
+    "anger": {
+      "A_turbo_best1": "2/8",
+      "C_anime_best1": "8/8"
+    },
+    "disgust": {
+      "A_turbo_best1": "3/8",
+      "C_anime_best1": "8/8"
+    },
+    "fear": {
+      "A_turbo_best1": "5/8",
+      "C_anime_best1": "8/8"
+    },
+    "joy": {
+      "A_turbo_best1": "8/8",
+      "C_anime_best1": "8/8"
+    },
+    "neutral": {
+      "A_turbo_best1": "7/8",
+      "C_anime_best1": "8/8"
+    },
+    "sadness": {
+      "A_turbo_best1": "4/8",
+      "C_anime_best1": "8/8"
+    },
+    "surprise": {
+      "A_turbo_best1": "4/8",
+      "C_anime_best1": "7/8"
+    }
+  },
+  "mcnemar": {
+    "only_A_turbo_best1": 0,
+    "only_C_anime_best1": 22,
+    "p_value": 0.0
+  }
+}
