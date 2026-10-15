@@ -9,29 +9,16 @@ small enough for diffusers to map one at a time.
 """
 import json
 import shutil
-import struct
 import sys
 from pathlib import Path
 
-import torch
 from huggingface_hub import hf_hub_download
 from safetensors.torch import save_file
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from pinch.tensor_io import read_tensors  # noqa: E402
+
 SHARD_BYTES = 1 << 30
-DTYPES = {"F16": torch.float16, "BF16": torch.bfloat16, "F32": torch.float32}
-
-
-def read_tensors(path: str):
-    """Yield (name, tensor) from a .safetensors file without memory-mapping it."""
-    with open(path, "rb") as f:
-        n = struct.unpack("<Q", f.read(8))[0]
-        header = json.loads(f.read(n))
-        header.pop("__metadata__", None)
-        for k, info in sorted(header.items(), key=lambda kv: kv[1]["data_offsets"][0]):
-            a, b = info["data_offsets"]
-            f.seek(8 + n + a)
-            buf = bytearray(f.read(b - a))
-            yield k, torch.frombuffer(buf, dtype=DTYPES[info["dtype"]]).reshape(info["shape"]).clone()
 
 
 def main(repo: str, out: str) -> None:

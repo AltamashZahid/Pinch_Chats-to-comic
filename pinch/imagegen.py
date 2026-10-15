@@ -32,6 +32,7 @@ class ImageRequest:
     negative: str = "text, letters, words, speech bubbles, watermark, signature, blurry"
     emotion: str | None = None   # used by backends that control the face directly (faceshape)
     shot: str | None = None
+    reference: bytes | None = None  # the character's portrait, for backends that copy identity (anime)
 
 
 def _png(img: Image.Image) -> bytes:
@@ -285,19 +286,37 @@ class LocalAnimeBackend:
     go first so they survive CLIP's 77-token cut; quality tags follow the model card.
     Not distilled: needs ~20 steps with guidance, so it is much slower than SD-Turbo.
     PINCH_ANIME_STEPS (default 20), PINCH_ANIME_SIZE (default 768; SDXL breaks down at 512).
+
+    Same face across panels: with `ip_scale` > 0 (PINCH_IP_SCALE), IP-Adapter Plus loads and a
+    request's `reference` image (the character's portrait) steers the drawing toward that
+    person. Requests without a reference get scale 0, which turns the adapter off.
+    Off by default: in a blind test (reports/consistency_ab.json, 4 characters x 7 emotions) the
+    fixed text description alone kept the same person in 27/28 panels vs 28/28 with the
+    reference, and emotions 28/28 vs 27/28. The reference also copied the portrait's close-up
+    framing into every panel, losing the scene and body language.
+
+    Memory: this laptop's commit limit (RAM + pagefile) is nearly used by other programs, so
+    memory-mapping the 1.3 GB image encoder or the 0.8 GB adapter file fails. Both are read
+    with plain reads (pinch/tensor_io.py). The encoder is only needed once per portrait: it
+    is loaded straight onto the GPU, turns the portrait into an embedding (cached by the
+    portrait's hash, ~1 MB), and is freed. Every panel reuses the embedding.
     """
     name = "anime"
     base = "cagliostrolab/animagine-xl-4.0"
+    ip_repo, ip_weights = "h94/IP-Adapter", "ip-adapter-plus_sdxl_vit-h.safetensors"
+    ip_encoder = Path(__file__).resolve().parent.parent / "models" / "ip_adapter" / "image_encoder"
     quality = "anime coloring, masterpiece, high score, great score, absurdres"
     negative = ("lowres, bad anatomy, bad hands, text, error, missing finger, extra digits, fewer digits, "
                 "cropped, worst quality, low quality, low score, bad score, average score, signature, "
                 "watermark, username, blurry, speech bubble, multiple views")
 
-    def __init__(self, steps: int | None = None, size: int | None = None, **_):
+    def __init__(self, steps: int | None = None, size: int | None = None, ip_scale: float | None = None, **_):
         self.steps = steps or int(os.environ.get("PINCH_ANIME_STEPS", "20"))
         self.size = size or int(os.environ.get("PINCH_ANIME_SIZE", "768"))
-        self.model = f"{self.base}@nf4/{self.steps}steps/{self.size}"
+        self.ip_scale = ip_scale if ip_scale is not None else float(os.environ.get("PINCH_IP_SCALE", "0"))
+        self.model = f"{self.base}@nf4/{self.steps}steps/{self.size}" + (f"+ip{self.ip_scale}" if self.ip_scale else "")
         self._pipe = None
+        self._embeds: dict[str, list] = {}  # portrait sha256 -> IP-Adapter embeddings (CPU)
 
     def _load(self):
         import torch
@@ -313,10 +332,70 @@ class LocalAnimeBackend:
         unet = UNet2DConditionModel.from_pretrained(**src, torch_dtype=torch.float16, quantization_config=q)
         pipe = StableDiffusionXLPipeline.from_pretrained(self.base, unet=unet, torch_dtype=torch.float16)
         pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(pipe.scheduler.config)
+        if self.ip_scale:
+            from huggingface_hub import hf_hub_download
+            from transformers import CLIPImageProcessor
+            from .tensor_io import read_tensors
+            if not (self.ip_encoder / "model.safetensors").exists():
+                raise ImageGenError("IP-Adapter image encoder missing: python training/to_fp16.py "
+                                    "h94/IP-Adapter models/image_encoder models/ip_adapter/image_encoder")
+            weights = {"image_proj": {}, "ip_adapter": {}}
+            for k, t in read_tensors(hf_hub_download(self.ip_repo, f"sdxl_models/{self.ip_weights}")):
+                part, name = k.split(".", 1)
+                weights[part][name] = t.half()
+            # After adding the adapter's layers, diffusers casts the whole UNet with .to(dtype),
+            # which it refuses for a 4-bit UNet. Skip that cast and convert only the new layers.
+            unet = pipe.unet
+            unet.to = lambda *a, **k: unet
+            try:
+                pipe.load_ip_adapter(weights, subfolder="", weight_name="", image_encoder_folder=None)
+            finally:
+                del unet.to
+            for proc in unet.attn_processors.values():
+                if isinstance(proc, torch.nn.Module):
+                    proc.to(unet.device, torch.float16)
+            unet.encoder_hid_proj.to(unet.device, torch.float16)
+            pipe.feature_extractor = CLIPImageProcessor()
         pipe.enable_model_cpu_offload()
         pipe.vae.enable_tiling()
         pipe.set_progress_bar_config(disable=True)
         self._torch, self._pipe = torch, pipe
+
+    def reference_embeds(self, portrait: bytes) -> list:
+        """IP-Adapter embeddings of a portrait ([negative; positive] for guidance), cached."""
+        key = hashlib.sha256(portrait).hexdigest()
+        if key not in self._embeds:
+            torch = self._torch
+            self._pipe.image_encoder = self._load_image_encoder()
+            try:
+                img = Image.open(io.BytesIO(portrait)).convert("RGB")
+                with torch.no_grad():
+                    embeds = self._pipe.prepare_ip_adapter_image_embeds(img, None, "cuda", 1, True)
+                self._embeds[key] = [e.to("cpu") for e in embeds]
+            finally:
+                self._pipe.image_encoder = None
+                torch.cuda.empty_cache()
+        return self._embeds[key]
+
+    def _load_image_encoder(self):
+        """CLIP ViT-H straight onto the GPU, one tensor at a time (no memory map)."""
+        from accelerate import init_empty_weights
+        from transformers import CLIPVisionConfig, CLIPVisionModelWithProjection
+        from .tensor_io import read_tensors
+        with init_empty_weights():
+            enc = CLIPVisionModelWithProjection(CLIPVisionConfig.from_pretrained(self.ip_encoder))
+        sd = {k: t.to("cuda") for k, t in read_tensors(self.ip_encoder / "model.safetensors")}
+        missing, _ = enc.load_state_dict(sd, strict=False, assign=True)
+        if any("position_ids" not in m for m in missing):
+            raise ImageGenError(f"image encoder weights incomplete: {missing[:3]}")
+        return enc.to("cuda", self._torch.float16).eval()
+
+    def _zero_embeds(self) -> list:
+        """Placeholder embeddings for panels without a reference (the adapter's scale is 0)."""
+        from transformers import CLIPVisionConfig
+        c = CLIPVisionConfig.from_pretrained(self.ip_encoder)
+        tokens = (c.image_size // c.patch_size) ** 2 + 1
+        return [self._torch.zeros(2, 1, tokens, c.hidden_size, dtype=self._torch.float16)]
 
     def prompt(self, req: ImageRequest) -> str:
         from .style import ANIME_EXPRESSION, ART_STYLE
@@ -340,8 +419,13 @@ class LocalAnimeBackend:
         if self._pipe is None:
             self._load()
         g = self._torch.Generator("cpu").manual_seed(req.seed)
+        extra = {}
+        if self.ip_scale:  # once loaded, the adapter needs embeddings every call; scale 0 = off
+            embeds = self.reference_embeds(req.reference) if req.reference else self._zero_embeds()
+            self._pipe.set_ip_adapter_scale(self.ip_scale if req.reference else 0.0)
+            extra["ip_adapter_image_embeds"] = [e.to("cuda") for e in embeds]
         img = self._pipe(self.prompt(req), negative_prompt=self.negative, num_inference_steps=self.steps,
-                         guidance_scale=5.0, generator=g, width=self.size, height=self.size).images[0]
+                         guidance_scale=5.0, generator=g, width=self.size, height=self.size, **extra).images[0]
         if img.size != (req.width, req.height):
             img = img.resize((req.width, req.height), Image.LANCZOS)
         return _png(img)
