@@ -236,9 +236,10 @@ def _parse(raw: str, n_panels: int) -> tuple[dict, dict, list[tuple[str, str]], 
 
 def write_script(lines: list[Line], llm: LLMClient | None = None, mode: str | None = None,
                  names: dict[str, str] | None = None, looks: dict[str, str] | None = None,
-                 history: list[str] | None = None) -> Script:
+                 history: list[str] | None = None, snap=None) -> Script:
     """`looks`: remembered appearance per role (always used, whatever the LLM writes).
-    `history`: summaries of earlier comics with these people, for callbacks."""
+    `history`: summaries of earlier comics with these people, for callbacks.
+    `snap`: maps the cast's looks to drawable presets (the pre-drawn panel library)."""
     mode = scene_mode(mode)
     groups = group_panels(lines)
     locations = dict(TEXTING_LOCATIONS) if mode == "texting" else         {"me": STORY_LOCATION, "them": STORY_LOCATION}
@@ -270,6 +271,8 @@ def write_script(lines: list[Line], llm: LLMClient | None = None, mode: str | No
                               f"Reply again with JSON only and exactly {len(groups)} panels."}]
 
     script.characters.update(looks or {})  # remembered people look the same in every comic
+    if snap is not None:
+        script.characters = snap(script.characters)
 
     prev_focus = prev_shot = None
     for i, group in enumerate(groups):

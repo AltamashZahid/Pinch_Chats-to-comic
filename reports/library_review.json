@@ -1,0 +1,19 @@
+{
+  "library": "12 presets x 7 emotions x 3 framings x 2 settings = 504 panels, anime backend (Animagine XL 4.0, NF4)",
+  "build": {"seconds_per_image": 42, "hours": 5.9, "crashes": "1 CUDA out-of-memory at image 390; builder now retries"},
+  "review": {
+    "reviewer": "Claude, from per-preset contact sheets",
+    "rejected": 86,
+    "disgust_aging": "72 of 72 disgust panels redrawn: the tag 'wrinkled nose' aged young characters into older men (one woman became a bald man)",
+    "other_rejects": "14: aged/distorted close-up fear or anger, one hair-colour change, tiny far-away figures",
+    "fix": "dropped 'wrinkled nose' from the disgust tags; negative prompt 'old, elderly, wrinkled skin, mature'",
+    "after_fix": "12/12 test panels stayed young and on-model; all 86 redrawn panels accepted"
+  },
+  "end_to_end": {
+    "warm_comic_seconds": 4.1,
+    "breakdown_seconds": {"script (tone + LLM)": 3.3, "panels from library": 0.4, "page layout": 0.5},
+    "cold_first_comic_seconds": "17.6 to 70 (loading torch, tone model, MiniLM from disk once per server start)",
+    "live_anime_for_comparison": "about 28-42 s per panel, i.e. ~3 minutes for a 6-panel comic",
+    "library_hits": "14 of 14 panels in three test comics, 0 live fallbacks"
+  }
+}

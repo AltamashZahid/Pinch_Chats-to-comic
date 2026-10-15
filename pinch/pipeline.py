@@ -49,6 +49,20 @@ def classify_dialogue(turns: list[tuple[str, str]]) -> list[tuple[str, float]]:
     return _classifier.predict_dialogue(turns)
 
 
+_snapper = None
+
+
+def library_snapper():
+    """With the pre-drawn panel library on, characters are snapped to its presets."""
+    global _snapper
+    if os.environ.get("PINCH_IMAGE_BACKEND", "").lower() != "library":
+        return None
+    if _snapper is None:
+        from .library import Snapper
+        _snapper = Snapper()
+    return _snapper.snap_cast
+
+
 def script_with_memory(lines: list[Line], names: dict[str, str] | None = None,
                        people: dict[str, str] | None = None) -> Script:
     """Write the script with what memory knows about these people, then remember this comic.
@@ -61,7 +75,8 @@ def script_with_memory(lines: list[Line], names: dict[str, str] | None = None,
     if store is not None and people:
         looks = {role: card.look for role, card in store.cast_for(people).items()}
         history = store.history_for(people)
-    script = write_script(lines, LLMClient.from_env(), names=names, looks=looks, history=history)
+    script = write_script(lines, LLMClient.from_env(), names=names, looks=looks, history=history,
+                          snap=library_snapper())
     if store is not None and people and script.source == "llm":  # template looks are generic, not a person
         store.remember(people, script.characters, script.summary)
     return script
