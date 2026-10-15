@@ -12,3 +12,6 @@ scikit-learn
 accelerate
 diffusers
 httpx
+# Optional: durable character memory (pinch/memory.py) in PersistKV, a C++ storage engine.
+# Needs a C++ compiler (MSVC Build Tools on Windows). Without it, memory lasts until restart.
+# persistkv @ git+https://github.com/AltamashZahid/persist_KV.git

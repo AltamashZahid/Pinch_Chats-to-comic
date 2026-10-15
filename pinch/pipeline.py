@@ -49,10 +49,29 @@ def classify_dialogue(turns: list[tuple[str, str]]) -> list[tuple[str, float]]:
     return _classifier.predict_dialogue(turns)
 
 
+def script_with_memory(lines: list[Line], names: dict[str, str] | None = None,
+                       people: dict[str, str] | None = None) -> Script:
+    """Write the script with what memory knows about these people, then remember this comic.
+    `names`: display names shown to the LLM. `people`: memory identities per role
+    ("me" is always the app's user, memory.SELF)."""
+    from .memory import default_store
+    store = default_store()
+    people = people or {}
+    looks, history = {}, []
+    if store is not None and people:
+        looks = {role: card.look for role, card in store.cast_for(people).items()}
+        history = store.history_for(people)
+    script = write_script(lines, LLMClient.from_env(), names=names, looks=looks, history=history)
+    if store is not None and people and script.source == "llm":  # template looks are generic, not a person
+        store.remember(people, script.characters, script.summary)
+    return script
+
+
 def screenshot_to_script(img: np.ndarray) -> Script:
+    from .memory import SELF
     load_env()
     messages = extract_dialogue(img)
-    return write_script(lines_from_messages(messages), LLMClient.from_env())
+    return script_with_memory(lines_from_messages(messages), people={"me": SELF})
 
 
 MAX_CHAT_MESSAGES = 12  # 6 panels of 2 lines; longer chats use their most recent messages
@@ -71,7 +90,9 @@ def chat_to_script(msgs: list[dict], me: str | None, last: int = MAX_CHAT_MESSAG
                 for i, m in enumerate(msgs)]
     others = [n for n in dict.fromkeys(m["speaker"] for m in msgs) if n != me]
     names = {"me": me, "them": others[0] if len(others) == 1 else "a friend"}
-    return write_script(lines_from_messages(messages), LLMClient.from_env(), names=names)
+    from .memory import SELF
+    people = {"me": SELF, **({"them": others[0]} if len(others) == 1 else {})}  # group chats: no single "them"
+    return script_with_memory(lines_from_messages(messages), names, people)
 
 
 def lines_from_messages(messages) -> list[Line]:

@@ -97,6 +97,7 @@ class Script:
     panels: list[Panel] = field(default_factory=list)
     source: str = "template"   # "llm" or "template"
     mode: str = "story"
+    summary: str = ""          # one sentence on what happened, saved to memory for later comics
 
     def location(self, panel: Panel) -> str:
         return self.locations.get(panel.focus, "")
@@ -198,10 +199,22 @@ Lines marked IRONIC have an emoji that contradicts the words (e.g. "I failed ðŸ˜
 that panel funny, with the person reacting like the emoji while the situation matches the words."""
 
 
-def _user_prompt(groups: list[list[Line]], names: dict[str, str] | None = None) -> str:
+MEMORY_RULES = """
+Also add "summary": "<one sentence on what happened, using the people's names>".
+A person whose look is marked FIXED has appeared in earlier comics: copy that look into
+"characters" word for word. "Earlier" lists what happened in previous comics with these
+people; reference it only when this conversation clearly continues it."""
+
+
+def _user_prompt(groups: list[list[Line]], names: dict[str, str] | None = None,
+                 looks: dict[str, str] | None = None, history: list[str] | None = None) -> str:
     out = []
     if names:  # real names hint at gender/age, so the cast looks like the actual people
         out.append("The two people: " + ", ".join(f'{k} is called "{v}"' for k, v in names.items()) + ".")
+    for role, look in (looks or {}).items():
+        out.append(f'FIXED look for {role}: "{look}"')
+    if history:
+        out.append("Earlier: " + " ".join(history))
     for i, group in enumerate(groups, 1):
         out.append(f"Panel {i} ({group[0].speaker} speaks, focus must be {group[0].speaker}):")
         for l in group:
@@ -210,7 +223,7 @@ def _user_prompt(groups: list[list[Line]], names: dict[str, str] | None = None) 
     return "\n".join(out)
 
 
-def _parse(raw: str, n_panels: int) -> tuple[dict, dict, list[tuple[str, str]]]:
+def _parse(raw: str, n_panels: int) -> tuple[dict, dict, list[tuple[str, str]], str]:
     raw = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw.strip())
     data = json.loads(raw)
     panels = [(str(p["focus"]), str(p["action"])) for p in data["panels"]]
@@ -218,26 +231,29 @@ def _parse(raw: str, n_panels: int) -> tuple[dict, dict, list[tuple[str, str]]]:
         raise ValueError(f"expected {n_panels} panels, got {len(panels)}")
     chars, locs = data["characters"], data["locations"]
     return ({"me": str(chars["me"]), "them": str(chars["them"])},
-            {"me": str(locs["me"]), "them": str(locs["them"])}, panels)
+            {"me": str(locs["me"]), "them": str(locs["them"])}, panels, str(data.get("summary", "")))
 
 
 def write_script(lines: list[Line], llm: LLMClient | None = None, mode: str | None = None,
-                 names: dict[str, str] | None = None) -> Script:
+                 names: dict[str, str] | None = None, looks: dict[str, str] | None = None,
+                 history: list[str] | None = None) -> Script:
+    """`looks`: remembered appearance per role (always used, whatever the LLM writes).
+    `history`: summaries of earlier comics with these people, for callbacks."""
     mode = scene_mode(mode)
     groups = group_panels(lines)
     locations = dict(TEXTING_LOCATIONS) if mode == "texting" else         {"me": STORY_LOCATION, "them": STORY_LOCATION}
     script = Script(dict(DEFAULT_CHARACTERS), locations, mode=mode)
     poses = POSE if mode == "texting" else STORY_POSE
-    system = SYSTEM_TEXTING if mode == "texting" else SYSTEM_STORY
+    system = (SYSTEM_TEXTING if mode == "texting" else SYSTEM_STORY) + MEMORY_RULES
     directions: list[tuple[str, str]] = []
     if llm is not None and groups:
         messages = [{"role": "system", "content": system},
-                    {"role": "user", "content": _user_prompt(groups, names) +
+                    {"role": "user", "content": _user_prompt(groups, names, looks, history) +
                      f'\n\nReturn exactly {len(groups)} entries in "panels".'}]
         for attempt in (1, 2):
             try:
                 raw = llm.chat(messages)
-                script.characters, script.locations, directions = _parse(raw, len(groups))
+                script.characters, script.locations, directions, script.summary = _parse(raw, len(groups))
                 script.source = "llm"
                 break
             except LLMError as e:  # network/HTTP: retrying the same request rarely helps
@@ -252,6 +268,8 @@ def write_script(lines: list[Line], llm: LLMClient | None = None, mode: str | No
                 messages += [{"role": "assistant", "content": raw},
                              {"role": "user", "content": f"That reply was invalid ({e}). "
                               f"Reply again with JSON only and exactly {len(groups)} panels."}]
+
+    script.characters.update(looks or {})  # remembered people look the same in every comic
 
     prev_focus = prev_shot = None
     for i, group in enumerate(groups):
