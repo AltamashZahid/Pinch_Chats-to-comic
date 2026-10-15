@@ -16,7 +16,7 @@ EXPRESSION = {
 # Same faces as Danbooru tags, for the anime backend (Animagine was trained on these tags).
 ANIME_EXPRESSION = {
     "anger": "angry, v-shaped eyebrows, clenched teeth, anger vein, glaring",
-    "disgust": "disgust, frown, wrinkled nose, tongue out, shaded face",
+    "disgust": "disgust, frown, tongue out, shaded face",  # "wrinkled nose" aged faces (library review)
     "fear": "scared, wide-eyed, constricted pupils, sweat, trembling, open mouth",
     "joy": "smile, open mouth, happy, laughing",
     "sadness": "crying, streaming tears, sad, frown",

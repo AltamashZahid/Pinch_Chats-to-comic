@@ -108,12 +108,13 @@ def _tries(backend, emotion: str | None) -> int:
     return _candidates(emotion) if head_for(getattr(backend, "name", "local")) else 1
 
 
-def draw_best(backend, panel: Panel, seed: int, width: int, height: int,
-              reveal: bool = False, reference: bytes | None = None) -> tuple[bytes, int, float | None]:
+def draw_best(backend, panel: Panel, seed: int, width: int, height: int, reveal: bool = False,
+              reference: bytes | None = None, character: str | None = None) -> tuple[bytes, int, float | None]:
     """Draw up to N candidates and keep the one the judge rates best for the panel's emotion."""
     prompt, emotion, shot = _beat(panel, reveal)
     n = _tries(backend, emotion)
-    req = lambda s: ImageRequest(prompt, s, width, height, emotion=emotion, shot=shot, reference=reference)  # noqa: E731
+    req = lambda s: ImageRequest(prompt, s, width, height, emotion=emotion, shot=shot,
+                                 reference=reference, character=character)  # noqa: E731
     first = backend.generate(req(seed))
     j = judge(getattr(backend, "name", "local")) if n > 1 else None  # don't load CLIP when there's nothing to choose between
     if j is None:
@@ -139,7 +140,8 @@ def render_panels(script: Script, backend, cache: ImageCache,
         hit = cache.get(text, key)
         if hit:
             return RenderedPanel(panel, hit.path, hit.kind, time.perf_counter() - start)
-        image, tried, prob = draw_best(backend, panel, seed, width, height, reveal, ref)
+        image, tried, prob = draw_best(backend, panel, seed, width, height, reveal, ref,
+                                         script.characters.get(panel.focus))
         took = time.perf_counter() - start
         return RenderedPanel(panel, cache.put(text, key, image, gen_seconds=took), "generated", took, tried, prob)
 

@@ -3,6 +3,7 @@
     PINCH_IMAGE_BACKEND = local        SD-Turbo on your GPU (default; free, ~1 s/panel on 4 GB)
                         | sdxl         SDXL-Turbo, 4-bit, on your GPU (free, ~8.5 s/panel, better art)
                         | anime        Animagine XL 4.0, 4-bit, on your GPU (Danbooru expression tags; slow)
+                        | library      pre-drawn anime panels (pinch/library.py), live anime for the rest
                         | huggingface  FLUX.1-schnell via HF Inference (needs HF_TOKEN, free tier)
                         | pollinations hosted (needs POLLINATIONS_TOKEN since anonymous use returns 402)
                         | placeholder  offline coloured cards, for tests and UI work
@@ -33,6 +34,7 @@ class ImageRequest:
     emotion: str | None = None   # used by backends that control the face directly (faceshape)
     shot: str | None = None
     reference: bytes | None = None  # the character's portrait, for backends that copy identity (anime)
+    character: str | None = None    # the focus character's look, for backends that look up pre-drawn panels
 
 
 def _png(img: Image.Image) -> bytes:
@@ -308,7 +310,10 @@ class LocalAnimeBackend:
     quality = "anime coloring, masterpiece, high score, great score, absurdres"
     negative = ("lowres, bad anatomy, bad hands, text, error, missing finger, extra digits, fewer digits, "
                 "cropped, worst quality, low quality, low score, bad score, average score, signature, "
-                "watermark, username, blurry, speech bubble, multiple views")
+                "watermark, username, blurry, speech bubble, multiple views, "
+                # Reviewing 378 library panels: disgust and close-up fear often turned the
+                # young character into an older man; the cast is always young.
+                "old, elderly, wrinkled skin, mature")
 
     def __init__(self, steps: int | None = None, size: int | None = None, ip_scale: float | None = None, **_):
         self.steps = steps or int(os.environ.get("PINCH_ANIME_STEPS", "20"))
@@ -507,8 +512,13 @@ class PlaceholderBackend:
         return _png(img)
 
 
+def _library(**kw):
+    from .library import LibraryBackend
+    return LibraryBackend(**kw)
+
+
 BACKENDS = {"local": LocalTurboBackend, "sdxl": LocalSDXLTurboBackend, "lcm": LocalLCMBackend,
-            "anime": LocalAnimeBackend,
+            "anime": LocalAnimeBackend, "library": _library,
             "faceshape": LocalFaceControlBackend, "huggingface": HuggingFaceBackend,
             "pollinations": PollinationsBackend, "placeholder": PlaceholderBackend}
 
