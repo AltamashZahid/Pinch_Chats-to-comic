@@ -89,6 +89,9 @@
     <div class="hint" id="hint">Click or drag a screenshot here</div>
     <input type="file" id="file" accept="image/*">
   </label>
+  <div class="opts" id="shotopts">
+    <label>Chat with <input type="text" id="them" placeholder="their name (so Pinch remembers them)" maxlength="60"></label>
+  </div>
 
   <div class="actions">
     <button id="go" disabled>Pinch it</button>
@@ -116,6 +119,7 @@ function setMode(m) {
   $("tab-shot").classList.toggle("on", m === "shot");
   $("tab-chat").classList.toggle("on", m === "chat");
   $("drop").hidden = m !== "shot";
+  $("shotopts").hidden = m !== "shot";
   $("chatbox").hidden = m !== "chat";
   $("go").disabled = m === "shot" ? !chosen : !($("chat").value.trim() || chatFile);
 }
@@ -166,6 +170,7 @@ $("go").addEventListener("click", async () => {
   if (mode === "shot") {
     if (!chosen) return;
     body.append("file", chosen);
+    body.append("them", $("them").value.trim());
   } else {
     if (chatFile) body.append("file", chatFile); else body.append("text", $("chat").value);
     body.append("me", $("me").value);
