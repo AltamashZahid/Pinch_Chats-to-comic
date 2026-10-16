@@ -21,6 +21,13 @@ def emoji_enabled() -> bool:
 MIN_CONFIDENCE = 60
 
 _TIMESTAMP = re.compile(r"\s*\d{1,2}[:.]\d{2}\s*([ap]\.?m\.?)?\s*[✓✔vV/]*\s*$", re.IGNORECASE)
+# WhatsApp prints the time inside each bubble and OCR garbles it: "1:05 am ✓✓" came out as
+# "4.95 am yw", "1-06 am", "10h am YW". A time token must contain a digit ("Yes I am" stays).
+# A time inside the text (two bubbles merged into one region) marks where one message ends.
+_TIME_TOKEN = r"(?=\S*\d)[\dOoIl|]{1,2}\s?[:.\-h]?\s?[\dOoIl|]{0,2}\s*[ap]\.?[mn]\b\.?"
+_GARBLED_TIME = re.compile(r"\s+" + _TIME_TOKEN + r"\s*[\u2713\u2714/a-zA-Z]{0,3}\s*$", re.IGNORECASE)
+_SAID_TIME = re.compile(r"\b(at|by|till|until|around|before|after|from|to|@)\s*$", re.IGNORECASE)
+_INNER_TIME = re.compile(r"\s+" + _TIME_TOKEN + r"\s*[\u2713\u2714/]*\s+(?=[A-Z])", re.IGNORECASE)
 _WS = re.compile(r"\s+")
 
 
@@ -58,7 +65,17 @@ def preprocess(crop: np.ndarray) -> np.ndarray:
 def clean_text(raw: str) -> str:
     text = _WS.sub(" ", raw).strip()
     text = " ".join("I" if w == "|" else w for w in text.split())  # Tesseract reads a lone "I" as "|"
-    return _TIMESTAMP.sub("", text).strip()
+    for pattern in (_GARBLED_TIME, _TIMESTAMP):
+        m = pattern.search(text)
+        if m and not _SAID_TIME.search(text[:m.start()]):  # "see you at 5 pm" keeps its time
+            text = text[:m.start()]
+    return text.strip()
+
+
+def split_merged(text: str) -> list[str]:
+    """Two stacked bubbles that merged into one region read as "first 1:07 am Second": the
+    time printed inside the first bubble marks the boundary."""
+    return [t.strip() for t in _INNER_TIME.split(text) if t.strip()]
 
 
 def bubble_emoji(crop: np.ndarray, fill) -> tuple[np.ndarray, list[str]]:
@@ -89,18 +106,33 @@ def read_bubble(img: np.ndarray, bubble: Bubble) -> tuple[str, float, list[str]]
     return text, sum(c for _, c in words) / len(words), emojis
 
 
+# Standalone emoji have no bubble vouching for them, and a false one invents a message.
+# Measured: real big emoji matched the gallery at 0.96; profile pictures at 0.73-0.84.
+LOOSE_MIN_SIMILARITY = 0.90
+
+
 def loose_emoji(img: np.ndarray, bubbles: list[Bubble]) -> list[Message]:
-    """Big emoji sent on their own (no bubble). Emoji on one row form one message."""
+    """Big emoji sent on their own (no bubble). Emoji on one row form one message.
+
+    Only below the first bubble's top and above the last bubble's bottom, with some margin:
+    above the chat is the app's header (its profile picture was "recognised" as 😃). With no
+    bubbles there is no chat at all: a screenshot the detector failed on became a comic made
+    of avatars read as emoji."""
+    if not bubbles:
+        return []
     bg = background_color(img)
     lefts = [b.box.x for b in bubbles if b.side == "left"]
-    boxes = E.find_loose(img, bg, [b.box for b in bubbles], min(lefts) if lefts else 0)
+    top = min(b.box.y for b in bubbles) - 3 * max(b.box.h for b in bubbles)
+    bottom = max(b.box.bottom for b in bubbles) + 3 * max(b.box.h for b in bubbles)
+    boxes = [b for b in E.find_loose(img, bg, [b.box for b in bubbles], min(lefts) if lefts else 0)
+             if top <= b[1] and b[1] + b[3] <= bottom]
     if not boxes:
         return []
     fill = tuple(int(v) for v in bg)
     crops = [E.crop_on_gray(img, box, fill) for box in boxes]
     rows: list[list[tuple]] = []
     for box, hit in zip(boxes, E.recognizer().recognise(crops)):
-        if not hit:
+        if not hit or hit.similarity < LOOSE_MIN_SIMILARITY:
             continue
         x, y, w, h = box
         row = next((r for r in rows if abs(r[0][0][1] - y) < h / 2), None)
@@ -125,11 +157,25 @@ def extract_dialogue(img: np.ndarray) -> list[Message]:
         text, conf, emojis = read_bubble(img, bubble)
         if conf < MIN_CONFIDENCE:  # kaomoji and leftovers OCR as low-confidence junk
             text = ""
-        if text or emojis:
-            messages.append(Message(SPEAKER_BY_SIDE[bubble.side], text, bubble.box, emojis))
+        parts = split_merged(text) if text else [""]
+        b = bubble.box
+        for k, part in enumerate(parts):  # a merged pair becomes two messages, stacked
+            box = Box(b.x, b.y + b.h * k // len(parts), b.w, b.h // len(parts))
+            if part or emojis:
+                messages.append(Message(SPEAKER_BY_SIDE[bubble.side], part, box, emojis if k == len(parts) - 1 else []))
     if emoji_enabled():
         messages += loose_emoji(img, bubbles)
     messages.sort(key=lambda m: (m.box.y, m.box.x))
+    return drop_quotes(messages)
+
+
+def drop_quotes(messages: list[Message]) -> list[Message]:
+    """A reply that quotes an earlier message shows the quote inside its bubble ("faiz wellness
+    Jab hum bags ... Kab denge"). Keep only what follows the quoted text."""
+    for i, m in enumerate(messages):
+        for prev in messages[:i]:
+            if len(prev.text) >= 12 and prev.text in m.text and m.text != prev.text:
+                m.text = m.text.split(prev.text, 1)[1].strip()
     return messages
 
 
