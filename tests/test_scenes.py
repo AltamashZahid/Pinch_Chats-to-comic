@@ -213,3 +213,20 @@ def test_classifier_sees_lowercase_for_shouting(monkeypatch):
     monkeypatch.setattr(pipeline, "classify_dialogue", lambda turns: seen.extend(t for _, t in turns) or [("anger", .9)] * len(turns))
     lines = pipeline.lines_from_messages([Message("me", "I HATE THIS", Box(0, 0, 1, 1))])
     assert seen == ["i hate this"] and lines[0].text == "I HATE THIS"
+
+
+def test_explicit_feeling_beats_later_replies(monkeypatch):
+    """"I am sooo happpy" stays joy even though later messages talk about crying, but only when
+    the model reading the past alone agrees with the statement."""
+    from pinch import pipeline
+    turns = [("B", "OMGG I am sooo happpy right now"), ("A", "why?? I thought we were supposed to cry"),
+             ("B", "Okayy. Now I am crying"), ("A", "I'm glad you asked")]
+    def fake(turns, future=True):
+        if future:  # reading the replies too: the first line drifts to sadness
+            return [("sadness", 0.9), ("surprise", 0.8), ("sadness", 0.95), ("neutral", 0.7)]
+        return [("joy", 0.54), ("surprise", 0.8), ("sadness", 0.95), ("neutral", 0.6)]
+    monkeypatch.setattr(pipeline, "classify_dialogue", fake)
+    out = pipeline.trust_self_reports(turns, fake(turns))
+    assert out[0] == ("joy", 0.54)            # statement + past-only model agree: joy wins
+    assert out[2] == ("sadness", 0.95)        # already agreed
+    assert out[3] == ("neutral", 0.7)         # "I'm glad you asked": the model disagrees, so no override
