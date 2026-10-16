@@ -105,8 +105,10 @@ def chat_to_script(msgs: list[dict], me: str | None, last: int = MAX_CHAT_MESSAG
     if me is None:  # assume a two-person chat where the user is whoever didn't speak first
         names = list(dict.fromkeys(m["speaker"] for m in msgs))
         me = names[1] if len(names) > 1 else names[0]
-    messages = [Message("me" if m["speaker"] == me else "them", m["text"], Box(0, i, 1, 1))
-                for i, m in enumerate(msgs)]
+    from .emoji import emoji_in_text, strip_emoji
+    # Typed emoji count like emoji read from a screenshot: "I failed 😂" is an ironic laugh.
+    messages = [Message("me" if m["speaker"] == me else "them", strip_emoji(m["text"]), Box(0, i, 1, 1),
+                        emoji_in_text(m["text"])) for i, m in enumerate(msgs)]
     others = [n for n in dict.fromkeys(m["speaker"] for m in msgs) if n != me]
     names = {"me": me, "them": others[0] if len(others) == 1 else "a friend"}
     from .memory import SELF

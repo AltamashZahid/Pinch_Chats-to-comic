@@ -159,3 +159,14 @@ def test_template_scripts_are_not_remembered(monkeypatch):
 def test_memory_off_returns_no_store(monkeypatch):
     monkeypatch.setenv("PINCH_MEMORY", "off")
     assert M.default_store() is None
+
+
+def test_typed_emoji_drive_irony(monkeypatch):
+    from pinch import pipeline
+    monkeypatch.setattr(pipeline, "classify_dialogue", lambda turns: [("sadness", 0.9)] * len(turns))
+    monkeypatch.setattr(pipeline.LLMClient, "from_env", classmethod(lambda cls: None))
+    script = pipeline.chat_to_script([{"speaker": "Rahul", "text": "I failed physics 😂"},
+                                      {"speaker": "Me", "text": "oh no"}], "Me")
+    line = script.panels[0].lines[0]
+    assert line.text == "I failed physics" and line.emoji == ["😂"]
+    assert line.ironic and line.emotion == "joy" and script.panels[0].reveal == "sadness"
