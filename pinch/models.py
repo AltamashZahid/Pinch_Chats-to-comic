@@ -27,6 +27,7 @@ class Bubble:
     side: str             # "left" or "right"
     fill: tuple[int, int, int]  # BGR fill colour of the bubble
     dark: bool            # True if the fill is dark (light text on dark bubble)
+    fill_map: object = field(default=None, compare=False, repr=False)  # (h, w, 3) fill of a gradient bubble
 
 
 @dataclass
