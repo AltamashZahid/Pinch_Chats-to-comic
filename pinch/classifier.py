@@ -32,7 +32,7 @@ class EmotionClassifier:
         b = json.loads(bias_file.read_text()) if bias_file.exists() and os.environ.get("PINCH_TEXT_BIASES", "on") != "off" else {}
         self.bias = torch.tensor([b.get(l, 0.0) for l in self.labels])
 
-    def predict_dialogue(self, turns: list[tuple[str, str]]) -> list[tuple[str, float]]:
+    def predict_dialogue(self, turns: list[tuple[str, str]], future: bool = True) -> list[tuple[str, float]]:
         """(emotion, probability) per turn of a conversation [(speaker, text), ...], each read with
         the turns around it (past and future). Falls back to per-line prediction for older models."""
         if not turns:
@@ -42,7 +42,8 @@ class EmotionClassifier:
             return self.predict(texts, [""] + texts[:-1])
         from .erc import build_input
         dialogue = [(s, t, None) for s, t in turns]
-        ids = [build_input(self.tokenizer, dialogue, i, self.erc.get("max_len", 256)) for i in range(len(turns))]
+        ids = [build_input(self.tokenizer, dialogue, i, self.erc.get("max_len", 256), future=future)
+               for i in range(len(turns))]
         n = max(map(len, ids))
         x = self._torch.full((len(ids), n), self.tokenizer.pad_token_id)
         m = self._torch.zeros((len(ids), n), dtype=self._torch.long)

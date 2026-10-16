@@ -39,14 +39,14 @@ def classify(texts: list[str], prevs: list[str] | None = None) -> list[tuple[str
 SPEAKER_NAME = {"me": "A", "them": "B"}
 
 
-def classify_dialogue(turns: list[tuple[str, str]]) -> list[tuple[str, float]]:
+def classify_dialogue(turns: list[tuple[str, str]], future: bool = True) -> list[tuple[str, float]]:
     global _classifier
     if not (DEFAULT_MODEL_DIR / "config.json").exists():
         return [("neutral", 1.0)] * len(turns)
     if _classifier is None:
         from .classifier import EmotionClassifier
         _classifier = EmotionClassifier()
-    return _classifier.predict_dialogue(turns)
+    return _classifier.predict_dialogue(turns, future=future)
 
 
 _snapper = None
@@ -116,6 +116,21 @@ def chat_to_script(msgs: list[dict], me: str | None, last: int = MAX_CHAT_MESSAG
     return script_with_memory(lines_from_messages(messages), names, people)
 
 
+def trust_self_reports(turns: list[tuple[str, str]], tones: list[tuple[str, float]]) -> list[tuple[str, float]]:
+    """"I am sooo happy" was labelled sadness because later messages talked about crying: the
+    model reads the replies too. When a speaker states their own feeling outright AND the model,
+    reading only the messages before it, agrees, that wins over what came after.
+    reports/self_report.json: on ~17,300 test lines this changed 2 labels (a blunt "trust the
+    statement" rule changed ~250 and lowered accuracy: "I'm glad you asked" is polite filler)."""
+    from .self_report import self_report
+    claims = [self_report(t) for _, t in turns]
+    if not any(claims):
+        return tones
+    past_only = classify_dialogue(turns, future=False)
+    return [past if claim and past[0] == claim and tone[0] != claim else tone
+            for claim, tone, past in zip(claims, tones, past_only)]
+
+
 def lines_from_messages(messages) -> list[Line]:
     """Text tone from the classifier, merged with the tone of any emoji (see emoji.combine)."""
     # The whole chat goes to the classifier at once: conversation models read each message
@@ -123,7 +138,7 @@ def lines_from_messages(messages) -> list[Line]:
     # lowercased copy; the bubble keeps the original and the shouting itself is drawn.
     turns = [(SPEAKER_NAME.get(m.speaker, m.speaker), m.text.lower() if is_shouting(m.text) else m.text)
              for m in messages if m.text]
-    tones = iter(classify_dialogue(turns)) if turns else iter(())
+    tones = iter(trust_self_reports(turns, classify_dialogue(turns))) if turns else iter(())
     lines = []
     for m in messages:
         text_emotion, conf = next(tones) if m.text else ("neutral", 0.0)
